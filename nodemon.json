@@ -1,0 +1,11 @@
+{
+    "watch": [
+        "_config.yml",
+        "_config.butterfly.yml"
+    ],
+    "ext": "yml",
+    "exec": "hexo clean && hexo server",
+    "ignore": [
+        "node_modules/**/*"
+    ]
+}

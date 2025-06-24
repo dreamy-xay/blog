@@ -1,0 +1,9 @@
+#page-header #site-title,
+#page-header #subtitle {
+  color: rgba(255, 255, 255, 0.5);
+  text-shadow: 0 0 10px rgb(255, 255, 255);
+}
+
+#aside-content .card-announcement .item-headline i {
+  color: #ec4c8c;
+}

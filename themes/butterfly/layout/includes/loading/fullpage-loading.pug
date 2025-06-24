@@ -1,0 +1,43 @@
+#loading-box
+  .gear-loader
+    .gear-loader_overlay
+    .gear-loader_cogs
+      .gear-loader_cogs__top
+        .gear-top_part
+        .gear-top_part
+        .gear-top_part
+        .gear-top_hole
+      .gear-loader_cogs__left
+        .gear-left_part
+        .gear-left_part
+        .gear-left_part
+        .gear-left_hole
+      .gear-loader_cogs__bottom
+        .gear-bottom_part
+        .gear-bottom_part
+        .gear-bottom_part
+        .gear-bottom_hole
+
+script.
+  (()=>{
+    const $loadingBox = document.getElementById('loading-box')
+    const $body = document.body
+    const preloader = {
+      endLoading: () => {
+        $body.style.overflow = ''
+        $loadingBox.classList.add('loaded')
+      },
+      initLoading: () => {
+        $body.style.overflow = 'hidden'
+        $loadingBox.classList.remove('loaded')
+      }
+    }
+
+    preloader.initLoading()
+    window.addEventListener('load',() => { preloader.endLoading() })
+
+    if (!{theme.pjax && theme.pjax.enable}) {
+      document.addEventListener('pjax:send', () => { preloader.initLoading() })
+      document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+    }
+  })()
