@@ -7,6 +7,9 @@
     "build": "hexo generate",
     "clean": "hexo clean",
     "deploy": "npm run clean && hexo deploy",
+    "deploy:github": "npm run clean && hexo deploy",
+    "deploy:netlify": ".\\scripts\\deploy_netlify",
+    "deploy:all": "npm run deploy:github && npm run deploy:netlify",
     "server": "hexo server"
   },
   "hexo": {

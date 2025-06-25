@@ -1,0 +1,2 @@
+# 复制_config 到 _config.tmp 并启用 netlify 配置，运行 npm deploy，将 _config.tmp 复制回 _config 并删除临时文件
+Copy-Item -Force _config.yml _config.yml.tmp && Copy-Item -Force _config.butterfly.yml _config.butterfly.yml.tmp && Copy-Item -Force netlify_config.yml _config.yml && Copy-Item -Force netlify_config.butterfly.yml _config.butterfly.yml && npm run deploy && Copy-Item -Force _config.yml.tmp _config.yml && Copy-Item -Force _config.butterfly.yml.tmp _config.butterfly.yml && Remove-Item _config.yml.tmp && Remove-Item _config.butterfly.yml.tmp

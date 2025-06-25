@@ -13,3 +13,8 @@ npm run dev
 ```zsh
 npm run deploy
 ```
+
+## 在线访问
+
+- [Github Pages](https://dreamy-xay.github.io/blog/)
+- [Netlify](https://blog-dreamy.netlify.app/)
