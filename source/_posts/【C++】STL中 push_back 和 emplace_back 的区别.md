@@ -1,11 +1,26 @@
 ---
 title: 【C++】STL中 push_back 和 emplace_back 的区别
-tags:
-  - C++
-  - Modern C++
-  - STL
-abbrlink: 1c60de9
 date: 2025-05-21 12:06:12
+updated: 2025-05-21 12:06:12
+tags:
+  - STL
+  - container
+  - vector
+categories:
+  - C++
+keywords: 
+description: 
+top_img: 
+comments: true
+cover: 
+toc: true
+toc_number: true
+toc_style_simple: false
+katex: false
+highlight_shrink: false
+aside: true
+noticeOutdate: false
+abbrlink: 1c60de9
 ---
 
 ## 区别

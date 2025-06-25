@@ -3,7 +3,7 @@
 # --------------------------------------
 
 nav:
-  logo: /img/logo2.png # image
+  logo: https://s2.loli.net/2025/06/25/fjC9WKNaAYieP4O.png # image
   display_title: true
   fixed: false # fixed navigation bar
 
@@ -36,18 +36,19 @@ formal:
   icon: link || the description || color
 social:
   fab fa-qq: http://wpa.qq.com/msgrd?v=3&uin=1985332264&site=qq&menu=yes || QQ || '#febcd5'
-  fab fa-weixin: https://github.com/dreamy-xay || WeChat || '#febcd5'
+  fab fa-weixin: /img/weixin.png || WeChat || '#febcd5'
   fas fa-envelope: mailto:dreamy-xay@foxmail.com || Email || '#febcd5'
+  fa-brands fa-bilibili: https://space.bilibili.com/365741414 || Bilibili || '#febcd5'
 
 # Image (圖片設置)
 # --------------------------------------
 
 # Favicon（网站图标）
-favicon: /img/logo.png
+favicon: https://s2.loli.net/2025/06/25/D5h2YiOHLyF1QZP.png
 
 # Avatar (头像)
 avatar:
-  img: /img/avatar.jpg
+  img: https://s2.loli.net/2025/06/25/dEB8ujQf4WVplwL.jpg
   effect: false
 
 # Disable all banner image
@@ -112,7 +113,7 @@ cover:
 # Replace Broken Images (替换无法显示的图片)
 error_img:
   flink: /img/friend_404.gif
-  post_page: /img/loading.gif
+  post_page: https://s2.loli.net/2025/06/25/nr3pxyiKvDIS8Ga.gif
 
 # A simple 404 page
 error_404:
@@ -185,10 +186,10 @@ reward:
   enable: true
   text:
   QR_code:
-    - img: /img/wechat.png
+    - img: https://s2.loli.net/2025/06/25/vwKmDI1fVebqYAr.png
       link:
       text: 微信
-    - img: /img/alipay.png
+    - img: https://s2.loli.net/2025/06/25/6iHwTzGKMY8N1Qr.png
       link:
       text: 支付宝
 
@@ -876,7 +877,7 @@ pjax:
 
 # Inject the css and script (aplayer/meting)
 aplayerInject:
-  enable: true
+  enable: false
   per_page: true
 
 # Snackbar (Toast Notification 彈窗)
@@ -940,7 +941,7 @@ css_prefix: true
 inject:
   head:
     # gitee 图床显示
-    # - <meta name="referrer" content="no-referrer" />
+    - <meta name="referrer" content="no-referrer" />
     # 自定义覆盖样式
     - <link rel="stylesheet" href="/blog/css/custom.css">
     - <link rel="stylesheet" href="/blog/css/background.css">

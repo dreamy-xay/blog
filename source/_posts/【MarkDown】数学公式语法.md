@@ -1,16 +1,27 @@
 ---
 title: 【MarkDown】数学公式语法
+date: 2025-05-20 07:31:53
+updated: 2025-05-20 07:31:53
 tags:
-  - MarkDown
-  - TeX
+  - Katex
+  - Latex
+categories:
+  - Markdown
+keywords: 
+description: 
+top_img: 
+comments: true
+cover: 
+toc: true
+toc_number: true
+toc_style_simple: false
 katex: true
-abbrlink: 915aa5e
-date: 2025-05-19 09:16:23
+highlight_shrink: false
+aside: true
+noticeOutdate: false
+abbrlink: 2a8b085e
 ---
 
-
-MarkDown数学公式语法
-===
 
 ## 行内式与行间式
 
