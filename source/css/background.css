@@ -79,7 +79,7 @@
 @font-face {
     font-family: 'ZhuZiAWan';
     /* 字体名自定义即可 */
-    src: url('../fonts/ZhuZiAWan.woff2');
+    src: url('https://cdn.jsdmirror.cn/gh/dreamy-xay/blog@gh-pages/fonts/ZhuZiAWan.woff2');
     /* 字体文件路径 */
     font-display: swap;
 }

@@ -1,22 +1,22 @@
 ---
 title: Second Dimension
 date: 2025-06-21 20:20:55
-top_img: https://s2.loli.net/2025/06/24/cKGlatf3JkOXCSQ.png
+top_img: https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/1_1752075509616.png
 ---
 
 {% gallery %}
-![](https://s2.loli.net/2025/06/24/cKGlatf3JkOXCSQ.png)
-![](https://s2.loli.net/2025/06/24/Ik1QnYOtzeDlFHA.jpg)
-![](https://s2.loli.net/2025/06/24/SQDcMGtOZ5Xyqok.jpg)
-![](https://s2.loli.net/2025/06/24/vARyDPxQjtb251J.jpg)
-![](https://s2.loli.net/2025/06/24/bxYfd58WlyR9p1C.jpg)
-![](https://s2.loli.net/2025/06/24/uf6lhVadxIAzTtN.jpg)
-![](https://s2.loli.net/2025/06/24/yFGwsu8fWMd9R2r.jpg)
-![](https://s2.loli.net/2025/06/24/PApHm2botTaxrY5.jpg)
-![](https://s2.loli.net/2025/06/24/IpEZhUSV4rzWJNk.jpg)
-![](https://s2.loli.net/2025/06/24/7Ray3lM49LsmgEC.jpg)
-![](https://s2.loli.net/2025/06/24/UymHCa4ZAwjgGos.jpg)
-![](https://s2.loli.net/2025/06/24/kfx6ryOIlN8A1iK.jpg)
-![](https://s2.loli.net/2025/06/24/Jrm2uXaj1FAoGVq.jpg)
-![](https://s2.loli.net/2025/06/24/UoiNBSWGthe2Y5a.jpg)
+![](https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/1_1752075509616.png)
+![](https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/2_1752075514363.jpeg)
+![](https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/3_1752075518457.jpeg)
+![](https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/4_1752075476601.jpg)
+![](https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/5_1752075479273.jpg)
+![](https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/6_1752075481704.jpeg)
+![](https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/7_1752075489299.jpg)
+![](https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/8_1752075493263.jpg)
+![](https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/9_1752075495937.jpg)
+![](https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/10_1752075498147.jpg)
+![](https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/11_1752075500877.jpg)
+![](https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/12_1752075503046.jpg)
+![](https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/13_1752075505242.jpg)
+![](https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/14_1752075507422.jpg)
 {% endgallery %}
