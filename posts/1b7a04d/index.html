@@ -1,0 +1,625 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><!-- hexo injector head_begin start --><style type="text/css">.douban-card-block {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-height: 400px;
+}
+
+.douban-card {
+    display: flex;
+    margin: 30px 10px;
+    padding: 15px;
+    border-radius: 15px;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    color: antiquewhite;
+    text-decoration: none;
+}
+
+.douban-card:hover {
+    text-decoration: none;
+}
+
+.douban-card-bgimg {
+    position: absolute;
+    width: 115%;
+    height: 115%;
+    filter: blur(15px) brightness(0.6);
+    background-size: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.douban-card-img {
+    position: relative;
+    height: 130px;
+    width: 80px;
+    background-size: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.douban-card-left:hover .douban-card-img {
+    filter: blur(5px) brightness(0.6);
+    transform: perspective(800px) rotateX(180deg);
+}
+
+.douban-card-left .douban-card-img {
+    transition: all 500ms ease;
+}
+
+.douban-card-left {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.douban-card-left .douban-card-status {
+    height: 130px;
+    width: 80px;
+    text-align: center;
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+    top: 30%;
+    transform: rotateX(180deg);
+    backface-visibility: hidden;
+    transition: all 500ms ease;
+}
+
+.douban-card-left:hover .douban-card-status {
+    transform: perspective(800px) rotateX(0deg);
+}
+
+.douban-card-right {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin-left: 12px;
+    font-size: 16px;
+    font-family: "Courier New", Courier, monospace;
+    line-height: 1.3;
+    color: antiquewhite;
+}
+
+.douban-card-item {
+    margin-top: 4px;
+}
+</style><!-- hexo injector head_begin end --><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>【Doxygen】Windows下的配置与使用 | dreamyのblog</title><meta name="author" content="dreamy-xay"><meta name="copyright" content="dreamy-xay"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="本文介绍了在 Windows 系统下安装和使用 Doxygen 的详细步骤">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Doxygen】Windows下的配置与使用">
+<meta property="og:url" content="https://blog-dreamy.netlify.app/posts/1b7a04d/">
+<meta property="og:site_name" content="dreamyのblog">
+<meta property="og:description" content="本文介绍了在 Windows 系统下安装和使用 Doxygen 的详细步骤">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/6_1752075481704.jpeg">
+<meta property="article:published_time" content="2025-05-24T00:27:34.000Z">
+<meta property="article:modified_time" content="2025-05-24T00:27:34.000Z">
+<meta property="article:author" content="dreamy-xay">
+<meta property="article:tag" content="技术文档指南">
+<meta property="article:tag" content="文档生成">
+<meta property="article:tag" content="Windows">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/6_1752075481704.jpeg"><link rel="shortcut icon" href="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/logo_1752075337653.png"><link rel="canonical" href="https://blog-dreamy.netlify.app/posts/1b7a04d/"><link rel="preconnect" href="https://cdn.staticfile.org"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.staticfile.org/node-snackbar/0.1.16/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.staticfile.org/fancyapps-ui/5.0.33/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":true,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":30,"languages":{"author":"作者: dreamy-xay","link":"链接: ","source":"来源: dreamyのblog","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体中文","cht_to_chs":"你已切换为简体中文","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#febcd5","bgDark":"#1f1f1f","position":"top-center"},
+  infinitegrid: {
+    js: 'https://cdn.staticfile.org/egjs-infinitegrid/4.11.1/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '【Doxygen】Windows下的配置与使用',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-05-24 08:27:34'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="referrer" content="no-referrer" /><link rel="stylesheet" href="/css/custom.css"><link rel="stylesheet" href="/css/background.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="gear-loader"><div class="gear-loader_overlay"></div><div class="gear-loader_cogs"><div class="gear-loader_cogs__top"><div class="gear-top_part"></div><div class="gear-top_part"></div><div class="gear-top_part"></div><div class="gear-top_hole"></div></div><div class="gear-loader_cogs__left"><div class="gear-left_part"></div><div class="gear-left_part"></div><div class="gear-left_part"></div><div class="gear-left_hole"></div></div><div class="gear-loader_cogs__bottom"><div class="gear-bottom_part"></div><div class="gear-bottom_part"></div><div class="gear-bottom_part"></div><div class="gear-bottom_hole"></div></div></div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/avatar_1752075331083.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">8</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">16</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa-fw fas fa-book"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa-fw fas fa-list"></i><span> 娱乐库</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/books/"><i class="fa-fw fas fa-book-open"></i><span> 阅读库</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐库</span></a></li><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-images"></i><span> 图片库</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影库</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友人帐</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/6_1752075481704.jpeg')"><nav id="nav"><span id="blog-info"><a href="/" title="dreamyのblog"><img class="site-icon" src="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/logo2_1752075340714.png"/><span class="site-name">dreamyのblog</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa-fw fas fa-book"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa-fw fas fa-list"></i><span> 娱乐库</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/books/"><i class="fa-fw fas fa-book-open"></i><span> 阅读库</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐库</span></a></li><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-images"></i><span> 图片库</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影库</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友人帐</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div><div id="nav-right"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i></a></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">【Doxygen】Windows下的配置与使用</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-05-24T00:27:34.000Z" title="发表于 2025-05-24 08:27:34">2025-05-24</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-05-24T00:27:34.000Z" title="更新于 2025-05-24 08:27:34">2025-05-24</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Doxygen/">Doxygen</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.1k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>6分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="【Doxygen】Windows下的配置与使用"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="前言">前言</h2>
+<p>​       Doxygen是一个自动生成文档的工具，支持C、C++、Java、Objective-C和IDL语言。只要在代码注释时遵循指定规则，就可以用该工具自动生成说明文档。可生成的文档格式包括HTML、XML、LaTeX、RTF、Unix Man Page，而其中还可衍生出不少其它格式。HTML可以打包成CHM格式，而LaTeX可以透过一些工具产生出PS或是PDF文档。</p>
+<h2 id="关联软件介绍">关联软件介绍</h2>
+<h3 id="Graphviz">Graphviz</h3>
+<p>​        Graphviz(Graph Visualization Software)是一个由AT&amp;T实验室启动的开源工具包，用于绘制DOT语言脚本描述的图形。要使用Doxygen生成依赖图、继承图以及协作图，必须先安装Graphviz软件。</p>
+<h3 id="HTML-Help-WorkShop">HTML Help WorkShop</h3>
+<p>​       微软推出的HTML Help WorkShop被广泛认为是创建CHM文件的首选工具，其主要功能是能够将HTML文件高效编译成CHM格式的文档。而对于Doxygen软件，尽管其默认输出格式为HTML文件或Latex文件，如果我们希望从HTML转换生成CHM文档，那么就必须先行安装HTML Help WorkShop，并确保在Doxygen的设置中进行适当的关联配置。</p>
+<h2 id="安装相关程序">安装相关程序</h2>
+<p>​       为了便捷性和灵活性，建议优先选择下载软件的压缩包版本。这种方式无需繁琐的安装过程，仅需解压即可立即使用。</p>
+<ul>
+<li>Doxygen下载：<a target="_blank" rel="noopener" href="https://www.doxygen.nl/download.html">https://www.doxygen.nl/download.html</a></li>
+<li>Graphviz下载：<a target="_blank" rel="noopener" href="https://graphviz.org/download/">https://graphviz.org/download/</a></li>
+<li>HTML Help WorkShop下载：<a target="_blank" rel="noopener" href="https://www.helpandmanual.com/downloads_mscomp.html">https://www.helpandmanual.com/downloads_mscomp.html</a></li>
+</ul>
+<p>​       在进行软件安装时，建议遵循默认设置，依次点击“下一步”直到安装过程顺利完成。安装结束后，为了确保Doxygen能够正常运行并发挥其最大功能，接下来的配置环节中需要特别注意将Graphviz和HTML Help WorkShop的安装路径与Doxygen进行正确的关联。</p>
+<h2 id="配置Doxygen">配置Doxygen</h2>
+<p>​       所有配置任务均可通过Doxywizard的图形用户界面（GUI）轻松完成，而文档的生成过程也同样通过运行Doxywizard来实现。</p>
+<h3 id="填写项目设置">填写项目设置</h3>
+<p>​       在 Doxywizard 的“Wizard”界面中，您会看到几个标签页，首先需要关注的是“Project”标签页。在这里，您需要填写一些基本的项目信息：</p>
+<ul>
+<li><strong>Project Name</strong>：在这里输入您的项目名称。这个名字将用于文档的各个部分。</li>
+<li><strong>Version or ID</strong>：在这里输入项目的版本号，这有助于文档的用户识别不同版本的文档。</li>
+<li><strong>Source code directory</strong>：点击浏览按钮选择源代码所在的文件夹。这告诉 Doxygen 在哪里找到需要生成文档的源代码。</li>
+<li><strong>Destination directory</strong>：点击浏览按钮选择一个文件夹，用于存放 Doxygen 生成的文档。请确保这个文件夹是空的或者是专门为此次文档生成预留的。</li>
+<li>勾选“Scan recursively”选项，以便 Doxygen 能够递归地扫描指定源代码目录中的所有子目录和文件。</li>
+</ul>
+<p><img src="https://img2024.cnblogs.com/blog/1933699/202505/1933699-20250520130710326-1916282764.png" alt="填写项目设置"></p>
+<p>​       在使用Doxywizard进行文档生成的过程中，至关重要的是正确设置工作目录、源代码目录以及参考文件生成目录这三个关键位置。其他如项目名称、项目简介、版本号和标识等信息，则可以根据具体需求灵活填写。工作目录应该是一个新建的目录，用于存放配置完成后的配置文件（Doxyfile）。这样，每次生成文档时，只需从该目录导入配置文件即可开始文档的编译过程。而源代码目录则指向你的源代码所在位置，最终生成的文档将放置在你设定的结果目录中。</p>
+<h3 id="调整文档选项">调整文档选项</h3>
+<p>​       在“Mode”标签页中，您可以根据项目的需求选择不同的配置选项：</p>
+<ul>
+<li><strong>Documented entities only</strong>：选择此模式意味着 Doxygen 将仅提取和生成那些已经被明确注释的实体（如类、函数、变量等）的文档。这种模式适合于那些希望只为特定代码部分生成文档的项目，或者在代码库中只有部分代码是有意义地、系统性地被注释了的情况。</li>
+<li><strong>All Entities</strong>：选择“所有实体”模式会指示 Doxygen 提取源代码中所有实体的信息，不论它们是否被注释。</li>
+<li><strong>Include cross-referenced source code in the output</strong>：此选项允许 Doxygen 在生成的文档中包含交叉引用的源代码。这意味着读者可以直接在文档中查看源代码，并且能够点击引用或者被引用的元素，跳转到相关的代码或文档部分。</li>
+<li><strong>Optimize for C or C++</strong>：如果您的项目主要使用C或C++编写，选择此选项可以让 Doxygen 更好地处理这两种语言的特性。</li>
+</ul>
+<p><img src="https://img2024.cnblogs.com/blog/1933699/202505/1933699-20250520130747666-843852989.png" alt="调整文档选项"></p>
+<h3 id="配置生成的输出类型">配置生成的输出类型</h3>
+<p>​       在“Output”标签页中，您可以选择和配置您希望生成的文档类型：</p>
+<ul>
+<li>勾选您想要生成的文档格式，如 HTML、LaTeX 等。</li>
+<li>对于每种格式，您可以通过点击对应的配置按钮（如果有的话）来进一步自定义输出设置，例如 HTML 的样式表或者 LaTeX 的文档类。</li>
+</ul>
+<p><img src="https://img2024.cnblogs.com/blog/1933699/202505/1933699-20250520130818901-2078776433.png" alt="配置生成的输出类型"></p>
+<h3 id="配置图表生成选项">配置图表生成选项</h3>
+<p>​       在 Doxywizard 配置流程中的“Diagrams”部分，您可以选择是否以及如何生成各种类型的图表来丰富您的文档。这些图表有助于可视化地展示代码之间的关系，例如类的继承结构、文件依赖关系等。下面是对这一部分选项的详细解释：</p>
+<h4 id="Diagrams-to-generate">Diagrams to generate</h4>
+<ul>
+<li>
+<p><strong>No diagrams</strong>：选择此选项意味着不生成任何图表。如果您希望文档尽可能简洁，或者不需要可视化表示，可以选择此选项。</p>
+</li>
+<li>
+<p><strong>Text only</strong>：此选项将会使用文本形式简单地表示一些关系，而不是生成图形化的图表。这对于希望保持文档轻量级的情况有用。</p>
+</li>
+<li>
+<p><strong>Use built-in class diagram generator</strong>：选择此选项将启用 Doxygen 内置的类图生成器来创建类之间的关系图。这是一个简单的选择，不需要额外的工具，但生成的图表可能不如使用 GraphViz 工具那么精细。</p>
+</li>
+<li>
+<p><strong>Use dot tool from the GraphViz package</strong>：此选项将利用 GraphViz 软件包中的 dot 工具来生成各种图表。GraphViz 是一个强大的图形生成工具，能够创建高质量的图表，是生成复杂关系图的首选方法。</p>
+</li>
+</ul>
+<h4 id="Dot-graphs-to-generate">Dot graphs to generate</h4>
+<p>当选择使用 GraphViz 的 dot 工具时，以下是您可以选择生成的图表类型：</p>
+<ul>
+<li><strong>Class graphs</strong>：显示类之间的继承和协作关系。</li>
+<li><strong>Collaboration diagrams</strong>：显示类或接口之间的协作关系，通常用于表示类之间的关联、聚合和组合关系。</li>
+<li><strong>Overall Class hierarchy</strong>：生成整个项目的类层次结构图。</li>
+<li><strong>Include dependency graphs</strong>：显示文件之间的包含（include）依赖关系。</li>
+<li><strong>Included by dependency graphs</strong>：显示哪些文件包含了当前文件。</li>
+<li><strong>Call graphs</strong>：对于函数，显示函数调用图，即一个函数调用了哪些函数。</li>
+<li><strong>Called by graphs</strong>：显示哪些函数调用了当前函数。</li>
+</ul>
+<p><img src="https://img2024.cnblogs.com/blog/1933699/202505/1933699-20250520130853289-1631866109.png" alt="配置图表生成选项"></p>
+<h3 id="调整详细设置（可选）">调整详细设置（可选）</h3>
+<p>​       切换到 Doxywizard 的“Expert”模式，您将能够访问更多高级配置选项。这些选项被分为多个类别，如“Project”、“Build”、“Output”等：</p>
+<ul>
+<li>在这里，您可以细致地调整 Doxygen 的行为，比如控制哪些文件被包含或排除、自定义文档的标题和页脚、设置预处理器宏等。</li>
+<li>每个选项旁边都有简短的说明，帮助您理解其作用。</li>
+<li><strong>Extract all</strong>：默认情况下，Doxygen 只提取公开成员的文档。如果您希望包括保护成员等在内的所有成员的文档，应该勾选此选项。</li>
+</ul>
+<p><img src="https://img2024.cnblogs.com/blog/1933699/202505/1933699-20250520130915473-2116288364.png" alt="调整详细设置1"></p>
+<p><img src="https://img2024.cnblogs.com/blog/1933699/202505/1933699-20250520130929569-1911283470.png" alt="调整详细设置2"></p>
+<p><img src="https://img2024.cnblogs.com/blog/1933699/202505/1933699-20250520131007038-747875459.png" alt="调整详细设置3"></p>
+<p><img src="https://img2024.cnblogs.com/blog/1933699/202505/1933699-20250520131017002-1058100728.png" alt="调整详细设置4"></p>
+<p><img src="https://img2024.cnblogs.com/blog/1933699/202505/1933699-20250520131032465-1072726004.png" alt="调整详细设置5"></p>
+<h3 id="生成文档">生成文档</h3>
+<p>​       配置完成后，切换到“Run”标签页：</p>
+<ul>
+<li>
+<p>点击“Run doxygen”按钮开始生成文档。Doxywizard 会显示进度条，让您知道当前的生成进度。</p>
+</li>
+<li>
+<p>如果遇到任何错误或警告，Doxywizard 会在底部的日志区域显示相关信息。</p>
+</li>
+</ul>
+<p><img src="https://img2024.cnblogs.com/blog/1933699/202505/1933699-20250520131042531-424169478.png" alt="生成文档"></p>
+<h3 id="查看生成的文档">查看生成的文档</h3>
+<p>​       文档生成完成后：</p>
+<ul>
+<li>您可以在“Destination directory”指定的目录中找到生成的文档文件。</li>
+<li>如果您选择生成 HTML 格式的文档，可以通过双击打开目录中的 <code>index.html</code> 文件，在浏览器中查看您的项目文档。</li>
+<li>对于其他格式（如 LaTeX），可能需要进一步的编译或处理才能查看最终的文档。</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog-dreamy.netlify.app">dreamy-xay</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog-dreamy.netlify.app/posts/1b7a04d/">https://blog-dreamy.netlify.app/posts/1b7a04d/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://blog-dreamy.netlify.app" target="_blank">dreamyのblog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3%E6%8C%87%E5%8D%97/">技术文档指南</a><a class="post-meta__tags" href="/tags/%E6%96%87%E6%A1%A3%E7%94%9F%E6%88%90/">文档生成</a><a class="post-meta__tags" href="/tags/Windows/">Windows</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/6_1752075481704.jpeg" data-sites="wechat,weibo,qq,qzone,facebook,twitter"></div><link rel="stylesheet" href="https://cdn.staticfile.org/butterfly-extsrc/1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.staticfile.org/butterfly-extsrc/1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赞助</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/wechat_1752075400337.png" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/wechat_1752075400337.png" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/alipay_1752075397065.png" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/alipay_1752075397065.png" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/posts/bce25c9a/" title="【Doxygen】Linux下的配置与使用"><img class="cover" src="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/13_1752075505242.jpg" onerror="onerror=null;src='https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">【Doxygen】Linux下的配置与使用</div></div></a></div><div class="next-post pull-right"><a href="/posts/910a9fb2/" title="【Python】自定义项目打包与轮子文件构建"><img class="cover" src="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/5_1752075479273.jpg" onerror="onerror=null;src='https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">【Python】自定义项目打包与轮子文件构建</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/posts/bce25c9a/" title="【Doxygen】Linux下的配置与使用"><img class="cover" src="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/13_1752075505242.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-05-23</div><div class="title">【Doxygen】Linux下的配置与使用</div></div></a></div><div><a href="/posts/2a8b085e/" title="【Doxygen】常用文档规范指南"><img class="cover" src="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/2_1752075514363.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-05-22</div><div class="title">【Doxygen】常用文档规范指南</div></div></a></div><div><a href="/posts/9137290a/" title="【Multithreading】Windows 下互斥锁的 C++ 实现"><img class="cover" src="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/13_1752075505242.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-07-08</div><div class="title">【Multithreading】Windows 下互斥锁的 C++ 实现</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/avatar_1752075331083.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">dreamy-xay</div><div class="author-info__description">只争朝夕，不负韶华</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">8</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">16</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/dreamy-xay"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="http://wpa.qq.com/msgrd?v=3&amp;uin=1985332264&amp;site=qq&amp;menu=yes" target="_blank" title="QQ"><i class="fab fa-qq" style="color: #febcd5;"></i></a><a class="social-icon" href="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/weixin_1752075402432.png" target="_blank" title="WeChat"><i class="fab fa-weixin" style="color: #febcd5;"></i></a><a class="social-icon" href="mailto:dreamy-xay@foxmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #febcd5;"></i></a><a class="social-icon" href="https://space.bilibili.com/365741414" target="_blank" title="Bilibili"><i class="fa-brands fa-bilibili" style="color: #febcd5;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Hi~ o(*￣▽￣*)ブ，欢迎来到dreamy'blog，如果喜欢记得收藏奥～</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E8%81%94%E8%BD%AF%E4%BB%B6%E4%BB%8B%E7%BB%8D"><span class="toc-number">2.</span> <span class="toc-text">关联软件介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Graphviz"><span class="toc-number">2.1.</span> <span class="toc-text">Graphviz</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTML-Help-WorkShop"><span class="toc-number">2.2.</span> <span class="toc-text">HTML Help WorkShop</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E7%9B%B8%E5%85%B3%E7%A8%8B%E5%BA%8F"><span class="toc-number">3.</span> <span class="toc-text">安装相关程序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AEDoxygen"><span class="toc-number">4.</span> <span class="toc-text">配置Doxygen</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A1%AB%E5%86%99%E9%A1%B9%E7%9B%AE%E8%AE%BE%E7%BD%AE"><span class="toc-number">4.1.</span> <span class="toc-text">填写项目设置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B0%83%E6%95%B4%E6%96%87%E6%A1%A3%E9%80%89%E9%A1%B9"><span class="toc-number">4.2.</span> <span class="toc-text">调整文档选项</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E7%94%9F%E6%88%90%E7%9A%84%E8%BE%93%E5%87%BA%E7%B1%BB%E5%9E%8B"><span class="toc-number">4.3.</span> <span class="toc-text">配置生成的输出类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E5%9B%BE%E8%A1%A8%E7%94%9F%E6%88%90%E9%80%89%E9%A1%B9"><span class="toc-number">4.4.</span> <span class="toc-text">配置图表生成选项</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Diagrams-to-generate"><span class="toc-number">4.4.1.</span> <span class="toc-text">Diagrams to generate</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Dot-graphs-to-generate"><span class="toc-number">4.4.2.</span> <span class="toc-text">Dot graphs to generate</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B0%83%E6%95%B4%E8%AF%A6%E7%BB%86%E8%AE%BE%E7%BD%AE%EF%BC%88%E5%8F%AF%E9%80%89%EF%BC%89"><span class="toc-number">4.5.</span> <span class="toc-text">调整详细设置（可选）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E6%96%87%E6%A1%A3"><span class="toc-number">4.6.</span> <span class="toc-text">生成文档</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E7%94%9F%E6%88%90%E7%9A%84%E6%96%87%E6%A1%A3"><span class="toc-number">4.7.</span> <span class="toc-text">查看生成的文档</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/9137290a/" title="【Multithreading】Windows 下互斥锁的 C++ 实现"><img src="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/13_1752075505242.jpg" onerror="this.onerror=null;this.src='https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【Multithreading】Windows 下互斥锁的 C++ 实现"/></a><div class="content"><a class="title" href="/posts/9137290a/" title="【Multithreading】Windows 下互斥锁的 C++ 实现">【Multithreading】Windows 下互斥锁的 C++ 实现</a><time datetime="2025-07-08T02:49:45.000Z" title="发表于 2025-07-08 10:49:45">2025-07-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/2f05bc66/" title="【Python】typing 和 typing_extensions 模块使用指南"><img src="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/13_1752075505242.jpg" onerror="this.onerror=null;this.src='https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【Python】typing 和 typing_extensions 模块使用指南"/></a><div class="content"><a class="title" href="/posts/2f05bc66/" title="【Python】typing 和 typing_extensions 模块使用指南">【Python】typing 和 typing_extensions 模块使用指南</a><time datetime="2025-05-26T01:48:57.000Z" title="发表于 2025-05-26 09:48:57">2025-05-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/910a9fb2/" title="【Python】自定义项目打包与轮子文件构建"><img src="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/5_1752075479273.jpg" onerror="this.onerror=null;this.src='https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【Python】自定义项目打包与轮子文件构建"/></a><div class="content"><a class="title" href="/posts/910a9fb2/" title="【Python】自定义项目打包与轮子文件构建">【Python】自定义项目打包与轮子文件构建</a><time datetime="2025-05-25T01:35:10.000Z" title="发表于 2025-05-25 09:35:10">2025-05-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/1b7a04d/" title="【Doxygen】Windows下的配置与使用"><img src="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/6_1752075481704.jpeg" onerror="this.onerror=null;this.src='https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【Doxygen】Windows下的配置与使用"/></a><div class="content"><a class="title" href="/posts/1b7a04d/" title="【Doxygen】Windows下的配置与使用">【Doxygen】Windows下的配置与使用</a><time datetime="2025-05-24T00:27:34.000Z" title="发表于 2025-05-24 08:27:34">2025-05-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/bce25c9a/" title="【Doxygen】Linux下的配置与使用"><img src="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/13_1752075505242.jpg" onerror="this.onerror=null;this.src='https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【Doxygen】Linux下的配置与使用"/></a><div class="content"><a class="title" href="/posts/bce25c9a/" title="【Doxygen】Linux下的配置与使用">【Doxygen】Linux下的配置与使用</a><time datetime="2025-05-22T23:24:41.000Z" title="发表于 2025-05-23 07:24:41">2025-05-23</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/6_1752075481704.jpeg')"><div id="footer-wrap"><div class="copyright">&copy;2025  <i id="heartbeat" class="fa fas fa-heartbeat"></i> dreamy-xay</div><div class="framework-info"><span>网站 </span><a target="_blank" rel="noopener" href="https://github.com/dreamy-xay/blog">Github</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://blog-dreamy.netlify.app">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="https://cdn.staticfile.org/hexo-theme-butterfly/4.13.0/js/utils.min.js"></script><script src="https://cdn.staticfile.org/hexo-theme-butterfly/4.13.0/js/main.min.js"></script><script src="https://cdn.staticfile.org/hexo-theme-butterfly/4.13.0/js/tw_cn.min.js"></script><script src="https://cdn.staticfile.org/fancyapps-ui/5.0.33/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.staticfile.org/instant.page/5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.staticfile.org/node-snackbar/0.1.16/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.staticfile.org/pangu/4.0.7/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"><script>(() => {
+  const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaid.length === 0) return
+  const runMermaid = () => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    Array.from($mermaid).forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+      const mermaidID = 'mermaid-' + index
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+
+      const renderV10 = () => {
+        renderFn.then(({svg}) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svg)
+        })
+      }
+
+      const renderV9 = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      typeof renderFn === 'string' ? renderV9(renderFn) : renderV10()
+    })
+  }
+
+  const loadMermaid = () => {
+    window.loadMermaid ? runMermaid() : getScript('https://cdn.staticfile.org/mermaid/10.8.0/mermaid.min.js').then(runMermaid)
+  }
+
+  btf.addGlobalFn('themeChange', runMermaid, 'mermaid')
+
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script><script>(() => {
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-vercel-swart-pi.vercel.app/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = () => {
+    twikoo.init(Object.assign({
+      el: '#twikoo-wrap',
+      envId: 'https://twikoo-vercel-swart-pi.vercel.app/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      }
+    }, null))
+
+    GLOBAL_CONFIG_SITE.isPost && getCount()
+  }
+
+  const loadTwikoo = () => {
+    if (typeof twikoo === 'object') setTimeout(init,0)
+    else getScript('https://cdn.staticfile.org/twikoo/1.6.31/twikoo.all.min.js').then(init)
+  }
+
+  if ('Twikoo' === 'Twikoo' || !true) {
+    if (true) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script>window.addEventListener('load', () => {
+  const changeContent = (content) => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g,"") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0,150) + '...'
+    }
+    return content
+  }
+
+  const getComment = () => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo-vercel-swart-pi.vercel.app/',
+        region: '',
+        pageSize: 6,
+        includeReply: true
+      }).then(function (res) {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        saveToLocal.set('twikoo-newest-comments', JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray)
+      }).catch(function (err) {
+        const $dom = document.querySelector('#card-newest-comments .aside-list')
+        $dom.textContent= "无法获取评论，请确认相关配置是否正确"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      getScript('https://cdn.staticfile.org/twikoo/1.6.31/twikoo.all.min.js').then(runTwikoo)
+    }
+  }
+
+  const generateHtml = array => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class=\'aside-list-item\'>'
+
+        if (true) {
+          const name = 'src'
+          result += `<a href='${array[i].url}' class='thumbnail'><img ${name}='${array[i].avatar}' alt='${array[i].nick}'></a>`
+        }
+        
+        result += `<div class='content'>
+        <a class='comment' href='${array[i].url}' title='${array[i].content}'>${array[i].content}</a>
+        <div class='name'><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '没有评论'
+    }
+
+    let $dom = document.querySelector('#card-newest-comments .aside-list')
+    $dom && ($dom.innerHTML= result)
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh($dom)
+  }
+
+  const newestCommentInit = () => {
+    if (document.querySelector('#card-newest-comments .aside-list')) {
+      const data = saveToLocal.get('twikoo-newest-comments')
+      if (data) {
+        generateHtml(JSON.parse(data))
+      } else {
+        getComment()
+      }
+    }
+  }
+
+  newestCommentInit()
+  document.addEventListener('pjax:complete', newestCommentInit)
+})</script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script><script type="text/javascript" src="/js/fireworks.min.js"></script><script src="https://cdn.staticfile.org/butterfly-extsrc/1.1.3/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><link rel="stylesheet" href="https://cdn.staticfile.org/aplayer/1.10.1/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.staticfile.org/aplayer/1.10.1/APlayer.min.js"></script><script src="https://cdn.staticfile.org/butterfly-extsrc/1.1.3/metingjs/dist/Meting.min.js"></script><script src="https://cdn.staticfile.org/pjax/0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="https://cdn.staticfile.org/hexo-theme-butterfly/4.13.0/js/search/local-search.min.js"></script></div></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/shizuku.model.json"},"display":{"position":"left","width":150,"height":300,"hOffset":20,"vOffset":-20},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/"});</script></body></html>
