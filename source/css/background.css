@@ -47,7 +47,7 @@
 }
 
 /* 网站字体设置 */
-:not(i):not(.fas):not(.fa):not(.katex):not(.katex *) {
+:not(i):not(.fas):not(.fa):not(.katex):not(.katex *):not(a.social-share-icon) {
     font-family: 'ZhuZiAWan', sans-serif !important;
 }
 
@@ -103,6 +103,16 @@
 
 #post .post-copyright .post-copyright__notice .post-copyright-info a:nth-child(2) {
     word-spacing: -5px;
+}
+
+/* 所有链接颜色 */
+#article-container a{
+    color: #febcd5;
+    transition: all 0.25s;
+}
+
+#article-container a:hover {
+    color: #ec4c8c;
 }
 
 /* 个人名片图标样式 */

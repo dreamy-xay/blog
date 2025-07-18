@@ -19,7 +19,7 @@ katex: true
 highlight_shrink: false
 aside: true
 noticeOutdate: false
-abbrlink: 2a8b085e
+abbrlink: 915aa5e
 ---
 
 

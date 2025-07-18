@@ -7,7 +7,7 @@ tags:
   - container
   - vector
 categories:
-  - C++
+  - [C++]
 keywords: 
 description: 
 top_img: 

@@ -7,7 +7,7 @@ tags:
   - typing_extensions
   - 编程规范
 categories:
-  - Python
+  - [Python]
 keywords: 
 description: 
 top_img: 

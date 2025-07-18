@@ -5,7 +5,7 @@ updated: 2025-05-25 09:35:10
 tags:
   - package
 categories:
-  - Python
+  - [Python]
 keywords: 
 description: 本文详细介绍了如何构建 Python 项目的轮子文件（.whl），以便于项目的分发和安装
 top_img: 

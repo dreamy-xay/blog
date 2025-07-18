@@ -7,7 +7,7 @@ tags:
   - 文档生成
   - Linux
 categories:
-  - Doxygen
+  - [Doxygen]
 keywords: 
 description: 本文介绍了在 Linux 系统下安装和使用 Doxygen 的方法
 top_img: 

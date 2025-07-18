@@ -8,9 +8,9 @@ tags:
   - RAII
   - 并发编程
 categories:
-  - Multithreading
-  - 多线程
-  - C++
+  - [Multithreading]
+  - [多线程]
+  - [C++]
 keywords:
 description:
 top_img:

@@ -9,6 +9,6 @@ type: "link"
 ```yml
 - name: dreamy
   link: https://dreamy-xay.github.io/blog/
-  avatar: https://dreamy-xay.github.io/blog/img/avatar.jpg
+  avatar: https://s2.loli.net/2025/07/09/THj6cDYKChlPZ5B.jpg
   descr: dreamyのblog
 ```

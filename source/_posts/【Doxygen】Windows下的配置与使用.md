@@ -7,7 +7,7 @@ tags:
   - 文档生成
   - Windows
 categories:
-  - Doxygen
+  - [Doxygen]
 keywords: 
 description: 本文介绍了在 Windows 系统下安装和使用 Doxygen 的详细步骤
 top_img: 
