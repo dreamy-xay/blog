@@ -1,0 +1,494 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><!-- hexo injector head_begin start --><style type="text/css">.douban-card-block {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-height: 400px;
+}
+
+.douban-card {
+    display: flex;
+    margin: 30px 10px;
+    padding: 15px;
+    border-radius: 15px;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    color: antiquewhite;
+    text-decoration: none;
+}
+
+.douban-card:hover {
+    text-decoration: none;
+}
+
+.douban-card-bgimg {
+    position: absolute;
+    width: 115%;
+    height: 115%;
+    filter: blur(15px) brightness(0.6);
+    background-size: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.douban-card-img {
+    position: relative;
+    height: 130px;
+    width: 80px;
+    background-size: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.douban-card-left:hover .douban-card-img {
+    filter: blur(5px) brightness(0.6);
+    transform: perspective(800px) rotateX(180deg);
+}
+
+.douban-card-left .douban-card-img {
+    transition: all 500ms ease;
+}
+
+.douban-card-left {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.douban-card-left .douban-card-status {
+    height: 130px;
+    width: 80px;
+    text-align: center;
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+    top: 30%;
+    transform: rotateX(180deg);
+    backface-visibility: hidden;
+    transition: all 500ms ease;
+}
+
+.douban-card-left:hover .douban-card-status {
+    transform: perspective(800px) rotateX(0deg);
+}
+
+.douban-card-right {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin-left: 12px;
+    font-size: 16px;
+    font-family: "Courier New", Courier, monospace;
+    line-height: 1.3;
+    color: antiquewhite;
+}
+
+.douban-card-item {
+    margin-top: 4px;
+}
+</style><!-- hexo injector head_begin end --><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>分类: Markdown | dreamyのblog</title><meta name="author" content="dreamy-xay"><meta name="copyright" content="dreamy-xay"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="只争朝夕，不负韶华">
+<meta property="og:type" content="website">
+<meta property="og:title" content="dreamyのblog">
+<meta property="og:url" content="https://dreamy-xay.github.io/blog/categories/Markdown/">
+<meta property="og:site_name" content="dreamyのblog">
+<meta property="og:description" content="只争朝夕，不负韶华">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/avatar_1752075331083.jpg">
+<meta property="article:author" content="dreamy-xay">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="Golang">
+<meta property="article:tag" content="Node.js">
+<meta property="article:tag" content="Rust">
+<meta property="article:tag" content="blog">
+<meta property="article:tag" content="前端">
+<meta property="article:tag" content="后端">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="日常">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/avatar_1752075331083.jpg"><link rel="shortcut icon" href="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/logo_1752075337653.png"><link rel="canonical" href="https://dreamy-xay.github.io/blog/categories/Markdown/"><link rel="preconnect" href="https://cdn.staticfile.org"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.staticfile.org/node-snackbar/0.1.16/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.staticfile.org/fancyapps-ui/5.0.33/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: {"path":"/blog/search.xml","preload":false,"top_n_per_article":1,"unescape":true,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":30,"languages":{"author":"作者: dreamy-xay","link":"链接: ","source":"来源: dreamyのblog","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体中文","cht_to_chs":"你已切换为简体中文","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#febcd5","bgDark":"#1f1f1f","position":"top-center"},
+  infinitegrid: {
+    js: 'https://cdn.staticfile.org/egjs-infinitegrid/4.11.1/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '分类: Markdown',
+  isPost: false,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2025-07-18 16:46:37'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="referrer" content="no-referrer" /><link rel="stylesheet" href="/blog/css/custom.css"><link rel="stylesheet" href="/blog/css/background.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="gear-loader"><div class="gear-loader_overlay"></div><div class="gear-loader_cogs"><div class="gear-loader_cogs__top"><div class="gear-top_part"></div><div class="gear-top_part"></div><div class="gear-top_part"></div><div class="gear-top_hole"></div></div><div class="gear-loader_cogs__left"><div class="gear-left_part"></div><div class="gear-left_part"></div><div class="gear-left_part"></div><div class="gear-left_hole"></div></div><div class="gear-loader_cogs__bottom"><div class="gear-bottom_part"></div><div class="gear-bottom_part"></div><div class="gear-bottom_part"></div><div class="gear-bottom_hole"></div></div></div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/avatar_1752075331083.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">8</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">16</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa-fw fas fa-book"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa-fw fas fa-list"></i><span> 娱乐库</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/blog/books/"><i class="fa-fw fas fa-book-open"></i><span> 阅读库</span></a></li><li><a class="site-page child" href="/blog/music/"><i class="fa-fw fas fa-music"></i><span> 音乐库</span></a></li><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 图片库</span></a></li><li><a class="site-page child" href="/blog/movies/"><i class="fa-fw fas fa-video"></i><span> 电影库</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/link/"><i class="fa-fw fas fa-link"></i><span> 友人帐</span></a></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="not-home-page" id="page-header" style="background-image: url('https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/15_1752075427743.png')"><nav id="nav"><span id="blog-info"><a href="/blog/" title="dreamyのblog"><img class="site-icon" src="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/logo2_1752075340714.png"/><span class="site-name">dreamyのblog</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa-fw fas fa-book"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa-fw fas fa-list"></i><span> 娱乐库</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/blog/books/"><i class="fa-fw fas fa-book-open"></i><span> 阅读库</span></a></li><li><a class="site-page child" href="/blog/music/"><i class="fa-fw fas fa-music"></i><span> 音乐库</span></a></li><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 图片库</span></a></li><li><a class="site-page child" href="/blog/movies/"><i class="fa-fw fas fa-video"></i><span> 电影库</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/link/"><i class="fa-fw fas fa-link"></i><span> 友人帐</span></a></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div><div id="nav-right"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i></a></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="page-site-info"><h1 id="site-title">Markdown</h1></div></header><main class="layout" id="content-inner"><div id="category"><div class="article-sort-title">分类 - Markdown</div><div class="article-sort"><div class="article-sort-item year">2025</div><div class="article-sort-item"><a class="article-sort-item-img" href="/blog/posts/2a8b085e/" title="【MarkDown】数学公式语法"><img src="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/1_1752075509616.png" alt="【MarkDown】数学公式语法" onerror="this.onerror=null;this.src='https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'"></a><div class="article-sort-item-info"><div class="article-sort-item-time"><i class="far fa-calendar-alt"></i><time class="post-meta-date-created" datetime="2025-05-19T23:31:53.000Z" title="发表于 2025-05-20 07:31:53">2025-05-20</time></div><a class="article-sort-item-title" href="/blog/posts/2a8b085e/" title="【MarkDown】数学公式语法">【MarkDown】数学公式语法</a></div></div></div><nav id="pagination"><div class="pagination"><span class="page-number current">1</span></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/avatar_1752075331083.jpg" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">dreamy-xay</div><div class="author-info__description">只争朝夕，不负韶华</div></div><div class="card-info-data site-data is-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">8</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">16</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/dreamy-xay"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="http://wpa.qq.com/msgrd?v=3&amp;uin=1985332264&amp;site=qq&amp;menu=yes" target="_blank" title="QQ"><i class="fab fa-qq" style="color: #febcd5;"></i></a><a class="social-icon" href="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/weixin_1752075402432.png" target="_blank" title="WeChat"><i class="fab fa-weixin" style="color: #febcd5;"></i></a><a class="social-icon" href="mailto:dreamy-xay@foxmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #febcd5;"></i></a><a class="social-icon" href="https://space.bilibili.com/365741414" target="_blank" title="Bilibili"><i class="fa-brands fa-bilibili" style="color: #febcd5;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Hi~ o(*￣▽￣*)ブ，欢迎来到dreamy'blog，如果喜欢记得收藏奥～</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/posts/9137290a/" title="【Multithreading】Windows 下互斥锁的 C++ 实现"><img src="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/9_1752075495937.jpg" onerror="this.onerror=null;this.src='https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【Multithreading】Windows 下互斥锁的 C++ 实现"/></a><div class="content"><a class="title" href="/blog/posts/9137290a/" title="【Multithreading】Windows 下互斥锁的 C++ 实现">【Multithreading】Windows 下互斥锁的 C++ 实现</a><time datetime="2025-07-08T02:49:45.000Z" title="发表于 2025-07-08 10:49:45">2025-07-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/posts/2f05bc66/" title="【Python】typing 和 typing_extensions 模块使用指南"><img src="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/3_1752075518457.jpeg" onerror="this.onerror=null;this.src='https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【Python】typing 和 typing_extensions 模块使用指南"/></a><div class="content"><a class="title" href="/blog/posts/2f05bc66/" title="【Python】typing 和 typing_extensions 模块使用指南">【Python】typing 和 typing_extensions 模块使用指南</a><time datetime="2025-05-26T01:48:57.000Z" title="发表于 2025-05-26 09:48:57">2025-05-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/posts/910a9fb2/" title="【Python】自定义项目打包与轮子文件构建"><img src="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/3_1752075518457.jpeg" onerror="this.onerror=null;this.src='https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【Python】自定义项目打包与轮子文件构建"/></a><div class="content"><a class="title" href="/blog/posts/910a9fb2/" title="【Python】自定义项目打包与轮子文件构建">【Python】自定义项目打包与轮子文件构建</a><time datetime="2025-05-25T01:35:10.000Z" title="发表于 2025-05-25 09:35:10">2025-05-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/posts/1b7a04d/" title="【Doxygen】Windows下的配置与使用"><img src="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/6_1752075481704.jpeg" onerror="this.onerror=null;this.src='https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【Doxygen】Windows下的配置与使用"/></a><div class="content"><a class="title" href="/blog/posts/1b7a04d/" title="【Doxygen】Windows下的配置与使用">【Doxygen】Windows下的配置与使用</a><time datetime="2025-05-24T00:27:34.000Z" title="发表于 2025-05-24 08:27:34">2025-05-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/posts/bce25c9a/" title="【Doxygen】Linux下的配置与使用"><img src="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/16_1752075433113.png" onerror="this.onerror=null;this.src='https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【Doxygen】Linux下的配置与使用"/></a><div class="content"><a class="title" href="/blog/posts/bce25c9a/" title="【Doxygen】Linux下的配置与使用">【Doxygen】Linux下的配置与使用</a><time datetime="2025-05-22T23:24:41.000Z" title="发表于 2025-05-23 07:24:41">2025-05-23</time></div></div></div></div><div class="card-widget" id="card-newest-comments"><div class="item-headline"><i class="fas fa-comment-dots"></i><span>最新评论</span></div><div class="aside-list"><span>正在加载中...</span></div></div><div class="card-widget card-categories"><div class="item-headline">
+            <i class="fas fa-folder-open"></i>
+            <span>分类</span>
+            
+            </div>
+            <ul class="card-category-list" id="aside-cat-list">
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/blog/categories/C/"><span class="card-category-list-name">C++</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/blog/categories/Doxygen/"><span class="card-category-list-name">Doxygen</span><span class="card-category-list-count">3</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/blog/categories/Markdown/"><span class="card-category-list-name">Markdown</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/blog/categories/Multithreading/"><span class="card-category-list-name">Multithreading</span><span class="card-category-list-count">1</span></a><ul class="card-category-list child"><li class="card-category-list-item "><a class="card-category-list-link" href="/blog/categories/Multithreading/%E5%A4%9A%E7%BA%BF%E7%A8%8B/"><span class="card-category-list-name">多线程</span><span class="card-category-list-count">1</span></a><ul class="card-category-list child"><li class="card-category-list-item "><a class="card-category-list-link" href="/blog/categories/Multithreading/%E5%A4%9A%E7%BA%BF%E7%A8%8B/C/"><span class="card-category-list-name">C++</span><span class="card-category-list-count">1</span></a></li></ul></li></ul></li><li class="card-category-list-item "><a class="card-category-list-link" href="/blog/categories/Python/"><span class="card-category-list-name">Python</span><span class="card-category-list-count">2</span></a></li>
+            </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/blog/tags/%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3%E6%8C%87%E5%8D%97/" style="font-size: 1.45em; color: rgb(22, 146, 193)">技术文档指南</a><a href="/blog/tags/%E6%96%87%E6%A1%A3%E7%94%9F%E6%88%90/" style="font-size: 1.45em; color: rgb(75, 130, 135)">文档生成</a><a href="/blog/tags/Linux/" style="font-size: 1.15em; color: rgb(168, 112, 117)">Linux</a><a href="/blog/tags/STL/" style="font-size: 1.15em; color: rgb(20, 1, 53)">STL</a><a href="/blog/tags/container/" style="font-size: 1.15em; color: rgb(146, 125, 147)">container</a><a href="/blog/tags/vector/" style="font-size: 1.15em; color: rgb(185, 117, 200)">vector</a><a href="/blog/tags/Windows/" style="font-size: 1.3em; color: rgb(148, 154, 15)">Windows</a><a href="/blog/tags/Katex/" style="font-size: 1.15em; color: rgb(10, 174, 99)">Katex</a><a href="/blog/tags/Latex/" style="font-size: 1.15em; color: rgb(131, 170, 75)">Latex</a><a href="/blog/tags/%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/" style="font-size: 1.15em; color: rgb(194, 65, 72)">线程安全</a><a href="/blog/tags/RAII/" style="font-size: 1.15em; color: rgb(51, 157, 100)">RAII</a><a href="/blog/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" style="font-size: 1.15em; color: rgb(151, 81, 82)">并发编程</a><a href="/blog/tags/package/" style="font-size: 1.15em; color: rgb(142, 40, 73)">package</a><a href="/blog/tags/typing/" style="font-size: 1.15em; color: rgb(116, 1, 34)">typing</a><a href="/blog/tags/typing-extensions/" style="font-size: 1.15em; color: rgb(4, 3, 182)">typing_extensions</a><a href="/blog/tags/%E7%BC%96%E7%A8%8B%E8%A7%84%E8%8C%83/" style="font-size: 1.15em; color: rgb(80, 94, 119)">编程规范</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>归档</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/blog/archives/2025/07/"><span class="card-archive-list-date">七月 2025</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/blog/archives/2025/05/"><span class="card-archive-list-date">五月 2025</span><span class="card-archive-list-count">7</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">8</div></div><div class="webinfo-item"><div class="item-name">本站总字数 :</div><div class="item-count">17.4k</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总访问量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2025-07-18T08:46:37.598Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/15_1752075427743.png')"><div id="footer-wrap"><div class="copyright">&copy;2025  <i id="heartbeat" class="fa fas fa-heartbeat"></i> dreamy-xay</div><div class="framework-info"><span>网站 </span><a target="_blank" rel="noopener" href="https://github.com/dreamy-xay/blog">Github</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://dreamy-xay.github.io/blog">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="translateLink" type="button" title="简繁转换">简</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="https://cdn.staticfile.org/hexo-theme-butterfly/4.13.0/js/utils.min.js"></script><script src="https://cdn.staticfile.org/hexo-theme-butterfly/4.13.0/js/main.min.js"></script><script src="https://cdn.staticfile.org/hexo-theme-butterfly/4.13.0/js/tw_cn.min.js"></script><script src="https://cdn.staticfile.org/fancyapps-ui/5.0.33/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.staticfile.org/instant.page/5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.staticfile.org/node-snackbar/0.1.16/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.staticfile.org/pangu/4.0.7/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"><script>(() => {
+  const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaid.length === 0) return
+  const runMermaid = () => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    Array.from($mermaid).forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+      const mermaidID = 'mermaid-' + index
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+
+      const renderV10 = () => {
+        renderFn.then(({svg}) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svg)
+        })
+      }
+
+      const renderV9 = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      typeof renderFn === 'string' ? renderV9(renderFn) : renderV10()
+    })
+  }
+
+  const loadMermaid = () => {
+    window.loadMermaid ? runMermaid() : getScript('https://cdn.staticfile.org/mermaid/10.8.0/mermaid.min.js').then(runMermaid)
+  }
+
+  btf.addGlobalFn('themeChange', runMermaid, 'mermaid')
+
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script>window.addEventListener('load', () => {
+  const changeContent = (content) => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g,"") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0,150) + '...'
+    }
+    return content
+  }
+
+  const getComment = () => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo-vercel-swart-pi.vercel.app/',
+        region: '',
+        pageSize: 6,
+        includeReply: true
+      }).then(function (res) {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        saveToLocal.set('twikoo-newest-comments', JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray)
+      }).catch(function (err) {
+        const $dom = document.querySelector('#card-newest-comments .aside-list')
+        $dom.textContent= "无法获取评论，请确认相关配置是否正确"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      getScript('https://cdn.staticfile.org/twikoo/1.6.31/twikoo.all.min.js').then(runTwikoo)
+    }
+  }
+
+  const generateHtml = array => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class=\'aside-list-item\'>'
+
+        if (true) {
+          const name = 'src'
+          result += `<a href='${array[i].url}' class='thumbnail'><img ${name}='${array[i].avatar}' alt='${array[i].nick}'></a>`
+        }
+        
+        result += `<div class='content'>
+        <a class='comment' href='${array[i].url}' title='${array[i].content}'>${array[i].content}</a>
+        <div class='name'><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '没有评论'
+    }
+
+    let $dom = document.querySelector('#card-newest-comments .aside-list')
+    $dom && ($dom.innerHTML= result)
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh($dom)
+  }
+
+  const newestCommentInit = () => {
+    if (document.querySelector('#card-newest-comments .aside-list')) {
+      const data = saveToLocal.get('twikoo-newest-comments')
+      if (data) {
+        generateHtml(JSON.parse(data))
+      } else {
+        getComment()
+      }
+    }
+  }
+
+  newestCommentInit()
+  document.addEventListener('pjax:complete', newestCommentInit)
+})</script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script><script type="text/javascript" src="/blog/js/fireworks.min.js"></script><script src="https://cdn.staticfile.org/butterfly-extsrc/1.1.3/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><link rel="stylesheet" href="https://cdn.staticfile.org/aplayer/1.10.1/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.staticfile.org/aplayer/1.10.1/APlayer.min.js"></script><script src="https://cdn.staticfile.org/butterfly-extsrc/1.1.3/metingjs/dist/Meting.min.js"></script><script src="https://cdn.staticfile.org/pjax/0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/blog/404')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="https://cdn.staticfile.org/hexo-theme-butterfly/4.13.0/js/search/local-search.min.js"></script></div></div><script src="/blog/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"tagMode":false,"debug":false,"model":{"jsonPath":"/blog/live2dw/assets/shizuku.model.json"},"display":{"position":"left","width":150,"height":300,"hOffset":20,"vOffset":-20},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/"});</script></body></html>

@@ -1,0 +1,133 @@
+#body-wrap {
+    background: -webkit-linear-gradient(0deg,
+            rgba(247, 149, 51, 0.1) 0,
+            rgba(243, 112, 85, 0.1) 15%,
+            rgba(239, 78, 123, 0.1) 30%,
+            rgba(161, 102, 171, 0.1) 44%,
+            rgba(80, 115, 184, 0.1) 58%,
+            rgba(16, 152, 173, 0.1) 72%,
+            rgba(7, 179, 155, 0.1) 86%,
+            rgba(109, 186, 130, 0.1) 100%);
+    background: -moz-linear-gradient(0deg,
+            rgba(247, 149, 51, 0.1) 0,
+            rgba(243, 112, 85, 0.1) 15%,
+            rgba(239, 78, 123, 0.1) 30%,
+            rgba(161, 102, 171, 0.1) 44%,
+            rgba(80, 115, 184, 0.1) 58%,
+            rgba(16, 152, 173, 0.1) 72%,
+            rgba(7, 179, 155, 0.1) 86%,
+            rgba(109, 186, 130, 0.1) 100%);
+    background: -o-linear-gradient(0deg,
+            rgba(247, 149, 51, 0.1) 0,
+            rgba(243, 112, 85, 0.1) 15%,
+            rgba(239, 78, 123, 0.1) 30%,
+            rgba(161, 102, 171, 0.1) 44%,
+            rgba(80, 115, 184, 0.1) 58%,
+            rgba(16, 152, 173, 0.1) 72%,
+            rgba(7, 179, 155, 0.1) 86%,
+            rgba(109, 186, 130, 0.1) 100%);
+    background: -ms-linear-gradient(0deg,
+            rgba(247, 149, 51, 0.1) 0,
+            rgba(243, 112, 85, 0.1) 15%,
+            rgba(239, 78, 123, 0.1) 30%,
+            rgba(161, 102, 171, 0.1) 44%,
+            rgba(80, 115, 184, 0.1) 58%,
+            rgba(16, 152, 173, 0.1) 72%,
+            rgba(7, 179, 155, 0.1) 86%,
+            rgba(109, 186, 130, 0.1) 100%);
+    background: linear-gradient(90deg,
+            rgba(247, 149, 51, 0.1) 0,
+            rgba(243, 112, 85, 0.1) 15%,
+            rgba(239, 78, 123, 0.1) 30%,
+            rgba(161, 102, 171, 0.1) 44%,
+            rgba(80, 115, 184, 0.1) 58%,
+            rgba(16, 152, 173, 0.1) 72%,
+            rgba(7, 179, 155, 0.1) 86%,
+            rgba(109, 186, 130, 0.1) 100%);
+}
+
+/* 网站字体设置 */
+:not(i):not(.fas):not(.fa):not(.katex):not(.katex *):not(a.social-share-icon) {
+    font-family: 'ZhuZiAWan', sans-serif !important;
+}
+
+/* 修改边界线 */
+:root {
+    --hr-border: #fed8e6 !important;
+    --hr-before-color: #febcd5 !important;
+}
+
+/* 表格显示 */
+.table-wrap {
+    overflow-x: auto !important;
+}
+
+/* 公式显示 */
+.katex-wrap {
+    padding: 0 2px;
+}
+
+/* 导航栏做居中处理 */
+#nav-right {
+    flex: 1 1 auto;
+    justify-content: flex-end;
+    margin-left: auto;
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+@font-face {
+    font-family: 'ZhuZiAWan';
+    /* 字体名自定义即可 */
+    src: url('https://cdn.jsdmirror.cn/gh/dreamy-xay/blog@gh-pages/fonts/ZhuZiAWan.woff2');
+    /* 字体文件路径 */
+    font-display: swap;
+}
+
+/* 文章页面居中 */
+#post-info {
+    bottom: 100px !important;
+    text-align: center;
+}
+
+/* 导航 */
+#nav #blog-info a span {
+    font-size: 22px;
+    word-spacing: -9px;
+}
+
+/* 主页标题 */
+#site-info #site-title {
+    word-spacing: -15px;
+}
+
+#post .post-copyright .post-copyright__notice .post-copyright-info a:nth-child(2) {
+    word-spacing: -5px;
+}
+
+/* 所有链接颜色 */
+#article-container a{
+    color: #febcd5;
+    transition: all 0.25s;
+}
+
+#article-container a:hover {
+    color: #ec4c8c;
+}
+
+/* 个人名片图标样式 */
+.fa-qq {
+    color: #10a4ff !important;
+}
+
+.fa-weixin {
+    color: #00bf03 !important;
+}
+
+.fa-envelope {
+    color: #ee8c6b !important;
+}
+
+.fa-envelope {
+    color: #f9c !important;
+}
