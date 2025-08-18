@@ -1,21 +1,21 @@
 ---
-title: 【Multithreading】Windows 下互斥锁的 C++ 实现
+title: 【Multithreading】Windows 下具名互斥锁的 C++ 实现
 date: 2025-07-08 10:49:45
-updated: 2025-07-08 11:20:36
+updated: 2025-07-08 10:49:45
 tags:
   - Windows
   - 线程安全
   - RAII
   - 并发编程
 categories:
-  - [Multithreading]
-  - [多线程]
-  - [C++]
-keywords:
-description:
-top_img:
+  - - Multithreading
+  - - 多线程
+  - - C++
+keywords: 
+description: 
+top_img: 
 comments: true
-cover:
+cover: 
 toc: true
 toc_number: true
 toc_style_simple: false
@@ -26,7 +26,7 @@ noticeOutdate: false
 abbrlink: 9137290a
 ---
 
-在多线程编程中，互斥锁是一种重要的同步机制，用于保护共享资源免受并发访问的冲突。本文将详细介绍一个基于 Windows API 的互斥锁实现，包括其核心功能、设计思路以及使用方法。
+在多线程编程中，互斥锁是一种重要的同步机制，用于保护共享资源免受并发访问的冲突。本文将详细介绍一个基于 Windows API 的具名互斥锁实现，包括其核心功能、设计思路以及使用方法。
 
 ## 前言
 
@@ -55,29 +55,32 @@ class Mutex {
      * @param {const std::string&} mutex_name 互斥锁名称
      * @param {bool} create 是否创建互斥锁，否则打开现有互斥锁
      */
-    Mutex(const std::string& mutex_name, bool create = false) : mutex_name(mutex_name) {
-        if (create) {
-            // 创建互斥锁
-            h_mutex = CreateMutexA(NULL, FALSE, mutex_name.c_str());
+	Mutex(const std::string& mutex_name, bool create = false) : mutex_name(mutex_name) {
+        if (create) {
+            // 创建互斥锁
+            h_mutex = CreateMutexA(NULL, FALSE, mutex_name.c_str());
 
-            if (h_mutex == NULL)
-                throw std::runtime_error("CreateMutex failed: " + std::to_string(GetLastError()));
-        } else {
-            // 打开现有互斥锁
-            h_mutex = OpenMutexA(MUTEX_ALL_ACCESS, FALSE, mutex_name.c_str());
-            
-            if (h_mutex == NULL) 
-                throw std::runtime_error("OpenMutex failed: " + std::to_string(GetLastError()));
-        }
-    }
+            if (h_mutex == NULL || h_mutex == INVALID_HANDLE_VALUE)
+                throw Exception("CreateMutex failed: " + std::to_string(GetLastError()));
+        } else {
+            // 打开现有互斥锁
+            h_mutex = OpenMutexA(MUTEX_ALL_ACCESS, FALSE, mutex_name.c_str());
+
+            if (h_mutex == NULL || h_mutex == INVALID_HANDLE_VALUE) {
+                throw Exception("OpenMutex failed: " + std::to_string(GetLastError()));
+            }
+        }
+    }
 
     /**
      * @brief 析构函数
      */
     ~Mutex() {
-        if (h_mutex != NULL)
-            CloseHandle(h_mutex);
-    }
+        if (h_mutex != NULL) {
+            CloseHandle(h_mutex);
+            h_mutex = NULL;
+        }
+    }
 
     // 禁止拷贝构造函数
     Mutex(const Mutex&) = delete;
@@ -108,6 +111,38 @@ class Mutex {
         if (!ReleaseMutex(h_mutex))
             throw std::runtime_error("ReleaseMutex failed: " + std::to_string(GetLastError()));
     }
+
+	/**
+     * @brief 判断互斥锁是否有效
+     * @return {bool} 是否有效
+     */
+    bool IsValid() const {
+        return h_mutex != NULL && h_mutex != INVALID_HANDLE_VALUE;
+    }
+    
+    /**
+     * @brief 生成唯一名称互斥锁
+     * @return {std::shared_ptr<Mutex>} 互斥锁对象对应的共享智能指针
+     */
+    inline static std::shared_ptr<Mutex> Create() {
+        return std::make_shared<Mutex>("__CREATE_NEW_MUTEX__ID=" + std::to_string(GetTickCount64()), true);
+    }
+
+    /**
+     * @brief 尝试创建互斥锁，如果创建失败则打开现有互斥锁
+     * @param {const std::string&} mutex_name 互斥锁名称
+     * @return {std::shared_ptr<Mutex>} 互斥锁对象对应的共享智能指针
+     */
+    static std::shared_ptr<Mutex> TryCreate(const std::string& mutex_name) {
+        std::shared_ptr<Mutex> mutex;
+        try {
+            mutex = std::make_shared<Mutex>(mutex_name, true);
+        } catch (const Exception& e) {
+            mutex = std::make_shared<Mutex>(mutex_name, false);
+        }
+
+        return mutex;
+    }
 
    private:
     HANDLE h_mutex;
