@@ -38,6 +38,7 @@ header#page-header(class=`${isHomeClass+isFixedClass}` style=bg_img)
     else if is_home() 
       #site-info
         h1#site-title=site_title
+        div.aplayer.no-destroy(data-id="509720124", data-server="netease", data-type="song", data-mini="true", data-autoplay="true", data-preload="auto", style="display: none")
         if theme.subtitle.enable
           - var loadSubJs = true
           #site-subtitle

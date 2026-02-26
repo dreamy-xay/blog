@@ -196,7 +196,3 @@ douban:
   #     - wish
   #     - collect
   #   option:
-
-# 豆瓣卡片
-doubanCard:
-  enable: true

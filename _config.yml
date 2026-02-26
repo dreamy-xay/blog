@@ -197,6 +197,6 @@ douban:
   #     - collect
   #   option:
 
-# 豆瓣卡片
-doubanCard:
-  enable: true
+# 主页音乐
+# themes\butterfly\layout\includes\header\index.pug
+# ==> div.aplayer.no-destroy(data-id="509720124", data-server="netease", data-type="song", data-mini="true", data-autoplay="true", data-preload="auto", style="display: none")
