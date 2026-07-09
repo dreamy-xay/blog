@@ -7,10 +7,10 @@ tags:
   - 线程安全
   - RAII
   - 并发编程
+  - 多线程
 categories:
-  - - Multithreading
-  - - 多线程
-  - - C++
+  - Multithreading
+  - C++
 keywords: 
 description: 
 top_img: 
