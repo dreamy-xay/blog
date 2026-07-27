@@ -69,7 +69,7 @@ FUSE（Filesystem in Userspace）是一个允许用户在用户态创建自定�
     <strong style="color: #1fb9fb; margin: -20px 0px 20px 0px; display: block;">FUSE操作示意图</strong>
 </div>
 
-### 3.1 FUSE 的组成
+### 1 FUSE 的组成
 
 FUSE 主要由**三部分组成：**
 - **FUSE 内核模块（fuse.ko）**：实现了和 VFS 的对接，实现了一个能被用户空间进程打开的设备。当 VFS 发来文件操作请求之后，将请求转化为特定格式，并通过设备传递给用户空间进程；用户空间进程处理完请求后，将结果返回给 fuse 内核模块，内核模块再将其还原为 Linux kernel 需要的格式，并返回给 VFS。
@@ -78,7 +78,7 @@ FUSE 主要由**三部分组成：**
 	- **low-level 异步 API**：回调函数必须使用索引节点 inode 工作，灵活性更大，适合有经验的开发者。
 - **挂载工具 fusermount**：一个 setuid-root 程序，实现用户态文件系统的挂载和卸载，普通用户通过它来执行这些操作。
 
-### 3.2 FUSE 的工作流程
+### 2 FUSE 的工作流程
 
 FUSE 的核心是一个内核模块和一个用户空间库，两者通过 /dev/fuse 设备进行通信。当运行一个 FUSE 文件系统程序时，完整的交互流程如下：
 - **挂载阶段**：用户运行 FUSE 程序并指定挂载点，fusermount 工具将该程序注册为挂载点的文件系统提供者。此时，内核中的 fuse 模块与用户空间进程建立连接。
@@ -97,13 +97,13 @@ FUSE 架构带来了**巨大灵活性：**
 
 ## 四、FUSE 的使用
 
-### 5.1 FUSE 的两种 API
+### 1 FUSE 的两种 API
 
 FUSE 提供了两种接口：
 - **fuse_operations（high-level API）**：较为上层的接口，使用简单、容易上手，适合初学者。回调函数使用文件名和路径工作。通过 `fuse_main` 函数将其传入 FUSE。
 - **fuse_lowlevel_ops（low-level API）**：较底层的接口，灵活性大，但需要有 FS 开发经验。回调函数必须使用索引节点 inode 工作，响应发送必须显式使用单独的 API 函数。通过 `fuse_session_loop` 函数实现。
 
-### 5.2 定义文件系统操作
+### 2 定义文件系统操作
 
 使用 high-level API 时，需要定义一个 `fuse_operations` 结构体，并实现必要的回调函数：
 
@@ -127,7 +127,7 @@ static struct fuse_operations myfs_ops = {
 - **open/read/write**：实现文件的打开、读取和写入操作
 - **init/destroy**：文件系统初始化和销毁时的回调
 
-### 5.3 编写主函数
+### 3 编写主函数
 
 使用 `fuse_main` 函数启动文件系统：
 
@@ -139,7 +139,7 @@ int main(int argc, char *argv[]) {
 
 `fuse_main` 会启动 libfuse 的主循环，从 /dev/fuse 读取请求，根据注册的回调函数进行处理。
 
-### 5.4 Hello World 示例
+### 4 Hello World 示例
 
 以下是一个极简的 Hello World 文件系统示例——当用户执行 `ls` 时，目录下只显示一个名为 "Hello-world" 的文件。
 
@@ -162,7 +162,7 @@ static int cfs_getattr(const char* path, struct stat *stbuf) {
 }
 ```
 
-### 5.5 编译 FUSE 程序
+### 5 编译 FUSE 程序
 
 编译时需要链接 fuse 库：
 
@@ -176,7 +176,7 @@ gcc -o myfs myfs.c `pkg-config fuse3 --cflags --libs`
 gcc -o myfs myfs.c -lfuse
 ```
 
-### 5.6 挂载文件系统
+### 6 挂载文件系统
 
 **创建挂载点**：
 
@@ -200,7 +200,7 @@ FUSE 程序本身会处理挂载操作，挂载成功后，可以像访问普通
 ./myfs -f -d ~/mnt
 ```
 
-### 5.7 卸载文件系统
+### 7 卸载文件系统
 
 使用 `fusermount` 命令卸载：
 
