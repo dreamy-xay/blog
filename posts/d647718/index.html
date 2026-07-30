@@ -1,0 +1,605 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>【存储初识】02-NAS | dreamyのblog</title><meta name="author" content="dreamy-xay"><meta name="copyright" content="dreamy-xay"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="一、NAS（网络附加存储） 1 概述 NAS（Network Attached Storage，网络附加存储）是一种将分布、独立的数据整合为大型、集中化管理的数据中心，以便于对不同主机和应用服务器进行访问的技术。按字面理解，NAS就是连接在网络上、具备数据存储功能的装置，因此也被称为“网络存储器”。           网络附加存储示例图  NAS被定义为一种专用数据存储服务器，包括存储器件（如磁">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【存储初识】02-NAS">
+<meta property="og:url" content="https://dreamy-xay.github.io/blog/posts/d647718/">
+<meta property="og:site_name" content="dreamyのblog">
+<meta property="og:description" content="一、NAS（网络附加存储） 1 概述 NAS（Network Attached Storage，网络附加存储）是一种将分布、独立的数据整合为大型、集中化管理的数据中心，以便于对不同主机和应用服务器进行访问的技术。按字面理解，NAS就是连接在网络上、具备数据存储功能的装置，因此也被称为“网络存储器”。           网络附加存储示例图  NAS被定义为一种专用数据存储服务器，包括存储器件（如磁">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/15_1752075427743.png">
+<meta property="article:published_time" content="2026-07-03T03:55:29.000Z">
+<meta property="article:modified_time" content="2026-07-07T06:47:22.000Z">
+<meta property="article:author" content="dreamy-xay">
+<meta property="article:tag" content="NAS">
+<meta property="article:tag" content="NFS">
+<meta property="article:tag" content="SMB">
+<meta property="article:tag" content="FTP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/15_1752075427743.png"><link rel="shortcut icon" href="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/logo_1752075337653.png"><link rel="canonical" href="https://dreamy-xay.github.io/blog/posts/d647718/"><link rel="preconnect" href="https://cdn.staticfile.net"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.staticfile.net/font-awesome/6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.staticfile.net/node-snackbar/0.1.16/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.staticfile.net/fancyapps-ui/5.0.33/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: {"path":"/blog/search.xml","preload":false,"top_n_per_article":1,"unescape":true,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":30,"languages":{"author":"作者: dreamy-xay","link":"链接: ","source":"来源: dreamyのblog","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体中文","cht_to_chs":"你已切换为简体中文","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#febcd5","bgDark":"#1f1f1f","position":"top-center"},
+  infinitegrid: {
+    js: 'https://cdn.staticfile.net/egjs-infinitegrid/4.11.1/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '【存储初识】02-NAS',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2026-07-07 14:47:22'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="referrer" content="no-referrer" /><link rel="stylesheet" href="/blog/css/custom.css"><link rel="stylesheet" href="/blog/css/background.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="gear-loader"><div class="gear-loader_overlay"></div><div class="gear-loader_cogs"><div class="gear-loader_cogs__top"><div class="gear-top_part"></div><div class="gear-top_part"></div><div class="gear-top_part"></div><div class="gear-top_hole"></div></div><div class="gear-loader_cogs__left"><div class="gear-left_part"></div><div class="gear-left_part"></div><div class="gear-left_part"></div><div class="gear-left_hole"></div></div><div class="gear-loader_cogs__bottom"><div class="gear-bottom_part"></div><div class="gear-bottom_part"></div><div class="gear-bottom_part"></div><div class="gear-bottom_hole"></div></div></div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/avatar_1752075331083.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">26</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">45</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa-fw fas fa-book"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa-fw fas fa-list"></i><span> 娱乐库</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/blog/books/"><i class="fa-fw fas fa-book-open"></i><span> 阅读库</span></a></li><li><a class="site-page child" href="/blog/music/"><i class="fa-fw fas fa-music"></i><span> 音乐库</span></a></li><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 图片库</span></a></li><li><a class="site-page child" href="/blog/movies/"><i class="fa-fw fas fa-video"></i><span> 电影库</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/link/"><i class="fa-fw fas fa-link"></i><span> 友人帐</span></a></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/15_1752075427743.png')"><nav id="nav"><span id="blog-info"><a href="/blog/" title="dreamyのblog"><img class="site-icon" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/logo2_1752075340714.png"/><span class="site-name">dreamyのblog</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa-fw fas fa-book"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa-fw fas fa-list"></i><span> 娱乐库</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/blog/books/"><i class="fa-fw fas fa-book-open"></i><span> 阅读库</span></a></li><li><a class="site-page child" href="/blog/music/"><i class="fa-fw fas fa-music"></i><span> 音乐库</span></a></li><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 图片库</span></a></li><li><a class="site-page child" href="/blog/movies/"><i class="fa-fw fas fa-video"></i><span> 电影库</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/link/"><i class="fa-fw fas fa-link"></i><span> 友人帐</span></a></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div><div id="nav-right"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i></a></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">【存储初识】02-NAS</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-07-03T03:55:29.000Z" title="发表于 2026-07-03 11:55:29">2026-07-03</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-07-07T06:47:22.000Z" title="更新于 2026-07-07 14:47:22">2026-07-07</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/%E5%AD%98%E5%82%A8/">存储</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/%E5%AD%98%E5%82%A8/%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/">基本概念</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>6分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="【存储初识】02-NAS"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="一、NAS（网络附加存储）">一、NAS（网络附加存储）</h2>
+<h3 id="1-概述">1 概述</h3>
+<p>NAS（Network Attached Storage，网络附加存储）是一种将分布、独立的数据整合为大型、集中化管理的数据中心，以便于对不同主机和应用服务器进行访问的技术。按字面理解，NAS就是连接在网络上、具备数据存储功能的装置，因此也被称为“网络存储器”。</p>
+<div align="center">
+    <img src="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2026-07/NAS_1783567860789.gif" width="700px" />
+    <strong style="color: #1fb9fb; margin: -20px 0px 20px 0px; display: block;">网络附加存储示例图</strong>
+</div>
+<p>NAS被定义为一种专用数据存储服务器，包括存储器件（如磁盘阵列、CD/DVD驱动器、磁带驱动器或可移动存储介质）和内嵌系统软件，可提供跨平台文件共享功能。它以数据为中心，将存储设备与服务器彻底分离，集中管理数据，从而释放带宽、提高性能。其成本远低于使用服务器存储，而效率却远高于后者。</p>
+<h3 id="2-核心特点">2 核心特点</h3>
+<ul>
+<li>通过网络（通常是以太网）连接，拥有自己的节点，无需应用服务器干预即可让用户在网络上存取数据</li>
+<li>具备文件系统和IP地址，可理解为“网上邻居的共享磁盘”</li>
+<li>支持多种协议（如NFS、CIFS/SMB、FTP、HTTP等），兼容各种操作系统</li>
+<li>通过任何一台工作站，使用浏览器即可对NAS设备进行直观方便的管理</li>
+<li>NAS是功能单一的精简型电脑，架构上不像个人电脑那么复杂，外观上像家电产品，只需电源与简单的控制钮</li>
+<li>NAS必须具备两个物理条件：能够访问卷或物理磁盘；具有接入以太网的能力（即以太网卡）</li>
+<li>一台普通主机就可以充当NAS，只要它有自己的磁盘和文件系统，并对外提供访问其文件系统的接口（如NFS、CIFS等）</li>
+</ul>
+<h3 id="3-优缺点">3 优缺点</h3>
+<p><strong>优点：</strong></p>
+<ul>
+<li><strong>成本低</strong>：前端只需以太网接口即可，相比SAN所需的FC适配卡和光纤交换机，成本大幅降低</li>
+<li><strong>节省服务器资源</strong>：NAS可将文件服务从应用服务器上卸载下来，减轻主机的CPU和内存负担</li>
+<li><strong>部署简单、扩展性强</strong>：利用以太网，可扩展性强且容易部署</li>
+<li><strong>共享能力强</strong>：可在一台盘阵上实现多台客户端的共享访问，包括同时访问某个目录或文件</li>
+<li><strong>协议丰富</strong>：提供多种协议访问数据，而SAN只能使用SCSI协议访问</li>
+<li><strong>并发处理能力强</strong>：经过特别优化的NAS系统，可以同时并发处理大量客户端的请求</li>
+<li><strong>简化系统冗余</strong>：多台主机可同时挂载NFS上的目录，将多个并行处理转化为单一实例</li>
+</ul>
+<p><strong>缺点：</strong></p>
+<ul>
+<li><strong>一般情况下速度不及SAN</strong>：NAS架构使用以太网和TCP/IP代替内存进行通信，增加了CPU指令周期，且以太网速度慢于内存</li>
+<li><strong>协议差异带来的性能开销</strong>：TCP/IP逻辑和网卡驱动程序消耗额外的CPU资源</li>
+<li><strong>部分协议存在局限性</strong>：如NFS缺乏加密和授权功能（v4以前仅靠IP/主机名控制），SMB传输效率有时不太稳定</li>
+</ul>
+<h2 id="二、NAS常见共享访问协议">二、NAS常见共享访问协议</h2>
+<h3 id="1-NFS（网络文件系统）">1 NFS（网络文件系统）</h3>
+<p>NFS是一种分布式文件系统协议，由Sun公司开发，于1984年发布，最新版本NFSv4.2于2016年发布。它基于ONC RPC协议，是一个开放标准的RFC协议。</p>
+<p><strong>特点：</strong></p>
+<ul>
+<li>通常用于Unix/Linux/FreeBSD等类Unix系统，macOS和Windows也提供NFS实现</li>
+<li>内核直接支持，部署简单、运行稳定，协议简单、传输效率高</li>
+</ul>
+<p><strong>缺点：</strong></p>
+<ul>
+<li>缺乏加密授权功能，仅靠IP地址或主机名控制挂载权限（NFSv4以前），对具体目录和文件无法进行ACL权限控制</li>
+<li>Windows客户端挂载NFS共享时，中文文件名可能显示为乱码（因UTF-8支持问题）</li>
+</ul>
+<h3 id="2-SMB-Samba（服务器消息块）">2 SMB / Samba（服务器消息块）</h3>
+<p>SMB是微软设计的专用协议，用于Windows主机间的文件与打印共享。Samba是Andrew Tridgell通过逆向工程在Linux上实现的SMB/CIFS兼容协议，实现了Windows与Linux之间的文件共享。</p>
+<p><strong>特点：</strong></p>
+<ul>
+<li>兼容性极好，在Windows、Linux、macOS等各平台获得广泛支持</li>
+<li>电视、电视盒子等设备默认支持，可用于远程播放电影、音乐和图片</li>
+<li>提供端到端加密、安全性高，配置选项丰富，支持ACL和多用户认证模式</li>
+</ul>
+<p><strong>缺点：</strong></p>
+<ul>
+<li>传输效率稍低，速度不太稳定，会有波动</li>
+</ul>
+<h3 id="3-FTP（文件传输协议）">3 FTP（文件传输协议）</h3>
+<p>FTP是TCP/IP应用层的基础协议，通常使用21端口，负责将文件从一台计算机传输到另一台计算机。第一版FTP协议于1971年发表为RFC 114。</p>
+<h2 id="三、NAS与SAN的对比">三、NAS与SAN的对比</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">对比维度</th>
+<th style="text-align:center">NAS（网络附加存储）</th>
+<th style="text-align:center">SAN（存储区域网络）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><strong>本质</strong></td>
+<td style="text-align:center">一个设备（专有文件服务器）</td>
+<td style="text-align:center">一个网络系统</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>核心功能</strong></td>
+<td style="text-align:center">文件级别的共享访问</td>
+<td style="text-align:center">块级别的数据存储</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>通俗理解</strong></td>
+<td style="text-align:center">网络上的文件系统</td>
+<td style="text-align:center">网络上的磁盘</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>访问协议</strong></td>
+<td style="text-align:center">NFS、CIFS/SMB、FTP、HTTP等</td>
+<td style="text-align:center">SCSI（FC或iSCSI）</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>传输网络</strong></td>
+<td style="text-align:center">以太网</td>
+<td style="text-align:center">光纤通道（FC）或以太网（iSCSI）</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>成本</strong></td>
+<td style="text-align:center">较低（以太网卡和交换机便宜）</td>
+<td style="text-align:center">较高（FC适配卡和光纤交换机昂贵）</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>速度</strong></td>
+<td style="text-align:center">一般情况下较慢（受以太网和TCP/IP开销影响）</td>
+<td style="text-align:center">一般较快（FC硬件处理，速度高于以太网）</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>共享能力</strong></td>
+<td style="text-align:center">强，多客户端可同时访问同一目录/文件</td>
+<td style="text-align:center">弱，需集群管理软件才能共享LUN</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>文件系统</strong></td>
+<td style="text-align:center">有完整的文件操作和管理系统</td>
+<td style="text-align:center">无文件系统，仅做数据管理</td>
+</tr>
+</tbody>
+</table>
+<p><strong>补充说明：</strong></p>
+<ul>
+<li>NAS和SAN并非相互排斥，可以共存于同一系统网络中。NAS产品也能通过SAN连接到存储设备。</li>
+<li>在大量随机小块I/O、缓存命中率极低的环境下，后端磁盘成为瓶颈时，NAS可能不比SAN慢，甚至因优化的并发I/O设计而表现更优。</li>
+<li>iSCSI作为沟通IP与SCSI的新协议，使SAN可以在以太网上运行，被视为影响SAN发展的重要事件。</li>
+</ul>
+<h2 id="四、三种存储方案对比">四、三种存储方案对比</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">对比维度</th>
+<th style="text-align:center">DAS（直连式存储）</th>
+<th style="text-align:center">NAS（网络附加存储）</th>
+<th style="text-align:center">SAN（存储区域网络）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><strong>连接方式</strong></td>
+<td style="text-align:center">通过SCSI或FC接口直接连接到一台计算机</td>
+<td style="text-align:center">通过以太网连接到一群计算机</td>
+<td style="text-align:center">通过光纤交换机或以太网连接到多台主机</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>访问级别</strong></td>
+<td style="text-align:center">块级别</td>
+<td style="text-align:center">文件级别</td>
+<td style="text-align:center">块级别</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>共享能力</strong></td>
+<td style="text-align:center">仅挂载的主机可访问</td>
+<td style="text-align:center">多客户端可共享访问</td>
+<td style="text-align:center">需特殊软件才能共享</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>文件系统</strong></td>
+<td style="text-align:center">由主机管理</td>
+<td style="text-align:center">自带文件系统</td>
+<td style="text-align:center">无文件系统</td>
+</tr>
+</tbody>
+</table>
+<h2 id="参考资料">参考资料</h2>
+<p><strong style="color: #db8ef7;">[1]</strong> <a target="_blank" rel="noopener" href="https://www.cnblogs.com/mydomain/archive/2011/02/19/1958396.html">NAS的一些基本介绍</a><br>
+<strong style="color: #db8ef7;">[2]</strong> <a target="_blank" rel="noopener" href="https://www.cnblogs.com/shijingxiang/articles/4444090.html">SAN和NAS的区别</a><br>
+<strong style="color: #db8ef7;">[3]</strong> <a target="_blank" rel="noopener" href="https://www.cnblogs.com/jmcui/p/13188882.html">NAS 共享访问协议 — NFS、SMB、FTP、WebDAV 各有何优势？</a><br>
+<strong style="color: #db8ef7;">[4]</strong> <a target="_blank" rel="noopener" href="https://www.cnblogs.com/seusoftware/p/3205590.html">DAS,NAS,SAN在数据库存储上的应用</a></p>
+<h2 id="专有名词">专有名词</h2>
+<div class="note pink icon-padding modern"><i class="note-icon far fa-lightbulb"></i><p>其他专有名词的释义请提前参阅<a href="/blog/posts/6daf612c/#%E4%B8%93%E6%9C%89%E5%90%8D%E8%AF%8D">《01-块、文件、对象存储》的专有名词</a>。</p>
+</div>
+<p><strong style="color: #db8ef7;">[1]</strong> <strong>SAN（Storage Area Network，存储区域网络）：</strong> 一种在服务器和存储器之间用作I/O路径的专用高速网络。基于光纤通道技术，将多个存储设备连接起来，再与服务器网络连接，实现多点对多点的数据管理。SAN包括面向块（SCSI）和面向文件（NAS）的存储产品。<br>
+<strong style="color: #db8ef7;">[2]</strong> <strong>DAS（Direct Attached Storage，直连式存储）：</strong> 将存储设备通过SCSI接口或FC接口直接连接到一台计算机上的存储方式，只有所挂载的主机才能访问，不属于网络存储。<br>
+<strong style="color: #db8ef7;">[3]</strong> <strong>LUN（Logical Unit Number，逻辑单元号）：</strong> 在SAN环境中，用于标识存储设备中的逻辑单元，是主机访问存储资源的基本单位。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://dreamy-xay.github.io/blog">dreamy-xay</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://dreamy-xay.github.io/blog/posts/d647718/">https://dreamy-xay.github.io/blog/posts/d647718/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://dreamy-xay.github.io/blog" target="_blank">dreamyのblog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/NAS/">NAS</a><a class="post-meta__tags" href="/blog/tags/NFS/">NFS</a><a class="post-meta__tags" href="/blog/tags/SMB/">SMB</a><a class="post-meta__tags" href="/blog/tags/FTP/">FTP</a></div><div class="post_share"><div class="social-share" data-image="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/15_1752075427743.png" data-sites="wechat,weibo,qq,qzone,facebook,twitter"></div><link rel="stylesheet" href="https://cdn.staticfile.net/butterfly-extsrc/1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.staticfile.net/butterfly-extsrc/1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赞助</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/wechat_1752075400337.png" target="_blank"><img class="post-qr-code-img" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/wechat_1752075400337.png" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/alipay_1752075397065.png" target="_blank"><img class="post-qr-code-img" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/alipay_1752075397065.png" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/blog/posts/6daf612c/" title="【存储初识】01-块、文件、对象存储"><img class="cover" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/28_1785311493480.jpg" onerror="onerror=null;src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">【存储初识】01-块、文件、对象存储</div></div></a></div><div class="next-post pull-right"><a href="/blog/posts/e6c0a3f/" title="【存储初识】03-单机、集中式、分布式、云、云原生存储"><img class="cover" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/35_1785311513568.jpg" onerror="onerror=null;src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">【存储初识】03-单机、集中式、分布式、云、云原生存储</div></div></a></div></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/avatar_1752075331083.jpg" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">dreamy-xay</div><div class="author-info__description">只争朝夕，不负韶华</div></div><div class="card-info-data site-data is-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">26</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">45</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/dreamy-xay"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="http://wpa.qq.com/msgrd?v=3&amp;uin=1985332264&amp;site=qq&amp;menu=yes" target="_blank" title="QQ"><i class="fab fa-qq" style="color: #febcd5;"></i></a><a class="social-icon" href="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/weixin_1752075402432.png" target="_blank" title="WeChat"><i class="fab fa-weixin" style="color: #febcd5;"></i></a><a class="social-icon" href="mailto:dreamy-xay@foxmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #febcd5;"></i></a><a class="social-icon" href="https://space.bilibili.com/365741414" target="_blank" title="Bilibili"><i class="fa-brands fa-bilibili" style="color: #febcd5;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Hi~ o(*￣▽￣*)ブ，欢迎来到dreamy'blog，如果喜欢记得收藏奥～</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81NAS%EF%BC%88%E7%BD%91%E7%BB%9C%E9%99%84%E5%8A%A0%E5%AD%98%E5%82%A8%EF%BC%89"><span class="toc-text">一、NAS（网络附加存储）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%A6%82%E8%BF%B0"><span class="toc-text">1 概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%A0%B8%E5%BF%83%E7%89%B9%E7%82%B9"><span class="toc-text">2 核心特点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-text">3 优缺点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81NAS%E5%B8%B8%E8%A7%81%E5%85%B1%E4%BA%AB%E8%AE%BF%E9%97%AE%E5%8D%8F%E8%AE%AE"><span class="toc-text">二、NAS常见共享访问协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-NFS%EF%BC%88%E7%BD%91%E7%BB%9C%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%EF%BC%89"><span class="toc-text">1 NFS（网络文件系统）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-SMB-Samba%EF%BC%88%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%B6%88%E6%81%AF%E5%9D%97%EF%BC%89"><span class="toc-text">2 SMB &#x2F; Samba（服务器消息块）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-FTP%EF%BC%88%E6%96%87%E4%BB%B6%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE%EF%BC%89"><span class="toc-text">3 FTP（文件传输协议）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81NAS%E4%B8%8ESAN%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="toc-text">三、NAS与SAN的对比</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E4%B8%89%E7%A7%8D%E5%AD%98%E5%82%A8%E6%96%B9%E6%A1%88%E5%AF%B9%E6%AF%94"><span class="toc-text">四、三种存储方案对比</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-text">参考资料</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%93%E6%9C%89%E5%90%8D%E8%AF%8D"><span class="toc-text">专有名词</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/posts/7fee99f/" title="【C】C语言面向对象实现"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/27_1785311487554.jpg" onerror="this.onerror=null;this.src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【C】C语言面向对象实现"/></a><div class="content"><a class="title" href="/blog/posts/7fee99f/" title="【C】C语言面向对象实现">【C】C语言面向对象实现</a><time datetime="2026-07-30T12:48:13.000Z" title="发表于 2026-07-30 20:48:13">2026-07-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/posts/c615e5d3/" title="【Linux 内核】VFS 基础：writeback"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/29_1785311495995.jpeg" onerror="this.onerror=null;this.src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【Linux 内核】VFS 基础：writeback"/></a><div class="content"><a class="title" href="/blog/posts/c615e5d3/" title="【Linux 内核】VFS 基础：writeback">【Linux 内核】VFS 基础：writeback</a><time datetime="2026-07-29T07:36:34.000Z" title="发表于 2026-07-29 15:36:34">2026-07-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/posts/71fe51a6/" title="【Linux 内核】VFS 基础：driect write"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/7_1752075489299.jpg" onerror="this.onerror=null;this.src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【Linux 内核】VFS 基础：driect write"/></a><div class="content"><a class="title" href="/blog/posts/71fe51a6/" title="【Linux 内核】VFS 基础：driect write">【Linux 内核】VFS 基础：driect write</a><time datetime="2026-07-28T07:34:51.000Z" title="发表于 2026-07-28 15:34:51">2026-07-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/posts/3a98d6d7/" title="【Linux 内核】VFS 基础：close"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/27_1785311487554.jpg" onerror="this.onerror=null;this.src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【Linux 内核】VFS 基础：close"/></a><div class="content"><a class="title" href="/blog/posts/3a98d6d7/" title="【Linux 内核】VFS 基础：close">【Linux 内核】VFS 基础：close</a><time datetime="2026-07-24T02:50:01.000Z" title="发表于 2026-07-24 10:50:01">2026-07-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/posts/d8c9ca1e/" title="【Linux 内核】VFS 基础：read"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/22_1785311474212.jpg" onerror="this.onerror=null;this.src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【Linux 内核】VFS 基础：read"/></a><div class="content"><a class="title" href="/blog/posts/d8c9ca1e/" title="【Linux 内核】VFS 基础：read">【Linux 内核】VFS 基础：read</a><time datetime="2026-07-23T05:35:12.000Z" title="发表于 2026-07-23 13:35:12">2026-07-23</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/15_1752075427743.png')"><div id="footer-wrap"><div class="copyright">&copy;2025 - 2026 By dreamy-xay</div><div class="framework-info"><span>网站 </span><a target="_blank" rel="noopener" href="https://github.com/dreamy-xay/blog">Github</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://dreamy-xay.github.io/blog">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="https://cdn.staticfile.net/hexo-theme-butterfly/4.13.0/js/utils.min.js"></script><script src="https://cdn.staticfile.net/hexo-theme-butterfly/4.13.0/js/main.min.js"></script><script src="https://cdn.staticfile.net/hexo-theme-butterfly/4.13.0/js/tw_cn.min.js"></script><script src="https://cdn.staticfile.net/fancyapps-ui/5.0.33/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.staticfile.net/instant.page/5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.staticfile.net/node-snackbar/0.1.16/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.staticfile.net/pangu/4.0.7/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"><script>(() => {
+  const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaid.length === 0) return
+  const runMermaid = () => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    Array.from($mermaid).forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+      const mermaidID = 'mermaid-' + index
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+
+      const renderV10 = () => {
+        renderFn.then(({svg}) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svg)
+        })
+      }
+
+      const renderV9 = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      typeof renderFn === 'string' ? renderV9(renderFn) : renderV10()
+    })
+  }
+
+  const loadMermaid = () => {
+    window.loadMermaid ? runMermaid() : getScript('https://cdn.staticfile.net/mermaid/10.8.0/mermaid.min.js').then(runMermaid)
+  }
+
+  btf.addGlobalFn('themeChange', runMermaid, 'mermaid')
+
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script><script>(() => {
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-vercel-swart-pi.vercel.app/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = () => {
+    twikoo.init(Object.assign({
+      el: '#twikoo-wrap',
+      envId: 'https://twikoo-vercel-swart-pi.vercel.app/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      }
+    }, null))
+
+    GLOBAL_CONFIG_SITE.isPost && getCount()
+  }
+
+  const loadTwikoo = () => {
+    if (typeof twikoo === 'object') setTimeout(init,0)
+    else getScript('https://cdn.staticfile.net/twikoo/1.6.31/twikoo.all.min.js').then(init)
+  }
+
+  if ('Twikoo' === 'Twikoo' || !true) {
+    if (true) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script>window.addEventListener('load', () => {
+  const changeContent = (content) => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g,"") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0,150) + '...'
+    }
+    return content
+  }
+
+  const getComment = () => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo-vercel-swart-pi.vercel.app/',
+        region: '',
+        pageSize: 6,
+        includeReply: true
+      }).then(function (res) {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        saveToLocal.set('twikoo-newest-comments', JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray)
+      }).catch(function (err) {
+        const $dom = document.querySelector('#card-newest-comments .aside-list')
+        $dom.textContent= "无法获取评论，请确认相关配置是否正确"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      getScript('https://cdn.staticfile.net/twikoo/1.6.31/twikoo.all.min.js').then(runTwikoo)
+    }
+  }
+
+  const generateHtml = array => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class=\'aside-list-item\'>'
+
+        if (true) {
+          const name = 'src'
+          result += `<a href='${array[i].url}' class='thumbnail'><img ${name}='${array[i].avatar}' alt='${array[i].nick}'></a>`
+        }
+        
+        result += `<div class='content'>
+        <a class='comment' href='${array[i].url}' title='${array[i].content}'>${array[i].content}</a>
+        <div class='name'><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '没有评论'
+    }
+
+    let $dom = document.querySelector('#card-newest-comments .aside-list')
+    $dom && ($dom.innerHTML= result)
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh($dom)
+  }
+
+  const newestCommentInit = () => {
+    if (document.querySelector('#card-newest-comments .aside-list')) {
+      const data = saveToLocal.get('twikoo-newest-comments')
+      if (data) {
+        generateHtml(JSON.parse(data))
+      } else {
+        getComment()
+      }
+    }
+  }
+
+  newestCommentInit()
+  document.addEventListener('pjax:complete', newestCommentInit)
+})</script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script><script type="text/javascript" src="/blog/js/fireworks.min.js"></script><script src="https://cdn.staticfile.net/butterfly-extsrc/1.1.3/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><link rel="stylesheet" href="https://cdn.staticfile.net/aplayer/1.10.1/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.staticfile.net/aplayer/1.10.1/APlayer.min.js"></script><script src="https://cdn.staticfile.net/butterfly-extsrc/1.1.3/metingjs/dist/Meting.min.js"></script><script src="https://cdn.staticfile.net/pjax/0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/blog/404')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="https://cdn.staticfile.net/hexo-theme-butterfly/4.13.0/js/search/local-search.min.js"></script></div></div><script src="/blog/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"tagMode":false,"debug":false,"model":{"jsonPath":"/blog/live2dw/assets/shizuku.model.json"},"display":{"position":"left","width":150,"height":300,"hOffset":20,"vOffset":-20},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/"});</script></body></html>

@@ -1,0 +1,581 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>【Linux 内核】VFS 基础：open | dreamyのblog</title><meta name="author" content="dreamy-xay"><meta name="copyright" content="dreamy-xay"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="阅读本文前，请先学习《【存储初识】05-内核文件系统》。  一、从用户空间到内核：open 系统调用 用户程序通过 open 函数打开文件，这在 C 语言中是最常见的文件操作之一： int fd &#x3D; open(&quot;&#x2F;home&#x2F;user&#x2F;test.txt&quot;, O_RDONLY); open 是标准 C 库提供的函数，它内部会触发系统调用，将控制权从用户空间转移到内核空间。系统调用是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Linux 内核】VFS 基础：open">
+<meta property="og:url" content="https://dreamy-xay.github.io/blog/posts/e4ee08dd/">
+<meta property="og:site_name" content="dreamyのblog">
+<meta property="og:description" content="阅读本文前，请先学习《【存储初识】05-内核文件系统》。  一、从用户空间到内核：open 系统调用 用户程序通过 open 函数打开文件，这在 C 语言中是最常见的文件操作之一： int fd &#x3D; open(&quot;&#x2F;home&#x2F;user&#x2F;test.txt&quot;, O_RDONLY); open 是标准 C 库提供的函数，它内部会触发系统调用，将控制权从用户空间转移到内核空间。系统调用是">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/18_1752075443054.png">
+<meta property="article:published_time" content="2026-07-21T07:33:23.000Z">
+<meta property="article:modified_time" content="2026-07-27T07:57:59.000Z">
+<meta property="article:author" content="dreamy-xay">
+<meta property="article:tag" content="虚拟文件系统">
+<meta property="article:tag" content="C">
+<meta property="article:tag" content="源码分析">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/18_1752075443054.png"><link rel="shortcut icon" href="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/logo_1752075337653.png"><link rel="canonical" href="https://dreamy-xay.github.io/blog/posts/e4ee08dd/"><link rel="preconnect" href="https://cdn.staticfile.net"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.staticfile.net/font-awesome/6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.staticfile.net/node-snackbar/0.1.16/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.staticfile.net/fancyapps-ui/5.0.33/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: {"path":"/blog/search.xml","preload":false,"top_n_per_article":1,"unescape":true,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":30,"languages":{"author":"作者: dreamy-xay","link":"链接: ","source":"来源: dreamyのblog","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体中文","cht_to_chs":"你已切换为简体中文","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#febcd5","bgDark":"#1f1f1f","position":"top-center"},
+  infinitegrid: {
+    js: 'https://cdn.staticfile.net/egjs-infinitegrid/4.11.1/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '【Linux 内核】VFS 基础：open',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2026-07-27 15:57:59'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="referrer" content="no-referrer" /><link rel="stylesheet" href="/blog/css/custom.css"><link rel="stylesheet" href="/blog/css/background.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="gear-loader"><div class="gear-loader_overlay"></div><div class="gear-loader_cogs"><div class="gear-loader_cogs__top"><div class="gear-top_part"></div><div class="gear-top_part"></div><div class="gear-top_part"></div><div class="gear-top_hole"></div></div><div class="gear-loader_cogs__left"><div class="gear-left_part"></div><div class="gear-left_part"></div><div class="gear-left_part"></div><div class="gear-left_hole"></div></div><div class="gear-loader_cogs__bottom"><div class="gear-bottom_part"></div><div class="gear-bottom_part"></div><div class="gear-bottom_part"></div><div class="gear-bottom_hole"></div></div></div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/avatar_1752075331083.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">26</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">45</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa-fw fas fa-book"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa-fw fas fa-list"></i><span> 娱乐库</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/blog/books/"><i class="fa-fw fas fa-book-open"></i><span> 阅读库</span></a></li><li><a class="site-page child" href="/blog/music/"><i class="fa-fw fas fa-music"></i><span> 音乐库</span></a></li><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 图片库</span></a></li><li><a class="site-page child" href="/blog/movies/"><i class="fa-fw fas fa-video"></i><span> 电影库</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/link/"><i class="fa-fw fas fa-link"></i><span> 友人帐</span></a></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/18_1752075443054.png')"><nav id="nav"><span id="blog-info"><a href="/blog/" title="dreamyのblog"><img class="site-icon" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/logo2_1752075340714.png"/><span class="site-name">dreamyのblog</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa-fw fas fa-book"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa-fw fas fa-list"></i><span> 娱乐库</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/blog/books/"><i class="fa-fw fas fa-book-open"></i><span> 阅读库</span></a></li><li><a class="site-page child" href="/blog/music/"><i class="fa-fw fas fa-music"></i><span> 音乐库</span></a></li><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 图片库</span></a></li><li><a class="site-page child" href="/blog/movies/"><i class="fa-fw fas fa-video"></i><span> 电影库</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/link/"><i class="fa-fw fas fa-link"></i><span> 友人帐</span></a></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div><div id="nav-right"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i></a></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">【Linux 内核】VFS 基础：open</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-07-21T07:33:23.000Z" title="发表于 2026-07-21 15:33:23">2026-07-21</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-07-27T07:57:59.000Z" title="更新于 2026-07-27 15:57:59">2026-07-27</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/Linux-%E5%86%85%E6%A0%B8/">Linux 内核</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/Linux-%E5%86%85%E6%A0%B8/VFS/">VFS</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>13分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="【Linux 内核】VFS 基础：open"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><div class="note pink icon-padding modern"><i class="note-icon far fa-lightbulb"></i><p>阅读本文前，请先学习<a href="/blog/posts/35ae6dfa/">《【存储初识】05-内核文件系统》</a>。</p>
+</div>
+<h2 id="一、从用户空间到内核：open-系统调用">一、从用户空间到内核：open 系统调用</h2>
+<p>用户程序通过 <code>open</code> 函数打开文件，这在 C 语言中是最常见的文件操作之一：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> fd = open(<span class="string">&quot;/home/user/test.txt&quot;</span>, O_RDONLY);</span><br></pre></td></tr></table></figure>
+<p><code>open</code> 是标准 C 库提供的函数，它内部会触发系统调用，将控制权从用户空间转移到内核空间。系统调用是用户程序与内核交互的特定机制，通过它，程序可以请求内核执行特权操作。</p>
+<p>在 x86 架构上，系统调用通过软中断（如 <code>int $0x80</code>）或更高效的 <code>sysenter</code> 指令实现，将 CPU 从用户态切换到内核态，并跳转到内核中预定义的系统调用入口。内核根据系统调用号在系统调用表中查找对应的处理函数——对于 <code>open</code>，这个函数是 <code>sys_open</code>。</p>
+<h2 id="二、open-系统调用的内核入口">二、open 系统调用的内核入口</h2>
+<h3 id="1-sys-open：系统调用的定义">1 sys_open：系统调用的定义</h3>
+<p>在 Linux 内核源码 <code>fs/open.c</code> 中，<code>open</code> 系统调用通过 <code>SYSCALL_DEFINE3</code> 宏定义：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">SYSCALL_DEFINE3(open, <span class="type">const</span> <span class="type">char</span> __user *, filename, <span class="type">int</span>, flags, <span class="type">umode_t</span>, mode)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (force_o_largefile())</span><br><span class="line">        flags |= O_LARGEFILE;</span><br><span class="line">    <span class="keyword">return</span> do_sys_open(AT_FDCWD, filename, flags, mode);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>SYSCALL_DEFINE3</code> 表示该系统调用有三个参数：</p>
+<ul>
+<li><code>filename</code>：用户空间传递的文件路径</li>
+<li><code>flags</code>：打开标志（如 <code>O_RDONLY</code>、<code>O_CREAT</code> 等）</li>
+<li><code>mode</code>：创建文件时的权限模式</li>
+</ul>
+<p><code>force_o_largefile()</code> 用于确定是否需要自动添加 <code>O_LARGEFILE</code> 标志——在 64 位系统上内核会自动添加，而在 32 位系统上需要显式设置才能操作大文件。</p>
+<p><code>AT_FDCWD</code> 是一个特殊值（-100），表示文件路径的查找起点是当前工作目录。</p>
+<h3 id="2-do-sys-open：核心分发函数">2 do_sys_open：核心分发函数</h3>
+<p><code>do_sys_open</code> 是 <code>open</code> 系统调用的核心实现，它完成了打开文件的主要工作：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">long</span> <span class="title function_">do_sys_open</span><span class="params">(<span class="type">int</span> dfd, <span class="type">const</span> <span class="type">char</span> __user *filename, <span class="type">int</span> flags, <span class="type">umode_t</span> mode)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">open_flags</span> <span class="title">op</span>;</span></span><br><span class="line">    <span class="type">int</span> fd = build_open_flags(flags, mode, &amp;op);</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">filename</span> *<span class="title">tmp</span>;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (fd)</span><br><span class="line">        <span class="keyword">return</span> fd;</span><br><span class="line"></span><br><span class="line">    tmp = getname(filename);</span><br><span class="line">    <span class="keyword">if</span> (IS_ERR(tmp))</span><br><span class="line">        <span class="keyword">return</span> PTR_ERR(tmp);</span><br><span class="line"></span><br><span class="line">    fd = get_unused_fd_flags(flags);</span><br><span class="line">    <span class="keyword">if</span> (fd &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">file</span> *<span class="title">f</span> =</span> do_filp_open(dfd, tmp, &amp;op);</span><br><span class="line">        <span class="keyword">if</span> (IS_ERR(f)) &#123;</span><br><span class="line">            put_unused_fd(fd);</span><br><span class="line">            fd = PTR_ERR(f);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            fsnotify_open(f);</span><br><span class="line">            fd_install(fd, f);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    putname(tmp);</span><br><span class="line">    <span class="keyword">return</span> fd;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个函数主要完成六个步骤：</p>
+<ol>
+<li><strong>构建打开标志：</strong><code>build_open_flags</code> 将用户传入的 <code>flags</code> 和 <code>mode</code> 转换为内核内部使用的 <code>open_flags</code> 结构体，处理权限模式转换、特殊标志（<code>O_TRUNC</code>、<code>O_APPEND</code> 等）以及打开意图设置（<code>LOOKUP_OPEN</code>、<code>LOOKUP_CREATE</code> 等）。</li>
+<li><strong>拷贝文件名：</strong><code>getname</code> 将用户空间的文件名字符串复制到内核空间，确保安全性。</li>
+<li><strong>分配文件描述符：</strong><code>get_unused_fd_flags</code> 在当前进程的文件描述符表中找到一个空闲位置。文件描述符本质上是一个整数，它作为索引指向进程打开文件表中对应的 <code>struct file</code> 结构。</li>
+<li><strong>执行实际打开：</strong><code>do_filp_open</code> 是打开文件的核心函数，负责构造并初始化 <code>struct file</code> 结构体。</li>
+<li><strong>安装文件描述符：</strong> 如果打开成功，<code>fd_install</code> 将文件描述符与 <code>struct file</code> 结构绑定。</li>
+<li><strong>释放文件名并返回：</strong> 释放内核空间的文件名副本，返回文件描述符。</li>
+</ol>
+<h2 id="三、do-filp-open：打开文件的核心">三、do_filp_open：打开文件的核心</h2>
+<p><code>do_filp_open</code> 函数是文件打开操作的核心入口，它接收文件描述符、文件名和打开标志，返回一个代表打开文件的 <code>struct file</code> 对象。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> file *<span class="title function_">do_filp_open</span><span class="params">(<span class="type">int</span> dfd, <span class="keyword">struct</span> filename *pathname,</span></span><br><span class="line"><span class="params">                          <span class="type">const</span> <span class="keyword">struct</span> open_flags *op)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">nameidata</span> <span class="title">nd</span>;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">file</span> *<span class="title">filp</span>;</span></span><br><span class="line"></span><br><span class="line">    set_nameidata(&amp;nd, dfd, pathname);</span><br><span class="line">    filp = path_openat(&amp;nd, op, flags | LOOKUP_RCU);</span><br><span class="line">    <span class="comment">/* 如果 RCU 查找失败，回退到非 RCU 模式 */</span></span><br><span class="line">    <span class="keyword">if</span> (unlikely(filp == ERR_PTR(-ECHILD)))</span><br><span class="line">        filp = path_openat(&amp;nd, op, flags);</span><br><span class="line">    restore_nameidata();</span><br><span class="line">    <span class="keyword">return</span> filp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="1-nameidata：路径查找的上下文">1 nameidata：路径查找的上下文</h3>
+<p><code>struct nameidata</code> 是路径查找过程中的核心上下文结构，它记录了：</p>
+<ul>
+<li>当前查找到的路径（<code>struct path</code>，包含 <code>vfsmount</code> 和 <code>dentry</code>）</li>
+<li>当前正在处理的路径分量</li>
+<li>查找标志（如是否跟随符号链接）</li>
+<li>符号链接展开栈（用于处理嵌套符号链接）</li>
+</ul>
+<h3 id="2-path-openat：路径查找与打开">2 path_openat：路径查找与打开</h3>
+<p><code>path_openat</code> 是真正执行路径查找和文件打开的函数。它在 <code>do_filp_open</code> 中被调用，完成以下核心工作：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">static</span> <span class="keyword">struct</span> file *<span class="title function_">path_openat</span><span class="params">(<span class="keyword">struct</span> nameidata *nd,</span></span><br><span class="line"><span class="params">                                <span class="type">const</span> <span class="keyword">struct</span> open_flags *op,</span></span><br><span class="line"><span class="params">                                <span class="type">unsigned</span> flags)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">file</span> *<span class="title">file</span>;</span></span><br><span class="line">    <span class="type">int</span> error;</span><br><span class="line"></span><br><span class="line">    file = alloc_empty_file(op-&gt;open_flag, current_cred());</span><br><span class="line">    <span class="keyword">if</span> (IS_ERR(file))</span><br><span class="line">        <span class="keyword">return</span> file;</span><br><span class="line"></span><br><span class="line">    <span class="type">const</span> <span class="type">char</span> *s = path_init(nd, flags);</span><br><span class="line">    <span class="keyword">while</span> (!(error = link_path_walk(s, nd)) &amp;&amp;</span><br><span class="line">           (s = open_last_lookups(nd, file, op)) != <span class="literal">NULL</span>)</span><br><span class="line">        ;</span><br><span class="line">    <span class="keyword">if</span> (!error)</span><br><span class="line">        error = do_open(nd, file, op);</span><br><span class="line"></span><br><span class="line">    terminate_walk(nd);</span><br><span class="line">    <span class="comment">/* ... 错误处理 ... */</span></span><br><span class="line">    <span class="keyword">return</span> file;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li><strong>分配 file 结构：</strong><code>alloc_empty_file</code> 分配并初始化一个空的 <code>struct file</code> 结构，设置基本的权限和引用计数。</li>
+<li><strong>路径初始化：</strong><code>path_init</code> 初始化路径查找的起点，根据 <code>dfd</code> 参数确定从根目录还是当前工作目录开始查找。</li>
+<li><strong>路径遍历：</strong><code>link_path_walk</code> 逐级解析路径名中的每个分量。</li>
+<li><strong>处理最后一个分量：</strong><code>open_last_lookups</code> 专门处理路径的最后一个分量，这是文件打开的关键步骤。</li>
+<li><strong>执行打开：</strong><code>do_open</code> 执行最终的打开操作，调用具体文件系统的 <code>open</code> 方法。</li>
+</ol>
+<h2 id="四、路径遍历：link-path-walk">四、路径遍历：link_path_walk</h2>
+<p><code>link_path_walk</code> 是路径查找的核心函数，它从路径的起点开始，逐级解析每个路径分量。</p>
+<h3 id="1-路径分量的解析">1 路径分量的解析</h3>
+<p>路径名以 <code>/</code> 作为分隔符。<code>link_path_walk</code> 会依次处理每个分量：</p>
+<ul>
+<li>对于空分量（连续的 <code>/</code>），直接跳过</li>
+<li>对于 <code>.</code>，停留在当前目录</li>
+<li>对于 <code>..</code>，向上移动到父目录</li>
+<li>对于普通名称，通过 <code>walk_component</code> 查找对应的 dentry</li>
+</ul>
+<h3 id="2-walk-component：查找单个分量">2 walk_component：查找单个分量</h3>
+<p><code>walk_component</code> 负责查找单个路径分量对应的 dentry。它包含两个查找路径：</p>
+<p><strong>快速路径（lookup_fast）</strong>：首先在 dentry 缓存中查找（使用 RCU 锁）。dentry 缓存通过全局哈希表 <code>dentry_hashtable</code> 管理，哈希键由父 dentry 地址和当前名称的哈希值共同计算。如果缓存命中，直接返回 dentry。</p>
+<p><strong>慢速路径（lookup_slow）</strong>：如果快速查找失败（例如 dentry 不在缓存中，或缓存已过期），则进入慢速路径。慢速路径会对父目录 inode 加锁，然后再次尝试从缓存查找，如果仍然失败，则调用底层文件系统的 <code>lookup</code> 方法。</p>
+<h3 id="3-lookup-real：调用文件系统的-lookup">3 lookup_real：调用文件系统的 lookup</h3>
+<p>当 dentry 不在缓存中时，<code>lookup_real</code> 会调用具体文件系统的 <code>lookup</code> 方法：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">dentry = dir-&gt;i_op-&gt;lookup(dir_inode, dentry, flags);</span><br></pre></td></tr></table></figure>
+<p>对于 ext4 文件系统，这会调用 <code>ext4_lookup</code>；对于 NFS，则调用 <code>nfs_lookup</code>。文件系统的 <code>lookup</code> 方法负责从磁盘或网络中读取目录项信息，创建 inode，并将 dentry 与 inode 关联起来。</p>
+<h3 id="4-follow-managed：处理挂载点">4 follow_managed：处理挂载点</h3>
+<p>在路径遍历过程中，每找到一个 dentry，都会调用 <code>follow_managed</code> 检查该 dentry 是否是一个挂载点。如果是，<code>follow_managed</code> 会通过查找 <code>mount_hashtable</code> 找到对应的 <code>vfsmount</code>，然后用被挂载文件系统的根 dentry 替换当前路径中的 dentry。这正是上一篇文章[[02-VFS 基础：mount### 2 真相：mount_hashtable 与 follow_managed|《VFS基础：mount》]]中描述的挂载点跳转机制在路径查找中的应用。</p>
+<h2 id="五、打开最后一个分量：open-last-lookups">五、打开最后一个分量：open_last_lookups</h2>
+<p>当 <code>link_path_walk</code> 完成除最后一个分量外的所有路径解析后，<code>open_last_lookups</code> 负责处理路径的最后一个分量。</p>
+<h3 id="1-lookup-open：查找或创建">1 lookup_open：查找或创建</h3>
+<p><code>lookup_open</code> 是处理最后一个分量的核心函数，它执行 “lookup and maybe create” 操作：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">static</span> <span class="keyword">struct</span> dentry *<span class="title function_">lookup_open</span><span class="params">(<span class="keyword">struct</span> nameidata *nd, <span class="keyword">struct</span> file *file,</span></span><br><span class="line"><span class="params">                                  <span class="type">const</span> <span class="keyword">struct</span> open_flags *op, <span class="type">bool</span> got_write)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">dentry</span> *<span class="title">dir</span> =</span> nd-&gt;path.dentry;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">inode</span> *<span class="title">dir_inode</span> =</span> dir-&gt;d_inode;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 1. 从 dentry 缓存中查找 */</span></span><br><span class="line">    dentry = d_lookup(dir, &amp;nd-&gt;last);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 2. 如果缓存中有且是 positive（有 inode），直接返回 */</span></span><br><span class="line">    <span class="keyword">if</span> (dentry &amp;&amp; dentry-&gt;d_inode)</span><br><span class="line">        <span class="keyword">return</span> dentry;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 3. 如果需要创建文件（O_CREAT） */</span></span><br><span class="line">    <span class="keyword">if</span> (open_flag &amp; O_CREAT) &#123;</span><br><span class="line">        <span class="comment">/* 检查权限，准备创建 */</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 4. 如果文件系统支持 atomic_open，调用它 */</span></span><br><span class="line">    <span class="keyword">if</span> (dir_inode-&gt;i_op-&gt;<span class="type">atomic_open</span>) &#123;</span><br><span class="line">        dentry = <span class="type">atomic_open</span>(nd, dentry, file, open_flag, mode);</span><br><span class="line">        <span class="keyword">return</span> dentry;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 5. 否则，调用文件系统的 lookup */</span></span><br><span class="line">    <span class="keyword">if</span> (d_in_lookup(dentry)) &#123;</span><br><span class="line">        dentry = dir_inode-&gt;i_op-&gt;lookup(dir_inode, dentry, nd-&gt;flags);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 6. 如果是 negative dentry 且需要创建，调用文件系统的 create */</span></span><br><span class="line">    <span class="keyword">if</span> (!dentry-&gt;d_inode &amp;&amp; (open_flag &amp; O_CREAT)) &#123;</span><br><span class="line">        error = dir_inode-&gt;i_op-&gt;create(dir_inode, dentry, mode, open_flag &amp; O_EXCL);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> dentry;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>lookup_open</code> 的执行逻辑如下：</p>
+<ol>
+<li><strong>d_lookup</strong>：从 dentry 缓存中查找最后一个分量对应的 dentry</li>
+<li><strong>缓存命中</strong>：如果找到 positive dentry（已关联 inode），直接返回</li>
+<li><strong>atomic_open</strong>：如果文件系统实现了 <code>atomic_open</code>，调用它以原子方式完成查找和打开</li>
+<li><strong>lookup</strong>：如果 dentry 处于 “in-lookup” 状态，调用文件系统的 <code>lookup</code> 方法</li>
+<li><strong>create</strong>：如果是 negative dentry（不存在）且指定了 <code>O_CREAT</code>，调用文件系统的 <code>create</code> 方法创建文件</li>
+</ol>
+<h3 id="2-文件系统的-lookup-和-create">2 文件系统的 lookup 和 create</h3>
+<p>对于不同的文件系统，<code>lookup</code> 和 <code>create</code> 方法的实现各不相同：</p>
+<ul>
+<li><strong>ext4_lookup</strong>：在 ext4 目录中查找文件，读取磁盘上的目录项，创建 inode</li>
+<li><strong>ext4_create</strong>：在 ext4 目录中创建新文件，分配 inode，初始化磁盘数据结构</li>
+</ul>
+<p>对于字符设备等特殊文件，<code>lookup</code> 可能会调用 <code>init_special_inode</code> 来设置特殊的 <code>i_fop</code>（如 <code>def_chr_fops</code>）。</p>
+<h2 id="六、执行打开：do-open-与-vfs-open">六、执行打开：do_open 与 vfs_open</h2>
+<p>当路径查找完成并获得了目标文件的 dentry 后，<code>do_open</code> 负责执行最终的打开操作。</p>
+<h3 id="1-do-open：权限检查与打开准备">1 do_open：权限检查与打开准备</h3>
+<p><code>do_open</code> 主要完成以下工作：</p>
+<ol>
+<li><strong>权限检查</strong>：调用 <code>may_open</code> 检查进程是否有权限以指定方式打开文件（读、写、执行等）</li>
+<li><strong>截断处理</strong>：如果指定了 <code>O_TRUNC</code> 且文件是普通文件，准备截断文件</li>
+<li><strong>调用 vfs_open</strong>：执行实际的打开操作</li>
+</ol>
+<h3 id="2-vfs-open：调用文件系统的-open-方法">2 vfs_open：调用文件系统的 open 方法</h3>
+<p><code>vfs_open</code> 是 VFS 层调用具体文件系统 <code>open</code> 方法的入口：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">vfs_open</span><span class="params">(<span class="type">const</span> <span class="keyword">struct</span> path *path, <span class="keyword">struct</span> file *file)</span></span><br><span class="line">&#123;</span><br><span class="line">    file-&gt;f_path = *path;</span><br><span class="line">    <span class="keyword">return</span> do_dentry_open(file, d_backing_inode(path-&gt;dentry), <span class="literal">NULL</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>do_dentry_open</code> 完成以下核心工作：</p>
+<ol>
+<li><strong>初始化 file 结构</strong>：设置 <code>f_inode</code>、<code>f_mapping</code> 等字段</li>
+<li><strong>绑定文件操作表</strong>：将 <code>inode-&gt;i_fop</code> 赋值给 <code>file-&gt;f_op</code></li>
+<li><strong>调用 open 回调</strong>：如果 <code>file-&gt;f_op-&gt;open</code> 存在，调用它</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">int</span> <span class="title function_">do_dentry_open</span><span class="params">(<span class="keyword">struct</span> file *f, <span class="keyword">struct</span> inode *inode,</span></span><br><span class="line"><span class="params">                          <span class="type">int</span> (*open)(<span class="keyword">struct</span> inode *, <span class="keyword">struct</span> file *))</span></span><br><span class="line">&#123;</span><br><span class="line">    f-&gt;f_inode = inode;</span><br><span class="line">    f-&gt;f_mapping = inode-&gt;i_mapping;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 绑定文件操作表 */</span></span><br><span class="line">    f-&gt;f_op = fops_get(inode-&gt;i_fop);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 调用具体的 open 方法 */</span></span><br><span class="line">    <span class="keyword">if</span> (open)</span><br><span class="line">        error = open(inode, f);</span><br><span class="line"></span><br><span class="line">    f-&gt;f_mode |= FMODE_OPENED;</span><br><span class="line">    <span class="keyword">return</span> error;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>对于 ext4 文件系统，<code>inode-&gt;i_fop</code> 指向 <code>ext4_file_operations</code>，其中的 <code>.open</code> 方法为 <code>ext4_file_open</code>。对于字符设备，<code>i_fop</code> 则指向设备驱动注册的 <code>file_operations</code>。</p>
+<h3 id="3-fd-install：安装文件描述符">3 fd_install：安装文件描述符</h3>
+<p>当 <code>do_dentry_open</code> 成功返回后，<code>fd_install</code> 将文件描述符与 <code>struct file</code> 绑定：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">fd_install</span><span class="params">(<span class="type">unsigned</span> <span class="type">int</span> fd, <span class="keyword">struct</span> file *file)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">files_struct</span> *<span class="title">files</span> =</span> current-&gt;files;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">fdtable</span> *<span class="title">fdt</span>;</span></span><br><span class="line"></span><br><span class="line">    fdt = files_fdtable(files);</span><br><span class="line">    rcu_assign_pointer(fdt-&gt;fd[fd], file);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>fd_install</code> 将 <code>struct file</code> 的指针存入当前进程的文件描述符表中对应下标的位置。此后，用户程序就可以通过文件描述符来访问这个打开的文件了。</p>
+<h2 id="七、struct-file：打开文件的代表">七、struct file：打开文件的代表</h2>
+<p><code>struct file</code> 是内核中代表一个打开文件的核心数据结构。每个 <code>open</code> 系统调用成功都会创建一个 <code>struct file</code> 实例。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">file</span> &#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">path</span> <span class="title">f_path</span>;</span>           <span class="comment">// 文件路径（dentry + vfsmount）</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">inode</span> *<span class="title">f_inode</span>;</span>        <span class="comment">// 关联的 inode</span></span><br><span class="line">    <span class="type">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">file_operations</span> *<span class="title">f_op</span>;</span>  <span class="comment">// 文件操作函数表</span></span><br><span class="line">    <span class="type">unsigned</span> <span class="type">int</span> f_flags;         <span class="comment">// 打开标志（O_RDONLY、O_NONBLOCK 等）</span></span><br><span class="line">    <span class="type">fmode_t</span> f_mode;               <span class="comment">// 文件模式（读/写）</span></span><br><span class="line">    <span class="type">loff_t</span> f_pos;                 <span class="comment">// 当前文件偏移量</span></span><br><span class="line">    <span class="type">atomic_long_t</span> f_count;        <span class="comment">// 引用计数</span></span><br><span class="line">    <span class="comment">/* ... 更多字段 ... */</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p><strong>关键字段说明：</strong></p>
+<ul>
+<li><code>f_path</code>：记录文件在目录树中的位置（挂载点 + dentry）</li>
+<li><code>f_inode</code>：指向文件的 inode，包含文件元数据</li>
+<li><code>f_op</code>：文件操作函数表，包含 <code>read</code>、<code>write</code>、<code>open</code>、<code>release</code> 等方法</li>
+<li><code>f_pos</code>：当前读写位置，对于普通文件，每次 <code>read</code>/<code>write</code> 都会更新</li>
+<li><code>f_count</code>：引用计数，多个文件描述符可以指向同一个 <code>struct file</code></li>
+</ul>
+<p>当一个进程打开同一个文件多次时，每次打开都会创建新的 <code>struct file</code> 实例（除非使用 <code>dup</code> 等特殊调用）。每个 <code>struct file</code> 有自己的 <code>f_pos</code>，因此多个文件描述符可以独立地读写同一个文件。</p>
+<h2 id="八、完整调用链总结">八、完整调用链总结</h2>
+<p>从用户空间的 <code>open</code> 函数到最终调用具体文件系统的打开方法，完整的调用链如下：</p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">用户空间: open()</span><br><span class="line">    ↓ (系统调用)</span><br><span class="line">内核入口: sys_open()                    [fs/open.c]</span><br><span class="line">    ↓</span><br><span class="line">do_sys_open()                             [fs/open.c]</span><br><span class="line">    ├── build_open_flags()              // 构建打开标志</span><br><span class="line">    ├── getname()                         // 拷贝文件名到内核</span><br><span class="line">    ├── get_unused_fd_flags()         // 分配文件描述符</span><br><span class="line">    ├── do_filp_open()                    // 执行打开</span><br><span class="line">    │   └── path_openat()               [fs/namei.c]</span><br><span class="line">    │       ├── alloc_empty_file()       // 分配 struct file</span><br><span class="line">    │       ├── path_init()                 // 初始化路径查找</span><br><span class="line">    │       ├── link_path_walk()         // 遍历路径</span><br><span class="line">    │       │   └── walk_component()</span><br><span class="line">    │       │       ├── lookup_fast()    // 快速缓存查找</span><br><span class="line">    │       │       └── lookup_slow()   // 慢速查找</span><br><span class="line">    │       │           └── lookup_real()</span><br><span class="line">    │       │               └── ext4_lookup() / nfs_lookup() 等</span><br><span class="line">    │       ├── open_last_lookups()      // 处理最后一个分量</span><br><span class="line">    │       │   └── lookup_open()</span><br><span class="line">    │       │       ├── d_lookup()        // 缓存查找</span><br><span class="line">    │       │       ├── atomic_open()   // 原子打开（可选）</span><br><span class="line">    │       │       ├── lookup()           // 文件系统 lookup</span><br><span class="line">    │       │       └── create()           // 文件系统 create（O_CREAT）</span><br><span class="line">    │       └── do_open()                  // 执行打开</span><br><span class="line">    │           └── vfs_open()</span><br><span class="line">    │               └── do_dentry_open()</span><br><span class="line">    │                   └── f_op-&gt;open()  // 具体文件系统的 open</span><br><span class="line">    ├── fd_install()                           // 安装文件描述符</span><br><span class="line">    └── 返回 fd</span><br></pre></td></tr></table></figure>
+<h2 id="九、总结">九、总结</h2>
+<p>Linux VFS 的 <code>open</code> 系统调用通过以下设计实现了文件的统一打开操作：</p>
+<ol>
+<li><strong>系统调用入口</strong>：通过 <code>SYSCALL_DEFINE3</code> 宏定义系统调用，使用 <code>do_sys_open</code> 作为核心分发函数</li>
+<li><strong>文件描述符管理</strong>：通过 <code>get_unused_fd_flags</code> 在进程的文件描述符表中分配空闲位置</li>
+<li><strong>路径查找</strong>：通过 <code>link_path_walk</code> 逐级解析路径，利用 dentry 缓存加速查找</li>
+<li><strong>dentry 缓存</strong>：通过全局 <code>dentry_hashtable</code> 缓存目录项，快速路径（<code>lookup_fast</code>）使用 RCU 锁实现无阻塞查找</li>
+<li><strong>挂载点处理</strong>：通过 <code>follow_managed</code> 在路径查找中动态处理挂载点跳转</li>
+<li><strong>文件系统抽象</strong>：通过 <code>inode-&gt;i_op-&gt;lookup</code>、<code>inode-&gt;i_op-&gt;create</code> 和 <code>file-&gt;f_op-&gt;open</code> 等回调接口，让不同文件系统实现各自的底层操作</li>
+<li><strong>file 结构</strong>：<code>struct file</code> 代表一个打开的文件实例，包含文件路径、操作函数表、当前偏移量等信息</li>
+</ol>
+<p>整个 <code>open</code> 流程体现了 VFS 作为<strong>中间层</strong>的核心设计思想：通过统一的接口（<code>file_operations</code>、<code>inode_operations</code>）抽象不同文件系统的差异，让上层应用通过相同的系统调用访问不同类型的文件系统（ext4、xfs、NFS、设备文件等），对用户程序完全透明。</p>
+<h2 id="参考内容">参考内容</h2>
+<p><strong style="color: #db8ef7;">[1]</strong> <a target="_blank" rel="noopener" href="https://geekdaxue.co/read/linux-insides-zh/SysCall-linux-syscall-5.md">open 系统调用实现</a><br>
+<strong style="color: #db8ef7;">[2]</strong> <a target="_blank" rel="noopener" href="https://www.cnblogs.com/lx--/p/16633817.html">内核模块实验3 Linux内核open的分析</a><br>
+<strong style="color: #db8ef7;">[3]</strong> <a target="_blank" rel="noopener" href="https://blog.csdn.net/gitblog_00101/article/details/148464305">Linux内核系统调用深度解析：open系统调用实现</a><br>
+<strong style="color: #db8ef7;">[4]</strong> <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/471175983">linux 内核open文件流程</a><br>
+<strong style="color: #db8ef7;">[5]</strong> <a target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/latest/source/fs/namei.c">Linux内核源码 - fs/namei.c (路径查找与open实现)</a><br>
+<strong style="color: #db8ef7;">[6]</strong> <a target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/latest/source/fs/open.c">Linux内核源码 - fs/open.c (open系统调用)</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://dreamy-xay.github.io/blog">dreamy-xay</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://dreamy-xay.github.io/blog/posts/e4ee08dd/">https://dreamy-xay.github.io/blog/posts/e4ee08dd/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://dreamy-xay.github.io/blog" target="_blank">dreamyのblog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/%E8%99%9A%E6%8B%9F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">虚拟文件系统</a><a class="post-meta__tags" href="/blog/tags/C/">C</a><a class="post-meta__tags" href="/blog/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">源码分析</a></div><div class="post_share"><div class="social-share" data-image="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/18_1752075443054.png" data-sites="wechat,weibo,qq,qzone,facebook,twitter"></div><link rel="stylesheet" href="https://cdn.staticfile.net/butterfly-extsrc/1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.staticfile.net/butterfly-extsrc/1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赞助</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/wechat_1752075400337.png" target="_blank"><img class="post-qr-code-img" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/wechat_1752075400337.png" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/alipay_1752075397065.png" target="_blank"><img class="post-qr-code-img" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/alipay_1752075397065.png" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/blog/posts/1370ad10/" title="【Linux 内核】VFS 基础：mount"><img class="cover" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/15_1752075427743.png" onerror="onerror=null;src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">【Linux 内核】VFS 基础：mount</div></div></a></div><div class="next-post pull-right"><a href="/blog/posts/54f22d4c/" title="【Linux 内核】VFS 基础：write"><img class="cover" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/28_1785311493480.jpg" onerror="onerror=null;src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">【Linux 内核】VFS 基础：write</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/blog/posts/71fe51a6/" title="【Linux 内核】VFS 基础：driect write"><img class="cover" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/7_1752075489299.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-28</div><div class="title">【Linux 内核】VFS 基础：driect write</div></div></a></div><div><a href="/blog/posts/3a98d6d7/" title="【Linux 内核】VFS 基础：close"><img class="cover" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/27_1785311487554.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-24</div><div class="title">【Linux 内核】VFS 基础：close</div></div></a></div><div><a href="/blog/posts/1370ad10/" title="【Linux 内核】VFS 基础：mount"><img class="cover" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/15_1752075427743.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-20</div><div class="title">【Linux 内核】VFS 基础：mount</div></div></a></div><div><a href="/blog/posts/d8c9ca1e/" title="【Linux 内核】VFS 基础：read"><img class="cover" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/22_1785311474212.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-23</div><div class="title">【Linux 内核】VFS 基础：read</div></div></a></div><div><a href="/blog/posts/c615e5d3/" title="【Linux 内核】VFS 基础：writeback"><img class="cover" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/29_1785311495995.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-29</div><div class="title">【Linux 内核】VFS 基础：writeback</div></div></a></div><div><a href="/blog/posts/54f22d4c/" title="【Linux 内核】VFS 基础：write"><img class="cover" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/28_1785311493480.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-22</div><div class="title">【Linux 内核】VFS 基础：write</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/avatar_1752075331083.jpg" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">dreamy-xay</div><div class="author-info__description">只争朝夕，不负韶华</div></div><div class="card-info-data site-data is-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">26</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">45</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/dreamy-xay"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="http://wpa.qq.com/msgrd?v=3&amp;uin=1985332264&amp;site=qq&amp;menu=yes" target="_blank" title="QQ"><i class="fab fa-qq" style="color: #febcd5;"></i></a><a class="social-icon" href="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/weixin_1752075402432.png" target="_blank" title="WeChat"><i class="fab fa-weixin" style="color: #febcd5;"></i></a><a class="social-icon" href="mailto:dreamy-xay@foxmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #febcd5;"></i></a><a class="social-icon" href="https://space.bilibili.com/365741414" target="_blank" title="Bilibili"><i class="fa-brands fa-bilibili" style="color: #febcd5;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Hi~ o(*￣▽￣*)ブ，欢迎来到dreamy'blog，如果喜欢记得收藏奥～</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E4%BB%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E5%88%B0%E5%86%85%E6%A0%B8%EF%BC%9Aopen-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="toc-text">一、从用户空间到内核：open 系统调用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81open-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%86%85%E6%A0%B8%E5%85%A5%E5%8F%A3"><span class="toc-text">二、open 系统调用的内核入口</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-sys-open%EF%BC%9A%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="toc-text">1 sys_open：系统调用的定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-do-sys-open%EF%BC%9A%E6%A0%B8%E5%BF%83%E5%88%86%E5%8F%91%E5%87%BD%E6%95%B0"><span class="toc-text">2 do_sys_open：核心分发函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81do-filp-open%EF%BC%9A%E6%89%93%E5%BC%80%E6%96%87%E4%BB%B6%E7%9A%84%E6%A0%B8%E5%BF%83"><span class="toc-text">三、do_filp_open：打开文件的核心</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-nameidata%EF%BC%9A%E8%B7%AF%E5%BE%84%E6%9F%A5%E6%89%BE%E7%9A%84%E4%B8%8A%E4%B8%8B%E6%96%87"><span class="toc-text">1 nameidata：路径查找的上下文</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-path-openat%EF%BC%9A%E8%B7%AF%E5%BE%84%E6%9F%A5%E6%89%BE%E4%B8%8E%E6%89%93%E5%BC%80"><span class="toc-text">2 path_openat：路径查找与打开</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E8%B7%AF%E5%BE%84%E9%81%8D%E5%8E%86%EF%BC%9Alink-path-walk"><span class="toc-text">四、路径遍历：link_path_walk</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E8%B7%AF%E5%BE%84%E5%88%86%E9%87%8F%E7%9A%84%E8%A7%A3%E6%9E%90"><span class="toc-text">1 路径分量的解析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-walk-component%EF%BC%9A%E6%9F%A5%E6%89%BE%E5%8D%95%E4%B8%AA%E5%88%86%E9%87%8F"><span class="toc-text">2 walk_component：查找单个分量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-lookup-real%EF%BC%9A%E8%B0%83%E7%94%A8%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84-lookup"><span class="toc-text">3 lookup_real：调用文件系统的 lookup</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-follow-managed%EF%BC%9A%E5%A4%84%E7%90%86%E6%8C%82%E8%BD%BD%E7%82%B9"><span class="toc-text">4 follow_managed：处理挂载点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E6%89%93%E5%BC%80%E6%9C%80%E5%90%8E%E4%B8%80%E4%B8%AA%E5%88%86%E9%87%8F%EF%BC%9Aopen-last-lookups"><span class="toc-text">五、打开最后一个分量：open_last_lookups</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-lookup-open%EF%BC%9A%E6%9F%A5%E6%89%BE%E6%88%96%E5%88%9B%E5%BB%BA"><span class="toc-text">1 lookup_open：查找或创建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84-lookup-%E5%92%8C-create"><span class="toc-text">2 文件系统的 lookup 和 create</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E6%89%A7%E8%A1%8C%E6%89%93%E5%BC%80%EF%BC%9Ado-open-%E4%B8%8E-vfs-open"><span class="toc-text">六、执行打开：do_open 与 vfs_open</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-do-open%EF%BC%9A%E6%9D%83%E9%99%90%E6%A3%80%E6%9F%A5%E4%B8%8E%E6%89%93%E5%BC%80%E5%87%86%E5%A4%87"><span class="toc-text">1 do_open：权限检查与打开准备</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-vfs-open%EF%BC%9A%E8%B0%83%E7%94%A8%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84-open-%E6%96%B9%E6%B3%95"><span class="toc-text">2 vfs_open：调用文件系统的 open 方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-fd-install%EF%BC%9A%E5%AE%89%E8%A3%85%E6%96%87%E4%BB%B6%E6%8F%8F%E8%BF%B0%E7%AC%A6"><span class="toc-text">3 fd_install：安装文件描述符</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81struct-file%EF%BC%9A%E6%89%93%E5%BC%80%E6%96%87%E4%BB%B6%E7%9A%84%E4%BB%A3%E8%A1%A8"><span class="toc-text">七、struct file：打开文件的代表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AB%E3%80%81%E5%AE%8C%E6%95%B4%E8%B0%83%E7%94%A8%E9%93%BE%E6%80%BB%E7%BB%93"><span class="toc-text">八、完整调用链总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B9%9D%E3%80%81%E6%80%BB%E7%BB%93"><span class="toc-text">九、总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E5%86%85%E5%AE%B9"><span class="toc-text">参考内容</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/posts/7fee99f/" title="【C】C语言面向对象实现"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/27_1785311487554.jpg" onerror="this.onerror=null;this.src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【C】C语言面向对象实现"/></a><div class="content"><a class="title" href="/blog/posts/7fee99f/" title="【C】C语言面向对象实现">【C】C语言面向对象实现</a><time datetime="2026-07-30T12:48:13.000Z" title="发表于 2026-07-30 20:48:13">2026-07-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/posts/c615e5d3/" title="【Linux 内核】VFS 基础：writeback"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/29_1785311495995.jpeg" onerror="this.onerror=null;this.src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【Linux 内核】VFS 基础：writeback"/></a><div class="content"><a class="title" href="/blog/posts/c615e5d3/" title="【Linux 内核】VFS 基础：writeback">【Linux 内核】VFS 基础：writeback</a><time datetime="2026-07-29T07:36:34.000Z" title="发表于 2026-07-29 15:36:34">2026-07-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/posts/71fe51a6/" title="【Linux 内核】VFS 基础：driect write"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/7_1752075489299.jpg" onerror="this.onerror=null;this.src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【Linux 内核】VFS 基础：driect write"/></a><div class="content"><a class="title" href="/blog/posts/71fe51a6/" title="【Linux 内核】VFS 基础：driect write">【Linux 内核】VFS 基础：driect write</a><time datetime="2026-07-28T07:34:51.000Z" title="发表于 2026-07-28 15:34:51">2026-07-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/posts/3a98d6d7/" title="【Linux 内核】VFS 基础：close"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/27_1785311487554.jpg" onerror="this.onerror=null;this.src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【Linux 内核】VFS 基础：close"/></a><div class="content"><a class="title" href="/blog/posts/3a98d6d7/" title="【Linux 内核】VFS 基础：close">【Linux 内核】VFS 基础：close</a><time datetime="2026-07-24T02:50:01.000Z" title="发表于 2026-07-24 10:50:01">2026-07-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/posts/d8c9ca1e/" title="【Linux 内核】VFS 基础：read"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/22_1785311474212.jpg" onerror="this.onerror=null;this.src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【Linux 内核】VFS 基础：read"/></a><div class="content"><a class="title" href="/blog/posts/d8c9ca1e/" title="【Linux 内核】VFS 基础：read">【Linux 内核】VFS 基础：read</a><time datetime="2026-07-23T05:35:12.000Z" title="发表于 2026-07-23 13:35:12">2026-07-23</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/18_1752075443054.png')"><div id="footer-wrap"><div class="copyright">&copy;2025 - 2026 By dreamy-xay</div><div class="framework-info"><span>网站 </span><a target="_blank" rel="noopener" href="https://github.com/dreamy-xay/blog">Github</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://dreamy-xay.github.io/blog">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="https://cdn.staticfile.net/hexo-theme-butterfly/4.13.0/js/utils.min.js"></script><script src="https://cdn.staticfile.net/hexo-theme-butterfly/4.13.0/js/main.min.js"></script><script src="https://cdn.staticfile.net/hexo-theme-butterfly/4.13.0/js/tw_cn.min.js"></script><script src="https://cdn.staticfile.net/fancyapps-ui/5.0.33/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.staticfile.net/instant.page/5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.staticfile.net/node-snackbar/0.1.16/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.staticfile.net/pangu/4.0.7/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"><script>(() => {
+  const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaid.length === 0) return
+  const runMermaid = () => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    Array.from($mermaid).forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+      const mermaidID = 'mermaid-' + index
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+
+      const renderV10 = () => {
+        renderFn.then(({svg}) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svg)
+        })
+      }
+
+      const renderV9 = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      typeof renderFn === 'string' ? renderV9(renderFn) : renderV10()
+    })
+  }
+
+  const loadMermaid = () => {
+    window.loadMermaid ? runMermaid() : getScript('https://cdn.staticfile.net/mermaid/10.8.0/mermaid.min.js').then(runMermaid)
+  }
+
+  btf.addGlobalFn('themeChange', runMermaid, 'mermaid')
+
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script><script>(() => {
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-vercel-swart-pi.vercel.app/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = () => {
+    twikoo.init(Object.assign({
+      el: '#twikoo-wrap',
+      envId: 'https://twikoo-vercel-swart-pi.vercel.app/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      }
+    }, null))
+
+    GLOBAL_CONFIG_SITE.isPost && getCount()
+  }
+
+  const loadTwikoo = () => {
+    if (typeof twikoo === 'object') setTimeout(init,0)
+    else getScript('https://cdn.staticfile.net/twikoo/1.6.31/twikoo.all.min.js').then(init)
+  }
+
+  if ('Twikoo' === 'Twikoo' || !true) {
+    if (true) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script>window.addEventListener('load', () => {
+  const changeContent = (content) => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g,"") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0,150) + '...'
+    }
+    return content
+  }
+
+  const getComment = () => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo-vercel-swart-pi.vercel.app/',
+        region: '',
+        pageSize: 6,
+        includeReply: true
+      }).then(function (res) {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        saveToLocal.set('twikoo-newest-comments', JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray)
+      }).catch(function (err) {
+        const $dom = document.querySelector('#card-newest-comments .aside-list')
+        $dom.textContent= "无法获取评论，请确认相关配置是否正确"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      getScript('https://cdn.staticfile.net/twikoo/1.6.31/twikoo.all.min.js').then(runTwikoo)
+    }
+  }
+
+  const generateHtml = array => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class=\'aside-list-item\'>'
+
+        if (true) {
+          const name = 'src'
+          result += `<a href='${array[i].url}' class='thumbnail'><img ${name}='${array[i].avatar}' alt='${array[i].nick}'></a>`
+        }
+        
+        result += `<div class='content'>
+        <a class='comment' href='${array[i].url}' title='${array[i].content}'>${array[i].content}</a>
+        <div class='name'><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '没有评论'
+    }
+
+    let $dom = document.querySelector('#card-newest-comments .aside-list')
+    $dom && ($dom.innerHTML= result)
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh($dom)
+  }
+
+  const newestCommentInit = () => {
+    if (document.querySelector('#card-newest-comments .aside-list')) {
+      const data = saveToLocal.get('twikoo-newest-comments')
+      if (data) {
+        generateHtml(JSON.parse(data))
+      } else {
+        getComment()
+      }
+    }
+  }
+
+  newestCommentInit()
+  document.addEventListener('pjax:complete', newestCommentInit)
+})</script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script><script type="text/javascript" src="/blog/js/fireworks.min.js"></script><script src="https://cdn.staticfile.net/butterfly-extsrc/1.1.3/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><link rel="stylesheet" href="https://cdn.staticfile.net/aplayer/1.10.1/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.staticfile.net/aplayer/1.10.1/APlayer.min.js"></script><script src="https://cdn.staticfile.net/butterfly-extsrc/1.1.3/metingjs/dist/Meting.min.js"></script><script src="https://cdn.staticfile.net/pjax/0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/blog/404')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="https://cdn.staticfile.net/hexo-theme-butterfly/4.13.0/js/search/local-search.min.js"></script></div></div><script src="/blog/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"tagMode":false,"debug":false,"model":{"jsonPath":"/blog/live2dw/assets/shizuku.model.json"},"display":{"position":"left","width":150,"height":300,"hOffset":20,"vOffset":-20},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/"});</script></body></html>

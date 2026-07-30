@@ -1,0 +1,827 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>【开发工具】Git | dreamyのblog</title><meta name="author" content="dreamy-xay"><meta name="copyright" content="dreamy-xay"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="一、Git 工作流程与核心概念 1 工作流程 Git 的工作流程可以想象成 写作业并交给老师 的过程。下图展示了这一流程：           Git 工作流程图  步骤 1：工作区（Working Directory）—— 你的书桌  这是你实际修改文件的地方。你在这里写新代码、修复 Bug、删除无用文件，所有改动都只存在于本地，尚未被 Git 记录。  步骤 2：暂存区（Staging Are">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【开发工具】Git">
+<meta property="og:url" content="https://dreamy-xay.github.io/blog/posts/98d6f04f/">
+<meta property="og:site_name" content="dreamyのblog">
+<meta property="og:description" content="一、Git 工作流程与核心概念 1 工作流程 Git 的工作流程可以想象成 写作业并交给老师 的过程。下图展示了这一流程：           Git 工作流程图  步骤 1：工作区（Working Directory）—— 你的书桌  这是你实际修改文件的地方。你在这里写新代码、修复 Bug、删除无用文件，所有改动都只存在于本地，尚未被 Git 记录。  步骤 2：暂存区（Staging Are">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/27_1785311487554.jpg">
+<meta property="article:published_time" content="2026-07-15T06:53:55.000Z">
+<meta property="article:modified_time" content="2026-07-27T08:01:02.000Z">
+<meta property="article:author" content="dreamy-xay">
+<meta property="article:tag" content="版本控制">
+<meta property="article:tag" content="远程开发">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/27_1785311487554.jpg"><link rel="shortcut icon" href="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/logo_1752075337653.png"><link rel="canonical" href="https://dreamy-xay.github.io/blog/posts/98d6f04f/"><link rel="preconnect" href="https://cdn.staticfile.net"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.staticfile.net/font-awesome/6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.staticfile.net/node-snackbar/0.1.16/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.staticfile.net/fancyapps-ui/5.0.33/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: {"path":"/blog/search.xml","preload":false,"top_n_per_article":1,"unescape":true,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":30,"languages":{"author":"作者: dreamy-xay","link":"链接: ","source":"来源: dreamyのblog","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体中文","cht_to_chs":"你已切换为简体中文","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#febcd5","bgDark":"#1f1f1f","position":"top-center"},
+  infinitegrid: {
+    js: 'https://cdn.staticfile.net/egjs-infinitegrid/4.11.1/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '【开发工具】Git',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2026-07-27 16:01:02'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="referrer" content="no-referrer" /><link rel="stylesheet" href="/blog/css/custom.css"><link rel="stylesheet" href="/blog/css/background.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="gear-loader"><div class="gear-loader_overlay"></div><div class="gear-loader_cogs"><div class="gear-loader_cogs__top"><div class="gear-top_part"></div><div class="gear-top_part"></div><div class="gear-top_part"></div><div class="gear-top_hole"></div></div><div class="gear-loader_cogs__left"><div class="gear-left_part"></div><div class="gear-left_part"></div><div class="gear-left_part"></div><div class="gear-left_hole"></div></div><div class="gear-loader_cogs__bottom"><div class="gear-bottom_part"></div><div class="gear-bottom_part"></div><div class="gear-bottom_part"></div><div class="gear-bottom_hole"></div></div></div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/avatar_1752075331083.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">26</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">45</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa-fw fas fa-book"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa-fw fas fa-list"></i><span> 娱乐库</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/blog/books/"><i class="fa-fw fas fa-book-open"></i><span> 阅读库</span></a></li><li><a class="site-page child" href="/blog/music/"><i class="fa-fw fas fa-music"></i><span> 音乐库</span></a></li><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 图片库</span></a></li><li><a class="site-page child" href="/blog/movies/"><i class="fa-fw fas fa-video"></i><span> 电影库</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/link/"><i class="fa-fw fas fa-link"></i><span> 友人帐</span></a></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/27_1785311487554.jpg')"><nav id="nav"><span id="blog-info"><a href="/blog/" title="dreamyのblog"><img class="site-icon" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/logo2_1752075340714.png"/><span class="site-name">dreamyのblog</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa-fw fas fa-book"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa-fw fas fa-list"></i><span> 娱乐库</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/blog/books/"><i class="fa-fw fas fa-book-open"></i><span> 阅读库</span></a></li><li><a class="site-page child" href="/blog/music/"><i class="fa-fw fas fa-music"></i><span> 音乐库</span></a></li><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 图片库</span></a></li><li><a class="site-page child" href="/blog/movies/"><i class="fa-fw fas fa-video"></i><span> 电影库</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/link/"><i class="fa-fw fas fa-link"></i><span> 友人帐</span></a></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div><div id="nav-right"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i></a></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">【开发工具】Git</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-07-15T06:53:55.000Z" title="发表于 2026-07-15 14:53:55">2026-07-15</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-07-27T08:01:02.000Z" title="更新于 2026-07-27 16:01:02">2026-07-27</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/">开发工具</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>11分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="【开发工具】Git"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="一、Git-工作流程与核心概念">一、Git 工作流程与核心概念</h2>
+<h3 id="1-工作流程">1 工作流程</h3>
+<p>Git 的工作流程可以想象成 <strong>写作业并交给老师</strong> 的过程。下图展示了这一流程：</p>
+<div align="center">
+    <img src="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2026-07/git-workflow_1785136799311.svg" width="100%" />
+    <strong style="color: #1fb9fb; margin: -20px 0px 20px 0px; display: block;">Git 工作流程图</strong>
+</div>
+<p><strong>步骤 1</strong>：工作区（Working Directory）—— 你的书桌</p>
+<blockquote>
+<p>这是你实际修改文件的地方。你在这里写新代码、修复 Bug、删除无用文件，所有改动都只存在于本地，尚未被 Git 记录。</p>
+</blockquote>
+<p><strong>步骤 2</strong>：暂存区（Staging Area）—— 你的待邮寄篮子</p>
+<blockquote>
+<p>当你觉得某部分作业差不多了，就用 <strong><code>git add</code></strong> 把它放进篮子。这一步告诉 Git：“这些改动我确认要提交了，先帮我记着。”你可以选择性地添加部分文件。</p>
+</blockquote>
+<p><strong>步骤 3</strong>：本地仓库（Local Repository）—— 你的个人保险箱</p>
+<blockquote>
+<p>用 <strong><code>git commit</code></strong> 把篮子里的内容打包并贴上标签（提交信息），锁进保险箱。从此，这次改动成为项目历史的一部分，随时可以找回。</p>
+</blockquote>
+<p><strong>步骤 4</strong>：远程仓库（Remote）—— 老师的收件箱（如 GitHub/GitLab）</p>
+<blockquote>
+<p>最后，用 <strong><code>git push</code></strong> 把保险箱里的代码发送到远程服务器，既备份又方便团队协作。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">区域</th>
+<th style="text-align:center">含义</th>
+<th style="text-align:center">对应操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><strong>工作区</strong></td>
+<td style="text-align:center">你电脑上看到的文件，日常编辑的地方</td>
+<td style="text-align:center">编写代码</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>暂存区</strong></td>
+<td style="text-align:center"><code>git add</code> 后的暂存地，标记下次要提交的内容</td>
+<td style="text-align:center"><code>git add</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>本地仓库</strong></td>
+<td style="text-align:center"><code>git commit</code> 后形成永久快照，拥有完整历史</td>
+<td style="text-align:center"><code>git commit</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>远程仓库</strong></td>
+<td style="text-align:center">GitHub/GitLab 等服务器上的仓库，团队共享</td>
+<td style="text-align:center"><code>git push</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="2-关键名词">2 关键名词</h3>
+<ul>
+<li><strong>Commit（提交）</strong>：一次项目快照，包含改动内容和说明信息。</li>
+<li><strong>Branch（分支）</strong>：一条独立的历史线，支持并行开发互不干扰。</li>
+<li><strong>Merge（合并）</strong>：将两个分支的改动整合到一起（如功能分支合并回主分支）。</li>
+</ul>
+<h2 id="二、Git-操作指南">二、Git 操作指南</h2>
+<h3 id="1-准备工作：克隆或初始化仓库">1 准备工作：克隆或初始化仓库</h3>
+<h4 id="1-1-克隆已有项目">1.1 克隆已有项目</h4>
+<p>若要参与已有项目，首先将远程仓库完整复制到本地：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/username/repo.git</span><br><span class="line"><span class="built_in">cd</span> repo</span><br></pre></td></tr></table></figure>
+<h4 id="1-2-从零开始新项目">1.2 从零开始新项目</h4>
+<p>若本地新建项目，需依次完成初始化、忽略规则配置、首次提交并关联远程：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 1. 初始化本地仓库</span></span><br><span class="line">git init</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 创建 .gitignore（排除临时文件、密钥、本地数据等）</span></span><br><span class="line"><span class="comment"># 示例内容（Python 项目）：</span></span><br><span class="line"><span class="comment"># __pycache__/</span></span><br><span class="line"><span class="comment"># .venv/</span></span><br><span class="line"><span class="comment"># .env</span></span><br><span class="line"><span class="comment"># *.log</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 添加所有文件到暂存区</span></span><br><span class="line">git add .</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. 完成首次提交（通常称为 initial commit）</span></span><br><span class="line">git commit -m <span class="string">&quot;init: project setup&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 5. 关联远程仓库</span></span><br><span class="line">git remote add origin https://github.com/yourname/your-repo.git</span><br><span class="line"></span><br><span class="line"><span class="comment"># 6. 首次推送并设置上游分支（-u 等价于 --set-upstream）</span></span><br><span class="line">git push -u origin main   <span class="comment"># 或 master</span></span><br></pre></td></tr></table></figure>
+<h3 id="2-日常开发核心循环">2 日常开发核心循环</h3>
+<p>每次开发遵循 <strong>编辑 → 暂存 → 提交 → 推送</strong> 的标准流程：</p>
+<ol>
+<li><strong>查看当前状态</strong>（养成习惯，随时检查）</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git status</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li><strong>将改动添加到暂存区</strong>（按需添加，避免无脑 <code>add .</code>）</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git add main.py rag/rag_chain.py   <span class="comment"># 指定文件</span></span><br><span class="line">git add .                          <span class="comment"># 添加所有改动</span></span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li><strong>提交并书写有意义的提交信息</strong></li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git commit -m <span class="string">&quot;feat: add RRF result fusion to search pipeline&quot;</span></span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li><strong>推送到远程仓库</strong></li>
+</ol>
+ <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git push</span><br></pre></td></tr></table></figure>
+<h3 id="3-分支管理">3 分支管理</h3>
+<h4 id="3-1-为什么需要分支">3.1 为什么需要分支</h4>
+<p>分支使不同功能的开发相互隔离。例如，正在开发新功能时突遇紧急修复，可在单独分支上处理 bug，主分支（main）始终保持稳定可部署。</p>
+<h4 id="3-2-基本分支操作">3.2 基本分支操作</h4>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 创建分支</span></span><br><span class="line">git branch feature/new-search</span><br><span class="line"></span><br><span class="line"><span class="comment"># 切换分支</span></span><br><span class="line">git checkout feature/new-search</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建并切换（一步到位，推荐）</span></span><br><span class="line">git checkout -b feature/new-search</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看所有分支（* 标记当前所在分支）</span></span><br><span class="line">git branch</span><br><span class="line"></span><br><span class="line"><span class="comment"># 切回主分支</span></span><br><span class="line">git checkout main</span><br><span class="line"></span><br><span class="line"><span class="comment"># 合并功能分支到主分支</span></span><br><span class="line">git checkout main</span><br><span class="line">git merge feature/new-search</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除已合并的本地分支（可选）</span></span><br><span class="line">git branch -d feature/new-search</span><br></pre></td></tr></table></figure>
+<h4 id="3-3-推荐工作流：功能分支工作流（Feature-Branch-Workflow）">3.3 推荐工作流：功能分支工作流（Feature Branch Workflow）</h4>
+<ul>
+<li><code>main</code> 分支始终保持可部署状态。</li>
+<li>每个新功能/修复均从 <code>main</code> 分出独立分支。</li>
+<li>完成后合并回 <code>main</code>，随后可删除功能分支。</li>
+</ul>
+<p><strong>分支命名规范</strong>：</p>
+<ul>
+<li><code>feat/xxx</code> 或 <code>feature/xxx</code> —— 新功能</li>
+<li><code>fix/xxx</code> 或 <code>bugfix/xxx</code> —— Bug 修复</li>
+<li><code>refactor/xxx</code> —— 重构</li>
+<li><code>docs/xxx</code> —— 文档</li>
+<li><code>hotfix/xxx</code> —— 紧急修复</li>
+</ul>
+<h4 id="3-4-实战示例：为-RAG-系统增加重排序功能">3.4 实战示例：为 RAG 系统增加重排序功能</h4>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 1. 确保本地 main 与远程同步</span></span><br><span class="line">git checkout main</span><br><span class="line">git pull origin main</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 创建功能分支</span></span><br><span class="line">git checkout -b feat/rerank</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 开发... 测试... 过程中可随时提交</span></span><br><span class="line">git add reranker.py</span><br><span class="line">git commit -m <span class="string">&quot;feat: add cross-encoder reranker module&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. 开发完成，合并回 main（--no-ff 保留分支历史）</span></span><br><span class="line">git checkout main</span><br><span class="line">git merge feat/rerank --no-ff</span><br><span class="line"></span><br><span class="line"><span class="comment"># 5. 推送更新到远程</span></span><br><span class="line">git push origin main</span><br><span class="line"></span><br><span class="line"><span class="comment"># 6. 清理本地功能分支</span></span><br><span class="line">git branch -d feat/rerank</span><br></pre></td></tr></table></figure>
+<h3 id="4-远程仓库操作">4 远程仓库操作</h3>
+<h4 id="4-1-远程仓库管理">4.1 远程仓库管理</h4>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 查看已配置的远程仓库</span></span><br><span class="line">git remote -v</span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加远程仓库</span></span><br><span class="line">git remote add origin https://github.com/yourname/repo.git</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改远程仓库 URL</span></span><br><span class="line">git remote set-url origin https://github.com/yourname/new-repo.git</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除远程仓库关联</span></span><br><span class="line">git remote remove origin</span><br></pre></td></tr></table></figure>
+<h4 id="4-2-推送与拉取">4.2 推送与拉取</h4>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 推送当前分支到远程</span></span><br><span class="line">git push</span><br><span class="line"></span><br><span class="line"><span class="comment"># 首次推送并设置上游分支</span></span><br><span class="line">git push -u origin main</span><br><span class="line"></span><br><span class="line"><span class="comment"># 拉取远程最新代码并自动合并（相当于 fetch + merge）</span></span><br><span class="line">git pull</span><br><span class="line"></span><br><span class="line"><span class="comment"># 仅下载远程更新，不合并（安全查看）</span></span><br><span class="line">git fetch</span><br></pre></td></tr></table></figure>
+<p><strong><code>fetch</code> 与 <code>pull</code> 的选择</strong>：</p>
+<ul>
+<li><code>git fetch</code>：只下载，不改变工作区，适合先审查远程变化再决定合并。</li>
+<li><code>git pull</code>：下载并自动合并，适用于日常同步且确信无冲突时。</li>
+</ul>
+<h4 id="4-3-分支推送与删除">4.3 分支推送与删除</h4>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 推送指定分支</span></span><br><span class="line">git push origin feature/rerank</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除远程分支（本地不受影响）</span></span><br><span class="line">git push origin --delete feature/rerank</span><br><span class="line"></span><br><span class="line"><span class="comment"># 推送所有分支</span></span><br><span class="line">git push --all</span><br></pre></td></tr></table></figure>
+<h3 id="5-多人协作流程">5 多人协作流程</h3>
+<h4 id="5-1-团队内协作（同一仓库写权限）">5.1 团队内协作（同一仓库写权限）</h4>
+<p>所有成员对同一个远程仓库有推送权限时，工作流如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 1. 克隆团队仓库</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/team/repo.git</span><br><span class="line"><span class="built_in">cd</span> repo</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 创建功能分支</span></span><br><span class="line">git checkout -b feat/my-feature</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 开发并提交</span></span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;feat: implement feature&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. 推送功能分支到远程</span></span><br><span class="line">git push -u origin feat/my-feature</span><br><span class="line"></span><br><span class="line"><span class="comment"># 5. 在托管平台（GitHub/GitLab）创建 Pull Request（PR），邀请 Review</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 6. Review 通过后合并到 main</span></span><br></pre></td></tr></table></figure>
+<h3 id="5-2-开源贡献（Fork-Pull-Request）">5.2 开源贡献（Fork + Pull Request）</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 1. 在 GitHub 上 Fork 原仓库至个人账号</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. Clone 自己的 Fork</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/yourname/repo.git</span><br><span class="line"><span class="built_in">cd</span> repo</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 添加原仓库为上游</span></span><br><span class="line">git remote add upstream https://github.com/original-author/repo.git</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. 从上游同步最新 main</span></span><br><span class="line">git checkout main</span><br><span class="line">git pull upstream main</span><br><span class="line"></span><br><span class="line"><span class="comment"># 5. 创建功能分支并开发</span></span><br><span class="line">git checkout -b feat/new-feature</span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;feat: add new feature&quot;</span></span><br><span class="line">git push origin feat/new-feature</span><br><span class="line"></span><br><span class="line"><span class="comment"># 6. 在 GitHub 上从该分支向原仓库发起 Pull Request</span></span><br></pre></td></tr></table></figure>
+<h4 id="5-3-每日同步规范">5.3 每日同步规范</h4>
+<p><strong>开工前</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git checkout main</span><br><span class="line">git pull origin main</span><br><span class="line">git checkout -b feat/today-task</span><br></pre></td></tr></table></figure>
+<p><strong>收工前</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;feat: xxx&quot;</span></span><br><span class="line">git push</span><br><span class="line"></span><br><span class="line"><span class="comment"># 若功能完成，提 PR 请求合并</span></span><br></pre></td></tr></table></figure>
+<h3 id="6-冲突处理">6 冲突处理</h3>
+<h4 id="6-1-冲突的产生">6.1 冲突的产生</h4>
+<p>当两个分支修改了同一文件的同一区域时，合并时 Git 无法自动决定取舍，便产生冲突。</p>
+<h4 id="6-2-冲突标记格式">6.2 冲突标记格式</h4>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</span><br><span class="line">你的代码版本</span><br><span class="line">=======</span><br><span class="line">别人的代码版本</span><br><span class="line">&gt;&gt;&gt;&gt;&gt;&gt;&gt; branch-name</span><br></pre></td></tr></table></figure>
+<h4 id="6-3-解决步骤">6.3 解决步骤</h4>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 1. 拉取或合并时发生冲突（示例为 git pull）</span></span><br><span class="line">git pull origin main</span><br><span class="line"><span class="comment"># 输出：CONFLICT (content): Merge conflict in main.py</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 打开冲突文件，手动编辑，删除 &lt;&lt;&lt;&lt;&lt;&lt;&lt; ======= &gt;&gt;&gt;&gt;&gt;&gt;&gt; 标记，保留最终内容</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 标记为已解决</span></span><br><span class="line">git add main.py</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. 提交合并结果</span></span><br><span class="line">git commit -m <span class="string">&quot;fix: resolve merge conflict in main.py&quot;</span></span><br></pre></td></tr></table></figure>
+<p>若多个文件冲突，需逐一解决后统一提交。</p>
+<h4 id="6-4-冲突预防策略">6.4 冲突预防策略</h4>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">策略</th>
+<th style="text-align:center">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">频繁拉取</td>
+<td style="text-align:center">每天开工前执行 <code>git pull</code>，减少差异</td>
+</tr>
+<tr>
+<td style="text-align:center">小步提交</td>
+<td style="text-align:center">每次提交改动量小，冲突概率低</td>
+</tr>
+<tr>
+<td style="text-align:center">分工明确</td>
+<td style="text-align:center">团队协商避免同时修改同一文件</td>
+</tr>
+<tr>
+<td style="text-align:center">及时合并</td>
+<td style="text-align:center">功能完成即合并，避免长期分支</td>
+</tr>
+<tr>
+<td style="text-align:center">定期同步</td>
+<td style="text-align:center">长期分支定期 <code>git merge main</code> 保持同步</td>
+</tr>
+</tbody>
+</table>
+<h3 id="7-常见场景实战">7 常见场景实战</h3>
+<h4 id="7-1-临时切换任务（保存未提交的改动）">7.1 临时切换任务（保存未提交的改动）</h4>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 正在开发功能，突遇紧急修复</span></span><br><span class="line">git stash                    <span class="comment"># 保存当前未提交的改动</span></span><br><span class="line">git checkout main</span><br><span class="line">git checkout -b hotfix/bug</span><br><span class="line"><span class="comment"># 修复...</span></span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;fix: xxx&quot;</span></span><br><span class="line">git checkout main</span><br><span class="line">git merge hotfix/bug</span><br><span class="line">git push origin main</span><br><span class="line"></span><br><span class="line"><span class="comment"># 回到原功能分支继续开发</span></span><br><span class="line">git checkout feat/my-feature</span><br><span class="line">git stash pop                <span class="comment"># 恢复暂存改动</span></span><br></pre></td></tr></table></figure>
+<h4 id="7-2-修正最后一次提交">7.2 修正最后一次提交</h4>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 提交消息写错</span></span><br><span class="line">git commit --amend -m <span class="string">&quot;correct message&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 漏加文件</span></span><br><span class="line">git add forgot-this.py</span><br><span class="line">git commit --amend --no-edit   <span class="comment"># 补加进上一次提交，不改消息</span></span><br></pre></td></tr></table></figure>
+<h4 id="7-3-撤销提交">7.3 撤销提交</h4>
+<ul>
+<li><strong><code>git revert</code></strong>（安全，适合已推送的提交）：创建一个新提交来反向撤销指定提交的改动，不修改历史。</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git revert HEAD      <span class="comment"># 撤销最近一次提交</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong><code>git reset</code></strong>（危险，会丢失提交）：回退到指定提交，之后的所有提交被移除。</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git reset --hard HEAD~1   <span class="comment"># 硬回退，本地改动全部丢失</span></span><br><span class="line">git reset --soft HEAD~1   <span class="comment"># 软回退，改动保留在暂存区</span></span><br></pre></td></tr></table></figure>
+<h4 id="7-4-合并多个小提交（交互式-rebase）">7.4 合并多个小提交（交互式 rebase）</h4>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git rebase -i HEAD~3    <span class="comment"># 合并最近 3 个提交</span></span><br><span class="line"><span class="comment"># 在编辑器中，将除第一个外的 pick 改为 squash，保存退出</span></span><br><span class="line"><span class="comment"># 然后编写新的合并提交消息</span></span><br></pre></td></tr></table></figure>
+<h4 id="7-5-远程有更新且本地有未提交改动">7.5 远程有更新且本地有未提交改动</h4>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git stash                    <span class="comment"># 暂存本地改动</span></span><br><span class="line">git pull origin main         <span class="comment"># 拉取远程更新</span></span><br><span class="line">git stash pop                <span class="comment"># 恢复本地改动（若有冲突则手动解决）</span></span><br></pre></td></tr></table></figure>
+<h4 id="7-6-查看提交详情">7.6 查看提交详情</h4>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git show &lt;commit-hash&gt;              <span class="comment"># 查看某次提交的完整改动</span></span><br><span class="line">git show --<span class="built_in">stat</span> &lt;commit-hash&gt;       <span class="comment"># 仅查看变更文件列表</span></span><br><span class="line">git diff &lt;hash1&gt; &lt;hash2&gt;            <span class="comment"># 比较两次提交的差异</span></span><br></pre></td></tr></table></figure>
+<h3 id="8-最佳实践与避坑指南">8 最佳实践与避坑指南</h3>
+<h4 id="8-1-严禁操作">8.1 严禁操作</h4>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">行为</th>
+<th style="text-align:center">后果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>git push --force</code> 到 main</td>
+<td style="text-align:center">覆盖他人提交，破坏团队协作</td>
+</tr>
+<tr>
+<td style="text-align:center">直接在 main 上开发</td>
+<td style="text-align:center">不稳定代码污染主分支</td>
+</tr>
+<tr>
+<td style="text-align:center">提交 <code>.env</code>、密码、API Key</td>
+<td style="text-align:center">敏感信息永久暴露（即使删除，历史仍可查）</td>
+</tr>
+<tr>
+<td style="text-align:center">提交超大文件（&gt;100MB）</td>
+<td style="text-align:center">GitHub 拒绝，后续处理复杂</td>
+</tr>
+<tr>
+<td style="text-align:center">长期不提交</td>
+<td style="text-align:center">改动量大，Review 困难，冲突风险高</td>
+</tr>
+</tbody>
+</table>
+<h4 id="8-2-必须配置的-gitignore（Python-示例）">8.2 必须配置的 .gitignore（Python 示例）</h4>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line"># Python 缓存</span><br><span class="line">__pycache__/</span><br><span class="line">*.pyc</span><br><span class="line">*.pyo</span><br><span class="line">*.egg-info/</span><br><span class="line"># 虚拟环境</span><br><span class="line">.venv/</span><br><span class="line">venv/</span><br><span class="line"># 环境变量</span><br><span class="line">.env</span><br><span class="line">.env.local</span><br><span class="line">.env.production</span><br><span class="line"># IDE 配置</span><br><span class="line">.idea/</span><br><span class="line">.vscode/</span><br><span class="line"># 操作系统</span><br><span class="line">.DS_Store</span><br><span class="line">Thumbs.db</span><br><span class="line"># 本地数据（大文件）</span><br><span class="line">*.db</span><br><span class="line">*.sqlite</span><br><span class="line">data/raw/</span><br></pre></td></tr></table></figure>
+<h4 id="8-3-Git-黄金法则">8.3 Git 黄金法则</h4>
+<ul>
+<li><strong>频繁提交，小步前进</strong>：每次提交只做一个小改动。</li>
+<li><strong>提交前检查</strong>：使用 <code>git diff</code> 复核改动内容。</li>
+<li><strong>提交消息清晰</strong>：说明“为什么改”，而非仅“改了什么”。</li>
+<li><strong>保持 main 可用</strong>：不稳定代码只留在功能分支。</li>
+<li><strong>每日同步</strong>：<code>git pull</code> 保持与远程一致。</li>
+<li><strong>敏感信息不入库</strong>：使用环境变量或密钥管理服务。</li>
+</ul>
+<h4 id="8-4-终极恢复工具：git-reflog">8.4 终极恢复工具：<code>git reflog</code></h4>
+<p>当误删分支、错误 reset 后，<code>git reflog</code> 记录了所有 HEAD 变动，可助你找回丢失状态：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git reflog</span><br><span class="line"><span class="comment"># 找到目标状态对应的索引，如 HEAD@&#123;5&#125;</span></span><br><span class="line">git reset --hard HEAD@&#123;5&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="附录：命令速查卡">附录：命令速查卡</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">分类</th>
+<th style="text-align:center">命令</th>
+<th style="text-align:center">作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><strong>初始化</strong></td>
+<td style="text-align:center"><code>git init</code></td>
+<td style="text-align:center">初始化本地仓库</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"><code>git clone &lt;url&gt;</code></td>
+<td style="text-align:center">克隆远程仓库</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>日常</strong></td>
+<td style="text-align:center"><code>git status</code></td>
+<td style="text-align:center">查看工作区和暂存区状态</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"><code>git diff</code></td>
+<td style="text-align:center">查看未暂存的改动</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"><code>git diff --cached</code></td>
+<td style="text-align:center">查看已暂存但未提交的改动</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"><code>git add &lt;file&gt;</code></td>
+<td style="text-align:center">添加指定文件到暂存区</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"><code>git add .</code></td>
+<td style="text-align:center">添加所有改动到暂存区</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"><code>git commit -m &quot;msg&quot;</code></td>
+<td style="text-align:center">提交暂存区内容</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"><code>git push</code></td>
+<td style="text-align:center">推送到远程</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>分支</strong></td>
+<td style="text-align:center"><code>git branch</code></td>
+<td style="text-align:center">列出本地分支</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"><code>git branch &lt;name&gt;</code></td>
+<td style="text-align:center">创建分支</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"><code>git checkout &lt;name&gt;</code></td>
+<td style="text-align:center">切换分支</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"><code>git checkout -b &lt;name&gt;</code></td>
+<td style="text-align:center">创建并切换</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"><code>git merge &lt;branch&gt;</code></td>
+<td style="text-align:center">合并分支到当前分支</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"><code>git branch -d &lt;name&gt;</code></td>
+<td style="text-align:center">删除本地分支</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>远程</strong></td>
+<td style="text-align:center"><code>git remote -v</code></td>
+<td style="text-align:center">查看远程仓库地址</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"><code>git fetch</code></td>
+<td style="text-align:center">拉取远程更新（不合并）</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"><code>git pull</code></td>
+<td style="text-align:center">拉取并合并</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"><code>git push origin &lt;branch&gt;</code></td>
+<td style="text-align:center">推送指定分支</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"><code>git push origin --delete &lt;branch&gt;</code></td>
+<td style="text-align:center">删除远程分支</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>撤销/修复</strong></td>
+<td style="text-align:center"><code>git stash</code></td>
+<td style="text-align:center">暂存未提交改动</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"><code>git stash pop</code></td>
+<td style="text-align:center">恢复最近一次暂存</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"><code>git commit --amend</code></td>
+<td style="text-align:center">修改上次提交</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"><code>git reset HEAD &lt;file&gt;</code></td>
+<td style="text-align:center">从暂存区移除文件</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"><code>git checkout -- &lt;file&gt;</code></td>
+<td style="text-align:center">丢弃工作区未暂存改动</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"><code>git revert HEAD</code></td>
+<td style="text-align:center">撤销最近一次提交（安全）</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"><code>git reflog</code></td>
+<td style="text-align:center">查看所有 HEAD 操作历史</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>日志</strong></td>
+<td style="text-align:center"><code>git log --oneline</code></td>
+<td style="text-align:center">简洁查看提交历史</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"><code>git log -p</code></td>
+<td style="text-align:center">查看每次提交的具体改动</td>
+</tr>
+</tbody>
+</table>
+<h2 id="参考资料">参考资料</h2>
+<p><strong style="color: #db8ef7;">[1]</strong> <a target="_blank" rel="noopener" href="https://www.runoob.com/git/git-workflow.html">Git 工作流程</a><br>
+<strong style="color: #db8ef7;">[2]</strong> <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/2033979954317243990">Git 从单人开发到多人协作</a><br>
+<strong style="color: #db8ef7;">[3]</strong> <a target="_blank" rel="noopener" href="https://juejin.cn/post/7327863960008392738">大厂真实 Git 开发工作流程</a><br>
+<strong style="color: #db8ef7;">[4]</strong> <a target="_blank" rel="noopener" href="https://www.cnblogs.com/kevin-ying/p/14329768.html">大厂git分支管理规范：gitflow规范指南</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://dreamy-xay.github.io/blog">dreamy-xay</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://dreamy-xay.github.io/blog/posts/98d6f04f/">https://dreamy-xay.github.io/blog/posts/98d6f04f/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://dreamy-xay.github.io/blog" target="_blank">dreamyのblog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6/">版本控制</a><a class="post-meta__tags" href="/blog/tags/%E8%BF%9C%E7%A8%8B%E5%BC%80%E5%8F%91/">远程开发</a></div><div class="post_share"><div class="social-share" data-image="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/27_1785311487554.jpg" data-sites="wechat,weibo,qq,qzone,facebook,twitter"></div><link rel="stylesheet" href="https://cdn.staticfile.net/butterfly-extsrc/1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.staticfile.net/butterfly-extsrc/1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赞助</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/wechat_1752075400337.png" target="_blank"><img class="post-qr-code-img" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/wechat_1752075400337.png" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/alipay_1752075397065.png" target="_blank"><img class="post-qr-code-img" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/alipay_1752075397065.png" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/blog/posts/97daf1b0/" title="【存储初识】06-用户态文件系统FUSE"><img class="cover" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/13_1752075505242.jpg" onerror="onerror=null;src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">【存储初识】06-用户态文件系统FUSE</div></div></a></div><div class="next-post pull-right"><a href="/blog/posts/77463f39/" title="【开发工具】GDB"><img class="cover" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/10_1752075498147.jpg" onerror="onerror=null;src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">【开发工具】GDB</div></div></a></div></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/avatar_1752075331083.jpg" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">dreamy-xay</div><div class="author-info__description">只争朝夕，不负韶华</div></div><div class="card-info-data site-data is-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">26</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">45</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/dreamy-xay"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="http://wpa.qq.com/msgrd?v=3&amp;uin=1985332264&amp;site=qq&amp;menu=yes" target="_blank" title="QQ"><i class="fab fa-qq" style="color: #febcd5;"></i></a><a class="social-icon" href="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/weixin_1752075402432.png" target="_blank" title="WeChat"><i class="fab fa-weixin" style="color: #febcd5;"></i></a><a class="social-icon" href="mailto:dreamy-xay@foxmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #febcd5;"></i></a><a class="social-icon" href="https://space.bilibili.com/365741414" target="_blank" title="Bilibili"><i class="fa-brands fa-bilibili" style="color: #febcd5;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Hi~ o(*￣▽￣*)ブ，欢迎来到dreamy'blog，如果喜欢记得收藏奥～</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81Git-%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B%E4%B8%8E%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5"><span class="toc-text">一、Git 工作流程与核心概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B"><span class="toc-text">1 工作流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%85%B3%E9%94%AE%E5%90%8D%E8%AF%8D"><span class="toc-text">2 关键名词</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81Git-%E6%93%8D%E4%BD%9C%E6%8C%87%E5%8D%97"><span class="toc-text">二、Git 操作指南</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C%EF%BC%9A%E5%85%8B%E9%9A%86%E6%88%96%E5%88%9D%E5%A7%8B%E5%8C%96%E4%BB%93%E5%BA%93"><span class="toc-text">1 准备工作：克隆或初始化仓库</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1-%E5%85%8B%E9%9A%86%E5%B7%B2%E6%9C%89%E9%A1%B9%E7%9B%AE"><span class="toc-text">1.1 克隆已有项目</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2-%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%96%B0%E9%A1%B9%E7%9B%AE"><span class="toc-text">1.2 从零开始新项目</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%97%A5%E5%B8%B8%E5%BC%80%E5%8F%91%E6%A0%B8%E5%BF%83%E5%BE%AA%E7%8E%AF"><span class="toc-text">2 日常开发核心循环</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%88%86%E6%94%AF%E7%AE%A1%E7%90%86"><span class="toc-text">3 分支管理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E5%88%86%E6%94%AF"><span class="toc-text">3.1 为什么需要分支</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-%E5%9F%BA%E6%9C%AC%E5%88%86%E6%94%AF%E6%93%8D%E4%BD%9C"><span class="toc-text">3.2 基本分支操作</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-3-%E6%8E%A8%E8%8D%90%E5%B7%A5%E4%BD%9C%E6%B5%81%EF%BC%9A%E5%8A%9F%E8%83%BD%E5%88%86%E6%94%AF%E5%B7%A5%E4%BD%9C%E6%B5%81%EF%BC%88Feature-Branch-Workflow%EF%BC%89"><span class="toc-text">3.3 推荐工作流：功能分支工作流（Feature Branch Workflow）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-4-%E5%AE%9E%E6%88%98%E7%A4%BA%E4%BE%8B%EF%BC%9A%E4%B8%BA-RAG-%E7%B3%BB%E7%BB%9F%E5%A2%9E%E5%8A%A0%E9%87%8D%E6%8E%92%E5%BA%8F%E5%8A%9F%E8%83%BD"><span class="toc-text">3.4 实战示例：为 RAG 系统增加重排序功能</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93%E6%93%8D%E4%BD%9C"><span class="toc-text">4 远程仓库操作</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#4-1-%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93%E7%AE%A1%E7%90%86"><span class="toc-text">4.1 远程仓库管理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-2-%E6%8E%A8%E9%80%81%E4%B8%8E%E6%8B%89%E5%8F%96"><span class="toc-text">4.2 推送与拉取</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-3-%E5%88%86%E6%94%AF%E6%8E%A8%E9%80%81%E4%B8%8E%E5%88%A0%E9%99%A4"><span class="toc-text">4.3 分支推送与删除</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%A4%9A%E4%BA%BA%E5%8D%8F%E4%BD%9C%E6%B5%81%E7%A8%8B"><span class="toc-text">5 多人协作流程</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#5-1-%E5%9B%A2%E9%98%9F%E5%86%85%E5%8D%8F%E4%BD%9C%EF%BC%88%E5%90%8C%E4%B8%80%E4%BB%93%E5%BA%93%E5%86%99%E6%9D%83%E9%99%90%EF%BC%89"><span class="toc-text">5.1 团队内协作（同一仓库写权限）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-%E5%BC%80%E6%BA%90%E8%B4%A1%E7%8C%AE%EF%BC%88Fork-Pull-Request%EF%BC%89"><span class="toc-text">5.2 开源贡献（Fork + Pull Request）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#5-3-%E6%AF%8F%E6%97%A5%E5%90%8C%E6%AD%A5%E8%A7%84%E8%8C%83"><span class="toc-text">5.3 每日同步规范</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E5%86%B2%E7%AA%81%E5%A4%84%E7%90%86"><span class="toc-text">6 冲突处理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#6-1-%E5%86%B2%E7%AA%81%E7%9A%84%E4%BA%A7%E7%94%9F"><span class="toc-text">6.1 冲突的产生</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-2-%E5%86%B2%E7%AA%81%E6%A0%87%E8%AE%B0%E6%A0%BC%E5%BC%8F"><span class="toc-text">6.2 冲突标记格式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-3-%E8%A7%A3%E5%86%B3%E6%AD%A5%E9%AA%A4"><span class="toc-text">6.3 解决步骤</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-4-%E5%86%B2%E7%AA%81%E9%A2%84%E9%98%B2%E7%AD%96%E7%95%A5"><span class="toc-text">6.4 冲突预防策略</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-%E5%B8%B8%E8%A7%81%E5%9C%BA%E6%99%AF%E5%AE%9E%E6%88%98"><span class="toc-text">7 常见场景实战</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#7-1-%E4%B8%B4%E6%97%B6%E5%88%87%E6%8D%A2%E4%BB%BB%E5%8A%A1%EF%BC%88%E4%BF%9D%E5%AD%98%E6%9C%AA%E6%8F%90%E4%BA%A4%E7%9A%84%E6%94%B9%E5%8A%A8%EF%BC%89"><span class="toc-text">7.1 临时切换任务（保存未提交的改动）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-2-%E4%BF%AE%E6%AD%A3%E6%9C%80%E5%90%8E%E4%B8%80%E6%AC%A1%E6%8F%90%E4%BA%A4"><span class="toc-text">7.2 修正最后一次提交</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-3-%E6%92%A4%E9%94%80%E6%8F%90%E4%BA%A4"><span class="toc-text">7.3 撤销提交</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-4-%E5%90%88%E5%B9%B6%E5%A4%9A%E4%B8%AA%E5%B0%8F%E6%8F%90%E4%BA%A4%EF%BC%88%E4%BA%A4%E4%BA%92%E5%BC%8F-rebase%EF%BC%89"><span class="toc-text">7.4 合并多个小提交（交互式 rebase）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-5-%E8%BF%9C%E7%A8%8B%E6%9C%89%E6%9B%B4%E6%96%B0%E4%B8%94%E6%9C%AC%E5%9C%B0%E6%9C%89%E6%9C%AA%E6%8F%90%E4%BA%A4%E6%94%B9%E5%8A%A8"><span class="toc-text">7.5 远程有更新且本地有未提交改动</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-6-%E6%9F%A5%E7%9C%8B%E6%8F%90%E4%BA%A4%E8%AF%A6%E6%83%85"><span class="toc-text">7.6 查看提交详情</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%E4%B8%8E%E9%81%BF%E5%9D%91%E6%8C%87%E5%8D%97"><span class="toc-text">8 最佳实践与避坑指南</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#8-1-%E4%B8%A5%E7%A6%81%E6%93%8D%E4%BD%9C"><span class="toc-text">8.1 严禁操作</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-2-%E5%BF%85%E9%A1%BB%E9%85%8D%E7%BD%AE%E7%9A%84-gitignore%EF%BC%88Python-%E7%A4%BA%E4%BE%8B%EF%BC%89"><span class="toc-text">8.2 必须配置的 .gitignore（Python 示例）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-3-Git-%E9%BB%84%E9%87%91%E6%B3%95%E5%88%99"><span class="toc-text">8.3 Git 黄金法则</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-4-%E7%BB%88%E6%9E%81%E6%81%A2%E5%A4%8D%E5%B7%A5%E5%85%B7%EF%BC%9Agit-reflog"><span class="toc-text">8.4 终极恢复工具：git reflog</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%99%84%E5%BD%95%EF%BC%9A%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5%E5%8D%A1"><span class="toc-text">附录：命令速查卡</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-text">参考资料</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/posts/7fee99f/" title="【C】C语言面向对象实现"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/27_1785311487554.jpg" onerror="this.onerror=null;this.src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【C】C语言面向对象实现"/></a><div class="content"><a class="title" href="/blog/posts/7fee99f/" title="【C】C语言面向对象实现">【C】C语言面向对象实现</a><time datetime="2026-07-30T12:48:13.000Z" title="发表于 2026-07-30 20:48:13">2026-07-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/posts/c615e5d3/" title="【Linux 内核】VFS 基础：writeback"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/29_1785311495995.jpeg" onerror="this.onerror=null;this.src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【Linux 内核】VFS 基础：writeback"/></a><div class="content"><a class="title" href="/blog/posts/c615e5d3/" title="【Linux 内核】VFS 基础：writeback">【Linux 内核】VFS 基础：writeback</a><time datetime="2026-07-29T07:36:34.000Z" title="发表于 2026-07-29 15:36:34">2026-07-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/posts/71fe51a6/" title="【Linux 内核】VFS 基础：driect write"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/7_1752075489299.jpg" onerror="this.onerror=null;this.src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【Linux 内核】VFS 基础：driect write"/></a><div class="content"><a class="title" href="/blog/posts/71fe51a6/" title="【Linux 内核】VFS 基础：driect write">【Linux 内核】VFS 基础：driect write</a><time datetime="2026-07-28T07:34:51.000Z" title="发表于 2026-07-28 15:34:51">2026-07-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/posts/3a98d6d7/" title="【Linux 内核】VFS 基础：close"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/27_1785311487554.jpg" onerror="this.onerror=null;this.src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【Linux 内核】VFS 基础：close"/></a><div class="content"><a class="title" href="/blog/posts/3a98d6d7/" title="【Linux 内核】VFS 基础：close">【Linux 内核】VFS 基础：close</a><time datetime="2026-07-24T02:50:01.000Z" title="发表于 2026-07-24 10:50:01">2026-07-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/posts/d8c9ca1e/" title="【Linux 内核】VFS 基础：read"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/22_1785311474212.jpg" onerror="this.onerror=null;this.src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【Linux 内核】VFS 基础：read"/></a><div class="content"><a class="title" href="/blog/posts/d8c9ca1e/" title="【Linux 内核】VFS 基础：read">【Linux 内核】VFS 基础：read</a><time datetime="2026-07-23T05:35:12.000Z" title="发表于 2026-07-23 13:35:12">2026-07-23</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/27_1785311487554.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2025 - 2026 By dreamy-xay</div><div class="framework-info"><span>网站 </span><a target="_blank" rel="noopener" href="https://github.com/dreamy-xay/blog">Github</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://dreamy-xay.github.io/blog">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="https://cdn.staticfile.net/hexo-theme-butterfly/4.13.0/js/utils.min.js"></script><script src="https://cdn.staticfile.net/hexo-theme-butterfly/4.13.0/js/main.min.js"></script><script src="https://cdn.staticfile.net/hexo-theme-butterfly/4.13.0/js/tw_cn.min.js"></script><script src="https://cdn.staticfile.net/fancyapps-ui/5.0.33/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.staticfile.net/instant.page/5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.staticfile.net/node-snackbar/0.1.16/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.staticfile.net/pangu/4.0.7/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"><script>(() => {
+  const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaid.length === 0) return
+  const runMermaid = () => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    Array.from($mermaid).forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+      const mermaidID = 'mermaid-' + index
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+
+      const renderV10 = () => {
+        renderFn.then(({svg}) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svg)
+        })
+      }
+
+      const renderV9 = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      typeof renderFn === 'string' ? renderV9(renderFn) : renderV10()
+    })
+  }
+
+  const loadMermaid = () => {
+    window.loadMermaid ? runMermaid() : getScript('https://cdn.staticfile.net/mermaid/10.8.0/mermaid.min.js').then(runMermaid)
+  }
+
+  btf.addGlobalFn('themeChange', runMermaid, 'mermaid')
+
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script><script>(() => {
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-vercel-swart-pi.vercel.app/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = () => {
+    twikoo.init(Object.assign({
+      el: '#twikoo-wrap',
+      envId: 'https://twikoo-vercel-swart-pi.vercel.app/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      }
+    }, null))
+
+    GLOBAL_CONFIG_SITE.isPost && getCount()
+  }
+
+  const loadTwikoo = () => {
+    if (typeof twikoo === 'object') setTimeout(init,0)
+    else getScript('https://cdn.staticfile.net/twikoo/1.6.31/twikoo.all.min.js').then(init)
+  }
+
+  if ('Twikoo' === 'Twikoo' || !true) {
+    if (true) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script>window.addEventListener('load', () => {
+  const changeContent = (content) => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g,"") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0,150) + '...'
+    }
+    return content
+  }
+
+  const getComment = () => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo-vercel-swart-pi.vercel.app/',
+        region: '',
+        pageSize: 6,
+        includeReply: true
+      }).then(function (res) {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        saveToLocal.set('twikoo-newest-comments', JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray)
+      }).catch(function (err) {
+        const $dom = document.querySelector('#card-newest-comments .aside-list')
+        $dom.textContent= "无法获取评论，请确认相关配置是否正确"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      getScript('https://cdn.staticfile.net/twikoo/1.6.31/twikoo.all.min.js').then(runTwikoo)
+    }
+  }
+
+  const generateHtml = array => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class=\'aside-list-item\'>'
+
+        if (true) {
+          const name = 'src'
+          result += `<a href='${array[i].url}' class='thumbnail'><img ${name}='${array[i].avatar}' alt='${array[i].nick}'></a>`
+        }
+        
+        result += `<div class='content'>
+        <a class='comment' href='${array[i].url}' title='${array[i].content}'>${array[i].content}</a>
+        <div class='name'><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '没有评论'
+    }
+
+    let $dom = document.querySelector('#card-newest-comments .aside-list')
+    $dom && ($dom.innerHTML= result)
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh($dom)
+  }
+
+  const newestCommentInit = () => {
+    if (document.querySelector('#card-newest-comments .aside-list')) {
+      const data = saveToLocal.get('twikoo-newest-comments')
+      if (data) {
+        generateHtml(JSON.parse(data))
+      } else {
+        getComment()
+      }
+    }
+  }
+
+  newestCommentInit()
+  document.addEventListener('pjax:complete', newestCommentInit)
+})</script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script><script type="text/javascript" src="/blog/js/fireworks.min.js"></script><script src="https://cdn.staticfile.net/butterfly-extsrc/1.1.3/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><link rel="stylesheet" href="https://cdn.staticfile.net/aplayer/1.10.1/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.staticfile.net/aplayer/1.10.1/APlayer.min.js"></script><script src="https://cdn.staticfile.net/butterfly-extsrc/1.1.3/metingjs/dist/Meting.min.js"></script><script src="https://cdn.staticfile.net/pjax/0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/blog/404')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="https://cdn.staticfile.net/hexo-theme-butterfly/4.13.0/js/search/local-search.min.js"></script></div></div><script src="/blog/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"tagMode":false,"debug":false,"model":{"jsonPath":"/blog/live2dw/assets/shizuku.model.json"},"display":{"position":"left","width":150,"height":300,"hOffset":20,"vOffset":-20},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/"});</script></body></html>

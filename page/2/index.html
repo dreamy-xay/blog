@@ -1,0 +1,694 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>dreamyのblog - 心中有光，何惧路长；志存高远，方能行远自迩</title><meta name="author" content="dreamy-xay"><meta name="copyright" content="dreamy-xay"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="只争朝夕，不负韶华">
+<meta property="og:type" content="website">
+<meta property="og:title" content="dreamyのblog">
+<meta property="og:url" content="https://dreamy-xay.github.io/blog/page/2/">
+<meta property="og:site_name" content="dreamyのblog">
+<meta property="og:description" content="只争朝夕，不负韶华">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/avatar_1752075331083.jpg">
+<meta property="article:author" content="dreamy-xay">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="Golang">
+<meta property="article:tag" content="Node.js">
+<meta property="article:tag" content="Rust">
+<meta property="article:tag" content="blog">
+<meta property="article:tag" content="前端">
+<meta property="article:tag" content="后端">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="日常">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/avatar_1752075331083.jpg"><link rel="shortcut icon" href="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/logo_1752075337653.png"><link rel="canonical" href="https://dreamy-xay.github.io/blog/page/2/"><link rel="preconnect" href="https://cdn.staticfile.net"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.staticfile.net/font-awesome/6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.staticfile.net/node-snackbar/0.1.16/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.staticfile.net/fancyapps-ui/5.0.33/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: {"path":"/blog/search.xml","preload":false,"top_n_per_article":1,"unescape":true,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":30,"languages":{"author":"作者: dreamy-xay","link":"链接: ","source":"来源: dreamyのblog","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体中文","cht_to_chs":"你已切换为简体中文","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#febcd5","bgDark":"#1f1f1f","position":"top-center"},
+  infinitegrid: {
+    js: 'https://cdn.staticfile.net/egjs-infinitegrid/4.11.1/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'dreamyのblog',
+  isPost: false,
+  isHome: true,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2026-07-30 20:57:49'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="referrer" content="no-referrer" /><link rel="stylesheet" href="/blog/css/custom.css"><link rel="stylesheet" href="/blog/css/background.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="gear-loader"><div class="gear-loader_overlay"></div><div class="gear-loader_cogs"><div class="gear-loader_cogs__top"><div class="gear-top_part"></div><div class="gear-top_part"></div><div class="gear-top_part"></div><div class="gear-top_hole"></div></div><div class="gear-loader_cogs__left"><div class="gear-left_part"></div><div class="gear-left_part"></div><div class="gear-left_part"></div><div class="gear-left_hole"></div></div><div class="gear-loader_cogs__bottom"><div class="gear-bottom_part"></div><div class="gear-bottom_part"></div><div class="gear-bottom_part"></div><div class="gear-bottom_hole"></div></div></div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/avatar_1752075331083.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">26</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">45</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa-fw fas fa-book"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa-fw fas fa-list"></i><span> 娱乐库</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/blog/books/"><i class="fa-fw fas fa-book-open"></i><span> 阅读库</span></a></li><li><a class="site-page child" href="/blog/music/"><i class="fa-fw fas fa-music"></i><span> 音乐库</span></a></li><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 图片库</span></a></li><li><a class="site-page child" href="/blog/movies/"><i class="fa-fw fas fa-video"></i><span> 电影库</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/link/"><i class="fa-fw fas fa-link"></i><span> 友人帐</span></a></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header" style="background-image: url('https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/top_1752075448265.png')"><nav id="nav"><span id="blog-info"><a href="/blog/" title="dreamyのblog"><img class="site-icon" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/logo2_1752075340714.png"/><span class="site-name">dreamyのblog</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa-fw fas fa-book"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa-fw fas fa-list"></i><span> 娱乐库</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/blog/books/"><i class="fa-fw fas fa-book-open"></i><span> 阅读库</span></a></li><li><a class="site-page child" href="/blog/music/"><i class="fa-fw fas fa-music"></i><span> 音乐库</span></a></li><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 图片库</span></a></li><li><a class="site-page child" href="/blog/movies/"><i class="fa-fw fas fa-video"></i><span> 电影库</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/link/"><i class="fa-fw fas fa-link"></i><span> 友人帐</span></a></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div><div id="nav-right"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i></a></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="site-info"><h1 id="site-title">dreamyのblog</h1><div class="aplayer no-destroy" data-id="509720124" data-server="netease" data-type="song" data-mini="true" data-autoplay="true" data-preload="auto" style="display: none"></div><div id="site-subtitle"><span id="subtitle"></span></div><div id="site_social_icons"><a class="social-icon" href="http://wpa.qq.com/msgrd?v=3&amp;uin=1985332264&amp;site=qq&amp;menu=yes" target="_blank" title="QQ"><i class="fab fa-qq" style="color: #febcd5;"></i></a><a class="social-icon" href="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/weixin_1752075402432.png" target="_blank" title="WeChat"><i class="fab fa-weixin" style="color: #febcd5;"></i></a><a class="social-icon" href="mailto:dreamy-xay@foxmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #febcd5;"></i></a><a class="social-icon" href="https://space.bilibili.com/365741414" target="_blank" title="Bilibili"><i class="fa-brands fa-bilibili" style="color: #febcd5;"></i></a></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="post_cover left"><a href="/blog/posts/98d6f04f/" title="【开发工具】Git"><img class="post-bg" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/27_1785311487554.jpg" onerror="this.onerror=null;this.src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【开发工具】Git"></a></div><div class="recent-post-info"><a class="article-title" href="/blog/posts/98d6f04f/" title="【开发工具】Git">【开发工具】Git</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-07-15T06:53:55.000Z" title="发表于 2026-07-15 14:53:55">2026-07-15</time><span class="article-meta-separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-07-27T08:01:02.000Z" title="更新于 2026-07-27 16:01:02">2026-07-27</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/">开发工具</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/blog/tags/%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6/">版本控制</a><span class="article-meta-link">•</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/blog/tags/%E8%BF%9C%E7%A8%8B%E5%BC%80%E5%8F%91/">远程开发</a></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-comments"></i><a class="twikoo-count" href="/blog/posts/98d6f04f/#post-comment"><i class="fa-solid fa-spinner fa-spin"></i></a><span class="article-meta-label"> 条评论</span></span></div><div class="content">一、Git 工作流程与核心概念
+1 工作流程
+Git 的工作流程可以想象成 写作业并交给老师 的过程。下图展示了这一流程：
+
+    
+    Git 工作流程图
+
+步骤 1：工作区（Working Directory）—— 你的书桌
+
+这是你实际修改文件的地方。你在这里写新代码、修复 Bug、删除无用文件，所有改动都只存在于本地，尚未被 Git 记录。
+
+步骤 2：暂存区（Staging Area）—— 你的待邮寄篮子
+
+当你觉得某部分作业差不多了，就用 git add 把它放进篮子。这一步告诉 Git：“这些改动我确认要提交了，先帮我记着。”你可以选择性地添加部分文件。
+
+步骤 3：本地仓库（Local Repository）—— 你的个人保险箱
+
+用 git commit 把篮子里的内容打包并贴上标签（提交信息），锁进保险箱。从此，这次改动成为项目历史的一部分，随时可以找回。
+
+步骤 4：远程仓库（Remote）—— 老师的收件箱（如 GitHub/GitLab）
+
+最后，用 git push 把保险箱里的代码发送到远程服务器，既备份又方便团队协作。
+
+
+
+
+区域
+含义
+对应操作 ...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/blog/posts/97daf1b0/" title="【存储初识】06-用户态文件系统FUSE"><img class="post-bg" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/13_1752075505242.jpg" onerror="this.onerror=null;this.src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【存储初识】06-用户态文件系统FUSE"></a></div><div class="recent-post-info"><a class="article-title" href="/blog/posts/97daf1b0/" title="【存储初识】06-用户态文件系统FUSE">【存储初识】06-用户态文件系统FUSE</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-07-06T08:44:22.000Z" title="发表于 2026-07-06 16:44:22">2026-07-06</time><span class="article-meta-separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-07-09T12:03:52.000Z" title="更新于 2026-07-09 20:03:52">2026-07-09</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/%E5%AD%98%E5%82%A8/">存储</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/%E5%AD%98%E5%82%A8/%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/">基本概念</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/blog/tags/Linux/">Linux</a><span class="article-meta-link">•</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/blog/tags/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">文件系统</a><span class="article-meta-link">•</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/blog/tags/FUSE/">FUSE</a></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-comments"></i><a class="twikoo-count" href="/blog/posts/97daf1b0/#post-comment"><i class="fa-solid fa-spinner fa-spin"></i></a><span class="article-meta-label"> 条评论</span></span></div><div class="content">一、单机文件系统：内核态与 VFS
+文件系统作为操作系统中的核心底层组件，负责频繁操作存储设备，因此最初的设计完全在内核空间中进行。内核是拥有超级权限的代码，负责管理计算机的核心资源（如 CPU、内存、硬盘、网络等）。当内核代码运行时，程序进入内核态，可以完全访问和操作这些底层设备。而与内核空间形成对应的是用户空间（User space），这部分代码就是平时常见的各种应用程序，在用户空间里程序的权限受到严格限制，不能直接访问底层的重要资源。
+
+    
+    内核空间与用户空间示意图
+
+如果应用程序需要使用文件系统，必须通过操作系统设计好的接口来进行访问，比如 OPEN、READ、WRITE 等系统调用。系统调用的作用是搭建起用户空间和内核空间的桥梁。当应用程序调用系统调用时，它就会进入一段内核空间代码，等执行完毕后，再把结果返回给用户空间。
+
+    
+    系统调用架构图
+
+内核通过 VFS（Virtual File System，虚拟文件系统）封装了一套通用的虚拟文件系统接口，向上以系统调用的形式暴露给用户态，向下给底层的文件系统规定编程接口，底层文件系统需要按照 VFS 的 ...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/blog/posts/35ae6dfa/" title="【存储初识】05-内核文件系统"><img class="post-bg" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/27_1785311487554.jpg" onerror="this.onerror=null;this.src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【存储初识】05-内核文件系统"></a></div><div class="recent-post-info"><a class="article-title" href="/blog/posts/35ae6dfa/" title="【存储初识】05-内核文件系统">【存储初识】05-内核文件系统</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-07-06T08:38:53.000Z" title="发表于 2026-07-06 16:38:53">2026-07-06</time><span class="article-meta-separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-07-08T09:01:12.000Z" title="更新于 2026-07-08 17:01:12">2026-07-08</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/%E5%AD%98%E5%82%A8/">存储</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/%E5%AD%98%E5%82%A8/%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/">基本概念</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/blog/tags/Linux/">Linux</a><span class="article-meta-link">•</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/blog/tags/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">文件系统</a><span class="article-meta-link">•</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/blog/tags/Linux%E5%86%85%E6%A0%B8/">Linux内核</a></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-comments"></i><a class="twikoo-count" href="/blog/posts/35ae6dfa/#post-comment"><i class="fa-solid fa-spinner fa-spin"></i></a><span class="article-meta-label"> 条评论</span></span></div><div class="content">一、文件系统的基本组成
+文件系统负责将用户文件持久化存储到磁盘，其基本数据单位是文件。Linux 遵循“一切皆文件”的设计哲学，普通文件、目录、块设备、管道、Socket等均由文件系统统一管理。文件系统会为每个文件分配两个数据结构：
+
+
+
+核心数据结构
+作用
+存储位置
+关键点
+
+
+
+
+inode（index node，索引节点）
+记录文件元信息（大小、权限、时间戳、磁盘位置等）
+磁盘（占用空间）
+文件的唯一标识，一一对应
+
+
+dentry（directory entry，目录项）
+记录文件名、inode 指针及目录层级关系
+内存（内核缓存）
+用于加速路径查找，与 inode 是多对一关系（硬链接即如此）
+
+
+
+✍️ 易混淆点
+●目录是存储于磁盘的文件（内容为子目录/文件列表）
+●目录项是内核缓存在内存中的数据结构，用以提升查询效率
+
+磁盘读写单元：
+
+物理最小单元：扇区（512B）
+文件系统逻辑单元：数据块（Linux 默认为 4KB，即 8 个扇区）
+
+
+    
+    目录项和索引关系图
+
+磁盘分区结构（格式化后）：
+
+超级块：存储全局信息（块总数、空闲块等），挂载时载入内存。
+ ...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/blog/posts/ab374fb7/" title="【存储初识】04-同步、异步I/O"><img class="post-bg" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/7_1752075489299.jpg" onerror="this.onerror=null;this.src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【存储初识】04-同步、异步I/O"></a></div><div class="recent-post-info"><a class="article-title" href="/blog/posts/ab374fb7/" title="【存储初识】04-同步、异步I/O">【存储初识】04-同步、异步I/O</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-07-04T07:33:36.000Z" title="发表于 2026-07-04 15:33:36">2026-07-04</time><span class="article-meta-separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-07-08T09:00:41.000Z" title="更新于 2026-07-08 17:00:41">2026-07-08</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/%E5%AD%98%E5%82%A8/">存储</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/%E5%AD%98%E5%82%A8/%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/">基本概念</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/blog/tags/%E5%90%8C%E6%AD%A5I-O/">同步I/O</a><span class="article-meta-link">•</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/blog/tags/%E5%BC%82%E6%AD%A5I-O/">异步I/O</a><span class="article-meta-link">•</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/blog/tags/libaio/">libaio</a><span class="article-meta-link">•</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/blog/tags/io-uring/">io_uring</a></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-comments"></i><a class="twikoo-count" href="/blog/posts/ab374fb7/#post-comment"><i class="fa-solid fa-spinner fa-spin"></i></a><span class="article-meta-label"> 条评论</span></span></div><div class="content">一、I/O 基本概念
+1 什么是 I/O？
+I/O 即 Input/Output（输入/输出）。程序和数据驻留在内存中由 CPU 执行，当涉及与磁盘、网卡等外部设备的数据交换时，就需要通过 I/O 接口完成。一次完整的 I/O 操作通常经历两个阶段：
+
+等待数据准备：内核等待数据从磁盘/网卡等设备到达内核空间
+数据拷贝：将数据从内核空间拷贝到用户空间
+
+根据这两个阶段的不同处理方式，衍生出了多种 I/O 模型。
+2 五种 I/O 模型
+Linux 下有阻塞 I/O、非阻塞 I/O、I/O 多路复用、信号驱动 I/O 和 异步 I/O 五种经典的 I/O 模型。
+
+    
+    五种I/O模型的比较
+
+2.1 阻塞 I/O（Blocking I/O）
+用户线程发起 I/O 请求后，进行系统调用，此时用户线程被阻塞，等待内核将数据准备好；内核准备好数据后，将数据从内核空间拷贝到用户空间，返回给用户线程，阻塞结束。
+
+    
+    阻塞式I/O模型示意图
+
+
+类比：去餐厅点餐，站在柜台前一直等到饭做好为止，期间什么也不能做。
+
+2.2 非阻塞 I/O（Non-blocking I/O ...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/blog/posts/e6c0a3f/" title="【存储初识】03-单机、集中式、分布式、云、云原生存储"><img class="post-bg" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/35_1785311513568.jpg" onerror="this.onerror=null;this.src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【存储初识】03-单机、集中式、分布式、云、云原生存储"></a></div><div class="recent-post-info"><a class="article-title" href="/blog/posts/e6c0a3f/" title="【存储初识】03-单机、集中式、分布式、云、云原生存储">【存储初识】03-单机、集中式、分布式、云、云原生存储</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-07-04T02:08:57.000Z" title="发表于 2026-07-04 10:08:57">2026-07-04</time><span class="article-meta-separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-07-08T09:39:12.000Z" title="更新于 2026-07-08 17:39:12">2026-07-08</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/%E5%AD%98%E5%82%A8/">存储</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/%E5%AD%98%E5%82%A8/%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/">基本概念</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/blog/tags/%E5%8D%95%E6%9C%BA%E5%AD%98%E5%82%A8/">单机存储</a><span class="article-meta-link">•</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/blog/tags/%E9%9B%86%E4%B8%AD%E5%BC%8F%E5%AD%98%E5%82%A8/">集中式存储</a><span class="article-meta-link">•</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/blog/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8/">分布式存储</a><span class="article-meta-link">•</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/blog/tags/%E4%BA%91%E5%AD%98%E5%82%A8/">云存储</a><span class="article-meta-link">•</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/blog/tags/%E4%BA%91%E5%8E%9F%E7%94%9F%E5%AD%98%E5%82%A8/">云原生存储</a></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-comments"></i><a class="twikoo-count" href="/blog/posts/e6c0a3f/#post-comment"><i class="fa-solid fa-spinner fa-spin"></i></a><span class="article-meta-label"> 条评论</span></span></div><div class="content">一、存储发展总览
+从单机时代到互联网时代，存储作为基础设施，其发展始终围绕低成本、高性能、可扩展、易用等核心目标持续演进。当前，存储形态已主要划分为单机存储、集中式存储、分布式存储、云存储和云原生存储五大类：
+
+单机存储：数据仅存于单台服务器，不共享
+集中式存储：逻辑上统一管理，物理可跨多设备（如SAN/NAS）
+分布式存储：多台独立设备通过网络协同，对外呈现单一存储池
+云存储：基于分布式存储，通过互联网以服务形式提供存储能力
+云原生存储：面向容器、编排等云原生环境，提供API化、统一控制面的存储服务
+
+
+    
+    存储发展史
+
+二、单机存储
+1 概述
+单机存储是指将图文数据直接存储在单个服务器上。这种存储方式成本较低，适用于数据量较小、访问量较小的场景。但是，单机存储的扩展性和可靠性较差，一旦服务器出现故障，数据将面临丢失的风险。
+2 存储引擎
+单机存储系统是单机存储引擎（数据结构在机械磁盘、SSD等持久化介质上的实现）的一种封装，对外提供文件、键值、表格或者关系模型的存储服务。
+存储引擎是存储系统的发动机，决定了存储系统能够提供的功能和性能, 提供功能包含 C（Create ...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/blog/posts/d647718/" title="【存储初识】02-NAS"><img class="post-bg" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/15_1752075427743.png" onerror="this.onerror=null;this.src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【存储初识】02-NAS"></a></div><div class="recent-post-info"><a class="article-title" href="/blog/posts/d647718/" title="【存储初识】02-NAS">【存储初识】02-NAS</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-07-03T03:55:29.000Z" title="发表于 2026-07-03 11:55:29">2026-07-03</time><span class="article-meta-separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-07-07T06:47:22.000Z" title="更新于 2026-07-07 14:47:22">2026-07-07</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/%E5%AD%98%E5%82%A8/">存储</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/%E5%AD%98%E5%82%A8/%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/">基本概念</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/blog/tags/NAS/">NAS</a><span class="article-meta-link">•</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/blog/tags/NFS/">NFS</a><span class="article-meta-link">•</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/blog/tags/SMB/">SMB</a><span class="article-meta-link">•</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/blog/tags/FTP/">FTP</a></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-comments"></i><a class="twikoo-count" href="/blog/posts/d647718/#post-comment"><i class="fa-solid fa-spinner fa-spin"></i></a><span class="article-meta-label"> 条评论</span></span></div><div class="content">一、NAS（网络附加存储）
+1 概述
+NAS（Network Attached Storage，网络附加存储）是一种将分布、独立的数据整合为大型、集中化管理的数据中心，以便于对不同主机和应用服务器进行访问的技术。按字面理解，NAS就是连接在网络上、具备数据存储功能的装置，因此也被称为“网络存储器”。
+
+    
+    网络附加存储示例图
+
+NAS被定义为一种专用数据存储服务器，包括存储器件（如磁盘阵列、CD/DVD驱动器、磁带驱动器或可移动存储介质）和内嵌系统软件，可提供跨平台文件共享功能。它以数据为中心，将存储设备与服务器彻底分离，集中管理数据，从而释放带宽、提高性能。其成本远低于使用服务器存储，而效率却远高于后者。
+2 核心特点
+
+通过网络（通常是以太网）连接，拥有自己的节点，无需应用服务器干预即可让用户在网络上存取数据
+具备文件系统和IP地址，可理解为“网上邻居的共享磁盘”
+支持多种协议（如NFS、CIFS/SMB、FTP、HTTP等），兼容各种操作系统
+通过任何一台工作站，使用浏览器即可对NAS设备进行直观方便的管理
+NAS是功能单一的精简型电脑，架构上不像个人电脑那么复杂， ...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/blog/posts/6daf612c/" title="【存储初识】01-块、文件、对象存储"><img class="post-bg" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/28_1785311493480.jpg" onerror="this.onerror=null;this.src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【存储初识】01-块、文件、对象存储"></a></div><div class="recent-post-info"><a class="article-title" href="/blog/posts/6daf612c/" title="【存储初识】01-块、文件、对象存储">【存储初识】01-块、文件、对象存储</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-07-03T03:55:07.000Z" title="发表于 2026-07-03 11:55:07">2026-07-03</time><span class="article-meta-separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-07-07T06:48:21.000Z" title="更新于 2026-07-07 14:48:21">2026-07-07</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/%E5%AD%98%E5%82%A8/">存储</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/%E5%AD%98%E5%82%A8/%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/">基本概念</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/blog/tags/%E5%9D%97%E5%AD%98%E5%82%A8/">块存储</a><span class="article-meta-link">•</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/blog/tags/%E6%96%87%E4%BB%B6%E5%AD%98%E5%82%A8/">文件存储</a><span class="article-meta-link">•</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/blog/tags/%E5%AF%B9%E8%B1%A1%E5%AD%98%E5%82%A8/">对象存储</a></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-comments"></i><a class="twikoo-count" href="/blog/posts/6daf612c/#post-comment"><i class="fa-solid fa-spinner fa-spin"></i></a><span class="article-meta-label"> 条评论</span></span></div><div class="content">一、块存储
+1 概述
+将存储介质（如硬盘）划分为固定大小的数据块（Block），每个块拥有唯一的编号（逻辑块地址，LBA），系统通过编号直接读写指定位置的数据。
+
+    
+    块存储示例图
+
+
+类比：就像一间巨大的仓库，地面被划成一个个编号的方格。你要存取物品，只需告诉管理员方格编号，他就能精准地帮你放入或取出——至于方格里的物品是什么、属于谁，他并不关心。
+
+2 核心特点
+
+数据按固定大小分块存储，每个块独立编址
+读写速度快，延迟低
+本身不包含文件系统，需要上层操作系统自行管理数据组织方式
+典型协议：SCSI、FC、iSCSI等
+典型设备：硬盘、磁盘阵列、虚拟硬盘
+
+3 优缺点
+优点：读写性能极高，适合对延迟敏感的场景。
+缺点：不利于多系统共享；元数据处理能力有限，需在应用层自行管理；成本相对较高。
+适用场景：数据库（如Oracle、MySQL）、企业级核心应用、虚拟机磁盘（云服务器系统盘）等对性能要求高的场景。
+二、文件存储
+1 概述
+以文件和文件夹的层级目录结构来组织和呈现数据。存储系统维护完整的目录树，用户通过路径（如 /home/user/doc/report.pdf） ...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/blog/posts/14bae32d/" title="【Develop】基本软件开发规范与效率指南"><img class="post-bg" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/11_1752075500877.jpg" onerror="this.onerror=null;this.src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【Develop】基本软件开发规范与效率指南"></a></div><div class="recent-post-info"><a class="article-title" href="/blog/posts/14bae32d/" title="【Develop】基本软件开发规范与效率指南">【Develop】基本软件开发规范与效率指南</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-08-10T21:55:43.000Z" title="发表于 2025-08-11 05:55:43">2025-08-11</time><span class="article-meta-separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-08-10T21:55:43.000Z" title="更新于 2025-08-11 05:55:43">2025-08-11</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/Develop/">Develop</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/blog/tags/%E7%BC%96%E7%A8%8B%E8%A7%84%E8%8C%83/">编程规范</a><span class="article-meta-link">•</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/blog/tags/%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3%E6%8C%87%E5%8D%97/">技术文档指南</a></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-comments"></i><a class="twikoo-count" href="/blog/posts/14bae32d/#post-comment"><i class="fa-solid fa-spinner fa-spin"></i></a><span class="article-meta-label"> 条评论</span></span></div><div class="content">开发环境规范
+环境配置
+
+
+统一开发环境（确保开发环境和线上环境一致），比如：
+
+统一开发平台：Windows 10或以上
+统一编译工具：MinGW 15.1.0-rt_v12-rev0或以上、CMake 3.6或以上
+统一外部依赖库：Boost 1.88.0或以上
+…
+
+
+
+将统一的开发环境配置编写为《环境搭建指南》（ENV_SETUP.md），并严格遵照执行
+
+
+…
+
+
+版本控制
+
+使用《变更日志》（CHANGES.md）记录所有版本变更，包括：
+
+功能变更
+BUG修复
+版本升级
+
+
+每次提交代码前更新变更日志
+…
+
+代码规范
+编码规范
+
+统一编码规范（最初由团队一起协商制定），比如：
+
+命名风格
+格式化风格
+注释规范（具体可以参照配套的自动文档生成工具）
+
+Doxygen
+
+支持C、C++、C#、Java、Objective-C和IDL语言
+可生成的文档格式包括HTML、XML、LaTeX、RTF、Unix Man Page，而其中还可衍生出不少其它格式，例如HTML可以打包成CHM格式，而LaTeX可以透过一些工具产生出PS或是PDF文档
+
+
+Sphinx
+
+主要支持 Pyth ...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/blog/posts/9137290a/" title="【Multithreading】Windows 下具名互斥锁的 C++ 实现"><img class="post-bg" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/7_1752075489299.jpg" onerror="this.onerror=null;this.src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【Multithreading】Windows 下具名互斥锁的 C++ 实现"></a></div><div class="recent-post-info"><a class="article-title" href="/blog/posts/9137290a/" title="【Multithreading】Windows 下具名互斥锁的 C++ 实现">【Multithreading】Windows 下具名互斥锁的 C++ 实现</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-07-08T02:49:45.000Z" title="发表于 2025-07-08 10:49:45">2025-07-08</time><span class="article-meta-separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-07-08T02:49:45.000Z" title="更新于 2025-07-08 10:49:45">2025-07-08</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/Multithreading/">Multithreading</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/Multithreading/C/">C++</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/blog/tags/Windows/">Windows</a><span class="article-meta-link">•</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/blog/tags/%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/">线程安全</a><span class="article-meta-link">•</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/blog/tags/RAII/">RAII</a><span class="article-meta-link">•</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/blog/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/">并发编程</a><span class="article-meta-link">•</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/blog/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-comments"></i><a class="twikoo-count" href="/blog/posts/9137290a/#post-comment"><i class="fa-solid fa-spinner fa-spin"></i></a><span class="article-meta-label"> 条评论</span></span></div><div class="content">在多线程编程中，互斥锁是一种重要的同步机制，用于保护共享资源免受并发访问的冲突。本文将详细介绍一个基于 Windows API 的具名互斥锁实现，包括其核心功能、设计思路以及使用方法。
+前言
+互斥锁（Mutex）是一种同步原语，用于在多线程环境中保护共享资源，确保同一时间只有一个线程可以访问该资源。互斥锁的工作原理是：当一个线程获取到互斥锁时，其他线程必须等待，直到该线程释放互斥锁。互斥锁通常用于防止数据竞争和死锁问题。
+在 Windows 系统中，互斥锁可以通过 Windows API 提供的 CreateMutex 和 OpenMutex 函数实现。这些函数允许创建或打开一个互斥锁对象，并通过 WaitForSingleObject 和 ReleaseMutex 函数来控制互斥锁的加锁和解锁操作。
+代码实现
+以下是一个基于 Windows API 的互斥锁实现代码，我们将逐步解析其代码。
+互斥锁类 Mutex
+互斥锁类 Mutex 提供了互斥锁的基本功能，包括创建互斥锁、打开现有互斥锁、加锁和解锁等操作。
+#include &lt;windows.h&gt;#include &lt ...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/blog/posts/2f05bc66/" title="【Python】typing 和 typing_extensions 模块使用指南"><img class="post-bg" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/1_1752075509616.png" onerror="this.onerror=null;this.src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【Python】typing 和 typing_extensions 模块使用指南"></a></div><div class="recent-post-info"><a class="article-title" href="/blog/posts/2f05bc66/" title="【Python】typing 和 typing_extensions 模块使用指南">【Python】typing 和 typing_extensions 模块使用指南</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-05-26T01:48:57.000Z" title="发表于 2025-05-26 09:48:57">2025-05-26</time><span class="article-meta-separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-05-26T01:48:57.000Z" title="更新于 2025-05-26 09:48:57">2025-05-26</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/Python/">Python</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/blog/tags/%E7%BC%96%E7%A8%8B%E8%A7%84%E8%8C%83/">编程规范</a><span class="article-meta-link">•</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/blog/tags/typing/">typing</a><span class="article-meta-link">•</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/blog/tags/typing-extensions/">typing_extensions</a></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-comments"></i><a class="twikoo-count" href="/blog/posts/2f05bc66/#post-comment"><i class="fa-solid fa-spinner fa-spin"></i></a><span class="article-meta-label"> 条评论</span></span></div><div class="content">前言
+Python 的类型提示系统（通过 typing 模块实现）允许开发者：
+
+提高代码可读性和可维护性；
+在开发阶段捕获类型错误；
+支持 IDE 的智能补全和重构；
+配合静态类型检查工具（如 mypy）。
+
+from typing import Literaldef process_data(data_type: Literal[&#x27;csv&#x27;, &#x27;json&#x27;]) -&gt; None:    if data_type == &#x27;csv&#x27;:        # process csv data    if data_type == &#x27;json&#x27;:        # process json data    else；    	# other        passprocess_data(&#x27;csv&#x27;) # 这里调用函数会提示效果只能选csv或者json
+typing 模块
+typing 模块是 Python 标准库的一部分，用于支持类型注解。它提供了一组类型提示（type hints），帮助 ...</div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/blog/"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/blog/">1</a><span class="page-number current">2</span><a class="page-number" href="/blog/page/3/#content-inner">3</a><a class="extend next" rel="next" href="/blog/page/3/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/avatar_1752075331083.jpg" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">dreamy-xay</div><div class="author-info__description">只争朝夕，不负韶华</div></div><div class="card-info-data site-data is-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">26</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">45</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/dreamy-xay"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="http://wpa.qq.com/msgrd?v=3&amp;uin=1985332264&amp;site=qq&amp;menu=yes" target="_blank" title="QQ"><i class="fab fa-qq" style="color: #febcd5;"></i></a><a class="social-icon" href="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/weixin_1752075402432.png" target="_blank" title="WeChat"><i class="fab fa-weixin" style="color: #febcd5;"></i></a><a class="social-icon" href="mailto:dreamy-xay@foxmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #febcd5;"></i></a><a class="social-icon" href="https://space.bilibili.com/365741414" target="_blank" title="Bilibili"><i class="fa-brands fa-bilibili" style="color: #febcd5;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Hi~ o(*￣▽￣*)ブ，欢迎来到dreamy'blog，如果喜欢记得收藏奥～</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/posts/7fee99f/" title="【C】C语言面向对象实现"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/27_1785311487554.jpg" onerror="this.onerror=null;this.src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【C】C语言面向对象实现"/></a><div class="content"><a class="title" href="/blog/posts/7fee99f/" title="【C】C语言面向对象实现">【C】C语言面向对象实现</a><time datetime="2026-07-30T12:48:13.000Z" title="发表于 2026-07-30 20:48:13">2026-07-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/posts/c615e5d3/" title="【Linux 内核】VFS 基础：writeback"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/29_1785311495995.jpeg" onerror="this.onerror=null;this.src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【Linux 内核】VFS 基础：writeback"/></a><div class="content"><a class="title" href="/blog/posts/c615e5d3/" title="【Linux 内核】VFS 基础：writeback">【Linux 内核】VFS 基础：writeback</a><time datetime="2026-07-29T07:36:34.000Z" title="发表于 2026-07-29 15:36:34">2026-07-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/posts/71fe51a6/" title="【Linux 内核】VFS 基础：driect write"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/7_1752075489299.jpg" onerror="this.onerror=null;this.src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【Linux 内核】VFS 基础：driect write"/></a><div class="content"><a class="title" href="/blog/posts/71fe51a6/" title="【Linux 内核】VFS 基础：driect write">【Linux 内核】VFS 基础：driect write</a><time datetime="2026-07-28T07:34:51.000Z" title="发表于 2026-07-28 15:34:51">2026-07-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/posts/3a98d6d7/" title="【Linux 内核】VFS 基础：close"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/27_1785311487554.jpg" onerror="this.onerror=null;this.src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【Linux 内核】VFS 基础：close"/></a><div class="content"><a class="title" href="/blog/posts/3a98d6d7/" title="【Linux 内核】VFS 基础：close">【Linux 内核】VFS 基础：close</a><time datetime="2026-07-24T02:50:01.000Z" title="发表于 2026-07-24 10:50:01">2026-07-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/posts/d8c9ca1e/" title="【Linux 内核】VFS 基础：read"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/22_1785311474212.jpg" onerror="this.onerror=null;this.src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【Linux 内核】VFS 基础：read"/></a><div class="content"><a class="title" href="/blog/posts/d8c9ca1e/" title="【Linux 内核】VFS 基础：read">【Linux 内核】VFS 基础：read</a><time datetime="2026-07-23T05:35:12.000Z" title="发表于 2026-07-23 13:35:12">2026-07-23</time></div></div></div></div><div class="card-widget" id="card-newest-comments"><div class="item-headline"><i class="fas fa-comment-dots"></i><span>最新评论</span></div><div class="aside-list"><span>正在加载中...</span></div></div><div class="card-widget card-categories"><div class="item-headline">
+            <i class="fas fa-folder-open"></i>
+            <span>分类</span>
+            <a class="card-more-btn" href="/blog/categories/" title="查看更多">
+    <i class="fas fa-angle-right"></i></a>
+            </div>
+            <ul class="card-category-list" id="aside-cat-list">
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/blog/categories/C/"><span class="card-category-list-name">C</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/blog/categories/C/"><span class="card-category-list-name">C++</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/blog/categories/Develop/"><span class="card-category-list-name">Develop</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/blog/categories/Doxygen/"><span class="card-category-list-name">Doxygen</span><span class="card-category-list-count">3</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/blog/categories/Linux-%E5%86%85%E6%A0%B8/"><span class="card-category-list-name">Linux 内核</span><span class="card-category-list-count">7</span></a><ul class="card-category-list child"><li class="card-category-list-item "><a class="card-category-list-link" href="/blog/categories/Linux-%E5%86%85%E6%A0%B8/VFS/"><span class="card-category-list-name">VFS</span><span class="card-category-list-count">7</span></a></li></ul></li><li class="card-category-list-item "><a class="card-category-list-link" href="/blog/categories/Markdown/"><span class="card-category-list-name">Markdown</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/blog/categories/Multithreading/"><span class="card-category-list-name">Multithreading</span><span class="card-category-list-count">1</span></a></li>
+            </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/blog/tags/%E7%BC%96%E7%A8%8B%E8%A7%84%E8%8C%83/" style="font-size: 1.22em; color: rgb(138, 191, 133)">编程规范</a><a href="/blog/tags/%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3%E6%8C%87%E5%8D%97/" style="font-size: 1.38em; color: rgb(22, 182, 92)">技术文档指南</a><a href="/blog/tags/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/" style="font-size: 1.15em; color: rgb(71, 116, 10)">面向对象</a><a href="/blog/tags/OOP/" style="font-size: 1.15em; color: rgb(160, 31, 197)">OOP</a><a href="/blog/tags/%E6%96%87%E6%A1%A3%E7%94%9F%E6%88%90/" style="font-size: 1.3em; color: rgb(135, 119, 88)">文档生成</a><a href="/blog/tags/Linux/" style="font-size: 1.3em; color: rgb(26, 110, 152)">Linux</a><a href="/blog/tags/Windows/" style="font-size: 1.22em; color: rgb(6, 103, 141)">Windows</a><a href="/blog/tags/STL/" style="font-size: 1.15em; color: rgb(132, 83, 138)">STL</a><a href="/blog/tags/container/" style="font-size: 1.15em; color: rgb(36, 158, 65)">container</a><a href="/blog/tags/vector/" style="font-size: 1.15em; color: rgb(170, 87, 198)">vector</a><a href="/blog/tags/%E8%99%9A%E6%8B%9F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/" style="font-size: 1.45em; color: rgb(92, 5, 196)">虚拟文件系统</a><a href="/blog/tags/C/" style="font-size: 1.45em; color: rgb(145, 52, 196)">C</a><a href="/blog/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" style="font-size: 1.45em; color: rgb(94, 146, 160)">源码分析</a><a href="/blog/tags/Katex/" style="font-size: 1.15em; color: rgb(81, 38, 129)">Katex</a><a href="/blog/tags/Latex/" style="font-size: 1.15em; color: rgb(72, 89, 102)">Latex</a><a href="/blog/tags/typing/" style="font-size: 1.15em; color: rgb(181, 186, 193)">typing</a><a href="/blog/tags/typing-extensions/" style="font-size: 1.15em; color: rgb(109, 30, 59)">typing_extensions</a><a href="/blog/tags/package/" style="font-size: 1.15em; color: rgb(167, 98, 119)">package</a><a href="/blog/tags/%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/" style="font-size: 1.15em; color: rgb(30, 104, 27)">线程安全</a><a href="/blog/tags/RAII/" style="font-size: 1.15em; color: rgb(36, 91, 156)">RAII</a><a href="/blog/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" style="font-size: 1.15em; color: rgb(92, 164, 100)">并发编程</a><a href="/blog/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" style="font-size: 1.15em; color: rgb(98, 46, 45)">多线程</a><a href="/blog/tags/%E5%9D%97%E5%AD%98%E5%82%A8/" style="font-size: 1.15em; color: rgb(133, 64, 37)">块存储</a><a href="/blog/tags/%E6%96%87%E4%BB%B6%E5%AD%98%E5%82%A8/" style="font-size: 1.15em; color: rgb(51, 35, 42)">文件存储</a><a href="/blog/tags/%E5%AF%B9%E8%B1%A1%E5%AD%98%E5%82%A8/" style="font-size: 1.15em; color: rgb(55, 47, 3)">对象存储</a><a href="/blog/tags/NAS/" style="font-size: 1.15em; color: rgb(18, 68, 150)">NAS</a><a href="/blog/tags/NFS/" style="font-size: 1.15em; color: rgb(22, 168, 13)">NFS</a><a href="/blog/tags/SMB/" style="font-size: 1.15em; color: rgb(6, 71, 40)">SMB</a><a href="/blog/tags/FTP/" style="font-size: 1.15em; color: rgb(192, 51, 102)">FTP</a><a href="/blog/tags/%E5%8D%95%E6%9C%BA%E5%AD%98%E5%82%A8/" style="font-size: 1.15em; color: rgb(199, 27, 26)">单机存储</a><a href="/blog/tags/%E9%9B%86%E4%B8%AD%E5%BC%8F%E5%AD%98%E5%82%A8/" style="font-size: 1.15em; color: rgb(195, 144, 188)">集中式存储</a><a href="/blog/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8/" style="font-size: 1.15em; color: rgb(139, 50, 27)">分布式存储</a><a href="/blog/tags/%E4%BA%91%E5%AD%98%E5%82%A8/" style="font-size: 1.15em; color: rgb(55, 191, 49)">云存储</a><a href="/blog/tags/%E4%BA%91%E5%8E%9F%E7%94%9F%E5%AD%98%E5%82%A8/" style="font-size: 1.15em; color: rgb(135, 104, 94)">云原生存储</a><a href="/blog/tags/%E5%90%8C%E6%AD%A5I-O/" style="font-size: 1.15em; color: rgb(173, 63, 152)">同步I/O</a><a href="/blog/tags/%E5%BC%82%E6%AD%A5I-O/" style="font-size: 1.15em; color: rgb(178, 21, 167)">异步I/O</a><a href="/blog/tags/libaio/" style="font-size: 1.15em; color: rgb(27, 18, 186)">libaio</a><a href="/blog/tags/io-uring/" style="font-size: 1.15em; color: rgb(36, 103, 192)">io_uring</a><a href="/blog/tags/C-C/" style="font-size: 1.22em; color: rgb(177, 31, 177)">C/C++</a><a href="/blog/tags/%E8%B0%83%E8%AF%95%E5%B7%A5%E5%85%B7/" style="font-size: 1.22em; color: rgb(184, 171, 121)">调试工具</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>归档</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/blog/archives/2026/07/"><span class="card-archive-list-date">七月 2026</span><span class="card-archive-list-count">17</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/blog/archives/2025/08/"><span class="card-archive-list-date">八月 2025</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/blog/archives/2025/07/"><span class="card-archive-list-date">七月 2025</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/blog/archives/2025/05/"><span class="card-archive-list-date">五月 2025</span><span class="card-archive-list-count">7</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">26</div></div><div class="webinfo-item"><div class="item-name">本站总字数 :</div><div class="item-count">72.9k</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总访问量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2026-07-30T12:57:49.113Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/top_1752075448265.png')"><div id="footer-wrap"><div class="copyright">&copy;2025 - 2026 By dreamy-xay</div><div class="framework-info"><span>网站 </span><a target="_blank" rel="noopener" href="https://github.com/dreamy-xay/blog">Github</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://dreamy-xay.github.io/blog">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="translateLink" type="button" title="简繁转换">简</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="https://cdn.staticfile.net/hexo-theme-butterfly/4.13.0/js/utils.min.js"></script><script src="https://cdn.staticfile.net/hexo-theme-butterfly/4.13.0/js/main.min.js"></script><script src="https://cdn.staticfile.net/hexo-theme-butterfly/4.13.0/js/tw_cn.min.js"></script><script src="https://cdn.staticfile.net/fancyapps-ui/5.0.33/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.staticfile.net/instant.page/5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.staticfile.net/node-snackbar/0.1.16/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.staticfile.net/pangu/4.0.7/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"><script>(() => { 
+  const getCommentUrl = () => {
+    const eleGroup = document.querySelectorAll('#recent-posts .article-title')
+    let urlArray = []
+    eleGroup.forEach(i=>{
+      urlArray.push(i.getAttribute('href'))
+    })
+    return urlArray
+  }
+
+  const getCount = () => {
+    const runTwikoo = () => {
+      twikoo.getCommentsCount({
+        envId: 'https://twikoo-vercel-swart-pi.vercel.app/',
+        region: '',
+        urls: getCommentUrl(),
+        includeReply: false
+      }).then(function (res) {
+        document.querySelectorAll('#recent-posts .twikoo-count').forEach((item,index) => {
+          item.textContent = res[index].count
+        })
+      }).catch(function (err) {
+        console.log(err)
+      })
+    }
+
+      if (typeof twikoo === 'object') {
+        runTwikoo()
+      } else {
+        getScript('https://cdn.staticfile.net/twikoo/1.6.31/twikoo.all.min.js').then(runTwikoo)
+      }
+  }
+
+  window.pjax ? getCount() : window.addEventListener('load', getCount)
+
+})()</script><script>window.typedJSFn = {
+  init: (str) => {
+    window.typed = new Typed('#subtitle', Object.assign({
+      strings: str,
+      startDelay: 300,
+      typeSpeed: 150,
+      loop: true,
+      backSpeed: 50,
+    }, null))
+  },
+  run: (subtitleType) => {
+    if (true) {
+      if (typeof Typed === 'function') {
+        subtitleType()
+      } else {
+        getScript('https://cdn.staticfile.net/typed.js/2.1.0/typed.umd.min.js').then(subtitleType)
+      }
+    } else {
+      subtitleType()
+    }
+  }
+}
+</script><script>function subtitleType () {
+  if (true) {
+    typedJSFn.init(["梦想在远方，路在脚下，坚持不懈，直至巅峰。","今日之我优于昨日之我，明日必将更加辉煌。","汗水浇灌希望，努力铸就成功，永不言弃，直到梦想成真。","心中有光，何惧路长；志存高远，方能行远自迩。","自信且温和，温和且坚定。","逆境是成长的催化剂，逆境中坚持，终将破茧成蝶。"])
+  } else {
+    document.getElementById("subtitle").textContent = "梦想在远方，路在脚下，坚持不懈，直至巅峰。"
+  }
+}
+typedJSFn.run(subtitleType)</script><script>(() => {
+  const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaid.length === 0) return
+  const runMermaid = () => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    Array.from($mermaid).forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+      const mermaidID = 'mermaid-' + index
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+
+      const renderV10 = () => {
+        renderFn.then(({svg}) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svg)
+        })
+      }
+
+      const renderV9 = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      typeof renderFn === 'string' ? renderV9(renderFn) : renderV10()
+    })
+  }
+
+  const loadMermaid = () => {
+    window.loadMermaid ? runMermaid() : getScript('https://cdn.staticfile.net/mermaid/10.8.0/mermaid.min.js').then(runMermaid)
+  }
+
+  btf.addGlobalFn('themeChange', runMermaid, 'mermaid')
+
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script>window.addEventListener('load', () => {
+  const changeContent = (content) => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g,"") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0,150) + '...'
+    }
+    return content
+  }
+
+  const getComment = () => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo-vercel-swart-pi.vercel.app/',
+        region: '',
+        pageSize: 6,
+        includeReply: true
+      }).then(function (res) {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        saveToLocal.set('twikoo-newest-comments', JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray)
+      }).catch(function (err) {
+        const $dom = document.querySelector('#card-newest-comments .aside-list')
+        $dom.textContent= "无法获取评论，请确认相关配置是否正确"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      getScript('https://cdn.staticfile.net/twikoo/1.6.31/twikoo.all.min.js').then(runTwikoo)
+    }
+  }
+
+  const generateHtml = array => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class=\'aside-list-item\'>'
+
+        if (true) {
+          const name = 'src'
+          result += `<a href='${array[i].url}' class='thumbnail'><img ${name}='${array[i].avatar}' alt='${array[i].nick}'></a>`
+        }
+        
+        result += `<div class='content'>
+        <a class='comment' href='${array[i].url}' title='${array[i].content}'>${array[i].content}</a>
+        <div class='name'><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '没有评论'
+    }
+
+    let $dom = document.querySelector('#card-newest-comments .aside-list')
+    $dom && ($dom.innerHTML= result)
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh($dom)
+  }
+
+  const newestCommentInit = () => {
+    if (document.querySelector('#card-newest-comments .aside-list')) {
+      const data = saveToLocal.get('twikoo-newest-comments')
+      if (data) {
+        generateHtml(JSON.parse(data))
+      } else {
+        getComment()
+      }
+    }
+  }
+
+  newestCommentInit()
+  document.addEventListener('pjax:complete', newestCommentInit)
+})</script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script><script type="text/javascript" src="/blog/js/fireworks.min.js"></script><script src="https://cdn.staticfile.net/butterfly-extsrc/1.1.3/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><link rel="stylesheet" href="https://cdn.staticfile.net/aplayer/1.10.1/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.staticfile.net/aplayer/1.10.1/APlayer.min.js"></script><script src="https://cdn.staticfile.net/butterfly-extsrc/1.1.3/metingjs/dist/Meting.min.js"></script><script src="https://cdn.staticfile.net/pjax/0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/blog/404')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="https://cdn.staticfile.net/hexo-theme-butterfly/4.13.0/js/search/local-search.min.js"></script></div></div><script src="/blog/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"tagMode":false,"debug":false,"model":{"jsonPath":"/blog/live2dw/assets/shizuku.model.json"},"display":{"position":"left","width":150,"height":300,"hOffset":20,"vOffset":-20},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/"});</script></body></html>

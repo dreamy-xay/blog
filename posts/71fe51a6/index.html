@@ -1,0 +1,576 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>【Linux 内核】VFS 基础：driect write | dreamyのblog</title><meta name="author" content="dreamy-xay"><meta name="copyright" content="dreamy-xay"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="阅读本文前，请先学习《【存储初识】05-内核文件系统》。  一、从缓冲写入到直接写入 在《【Linux 内核】VFS 基础：write》中，详细分析了带页缓存（Page Cache）的缓冲写入（Buffered Write）流程。缓冲写入的核心思想是：数据先写入页缓存，标记为脏页，然后由内核后台线程异步写回磁盘。这种设计大幅提升了写入性能，但也带来了一些问题：  数据安全性：数据在页缓存中停留期间">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Linux 内核】VFS 基础：driect write">
+<meta property="og:url" content="https://dreamy-xay.github.io/blog/posts/71fe51a6/">
+<meta property="og:site_name" content="dreamyのblog">
+<meta property="og:description" content="阅读本文前，请先学习《【存储初识】05-内核文件系统》。  一、从缓冲写入到直接写入 在《【Linux 内核】VFS 基础：write》中，详细分析了带页缓存（Page Cache）的缓冲写入（Buffered Write）流程。缓冲写入的核心思想是：数据先写入页缓存，标记为脏页，然后由内核后台线程异步写回磁盘。这种设计大幅提升了写入性能，但也带来了一些问题：  数据安全性：数据在页缓存中停留期间">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/7_1752075489299.jpg">
+<meta property="article:published_time" content="2026-07-28T07:34:51.000Z">
+<meta property="article:modified_time" content="2026-07-29T07:40:34.000Z">
+<meta property="article:author" content="dreamy-xay">
+<meta property="article:tag" content="虚拟文件系统">
+<meta property="article:tag" content="C">
+<meta property="article:tag" content="源码分析">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/7_1752075489299.jpg"><link rel="shortcut icon" href="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/logo_1752075337653.png"><link rel="canonical" href="https://dreamy-xay.github.io/blog/posts/71fe51a6/"><link rel="preconnect" href="https://cdn.staticfile.net"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.staticfile.net/font-awesome/6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.staticfile.net/node-snackbar/0.1.16/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.staticfile.net/fancyapps-ui/5.0.33/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: {"path":"/blog/search.xml","preload":false,"top_n_per_article":1,"unescape":true,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":30,"languages":{"author":"作者: dreamy-xay","link":"链接: ","source":"来源: dreamyのblog","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体中文","cht_to_chs":"你已切换为简体中文","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#febcd5","bgDark":"#1f1f1f","position":"top-center"},
+  infinitegrid: {
+    js: 'https://cdn.staticfile.net/egjs-infinitegrid/4.11.1/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '【Linux 内核】VFS 基础：driect write',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2026-07-29 15:40:34'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="referrer" content="no-referrer" /><link rel="stylesheet" href="/blog/css/custom.css"><link rel="stylesheet" href="/blog/css/background.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="gear-loader"><div class="gear-loader_overlay"></div><div class="gear-loader_cogs"><div class="gear-loader_cogs__top"><div class="gear-top_part"></div><div class="gear-top_part"></div><div class="gear-top_part"></div><div class="gear-top_hole"></div></div><div class="gear-loader_cogs__left"><div class="gear-left_part"></div><div class="gear-left_part"></div><div class="gear-left_part"></div><div class="gear-left_hole"></div></div><div class="gear-loader_cogs__bottom"><div class="gear-bottom_part"></div><div class="gear-bottom_part"></div><div class="gear-bottom_part"></div><div class="gear-bottom_hole"></div></div></div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/avatar_1752075331083.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">26</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">45</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa-fw fas fa-book"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa-fw fas fa-list"></i><span> 娱乐库</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/blog/books/"><i class="fa-fw fas fa-book-open"></i><span> 阅读库</span></a></li><li><a class="site-page child" href="/blog/music/"><i class="fa-fw fas fa-music"></i><span> 音乐库</span></a></li><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 图片库</span></a></li><li><a class="site-page child" href="/blog/movies/"><i class="fa-fw fas fa-video"></i><span> 电影库</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/link/"><i class="fa-fw fas fa-link"></i><span> 友人帐</span></a></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/7_1752075489299.jpg')"><nav id="nav"><span id="blog-info"><a href="/blog/" title="dreamyのblog"><img class="site-icon" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/logo2_1752075340714.png"/><span class="site-name">dreamyのblog</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa-fw fas fa-book"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa-fw fas fa-list"></i><span> 娱乐库</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/blog/books/"><i class="fa-fw fas fa-book-open"></i><span> 阅读库</span></a></li><li><a class="site-page child" href="/blog/music/"><i class="fa-fw fas fa-music"></i><span> 音乐库</span></a></li><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 图片库</span></a></li><li><a class="site-page child" href="/blog/movies/"><i class="fa-fw fas fa-video"></i><span> 电影库</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/link/"><i class="fa-fw fas fa-link"></i><span> 友人帐</span></a></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div><div id="nav-right"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i></a></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">【Linux 内核】VFS 基础：driect write</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-07-28T07:34:51.000Z" title="发表于 2026-07-28 15:34:51">2026-07-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-07-29T07:40:34.000Z" title="更新于 2026-07-29 15:40:34">2026-07-29</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/Linux-%E5%86%85%E6%A0%B8/">Linux 内核</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/Linux-%E5%86%85%E6%A0%B8/VFS/">VFS</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.6k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>8分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="【Linux 内核】VFS 基础：driect write"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><div class="note pink icon-padding modern"><i class="note-icon far fa-lightbulb"></i><p>阅读本文前，请先学习<a href="/blog/posts/35ae6dfa/">《【存储初识】05-内核文件系统》</a>。</p>
+</div>
+<h2 id="一、从缓冲写入到直接写入">一、从缓冲写入到直接写入</h2>
+<p>在<a href="/blog/posts/54f22d4c/">《【Linux 内核】VFS 基础：write》</a>中，详细分析了带页缓存（Page Cache）的缓冲写入（Buffered Write）流程。缓冲写入的核心思想是：数据先写入页缓存，标记为脏页，然后由内核后台线程异步写回磁盘。这种设计大幅提升了写入性能，但也带来了一些问题：</p>
+<ul>
+<li><strong>数据安全性</strong>：数据在页缓存中停留期间，如果系统崩溃，数据可能丢失</li>
+<li><strong>双缓冲问题</strong>：应用程序有自己的缓存，内核又有页缓存，造成内存浪费</li>
+<li><strong>性能不可预测</strong>：脏页回写可能在任何时候触发，影响 I/O 延迟的确定性</li>
+</ul>
+<p>为了解决这些问题，Linux 提供了 <strong>O_DIRECT</strong> 标志。当文件以 O_DIRECT 模式打开时，I/O 操作会绕过页缓存，直接将数据从用户空间传输到存储设备。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> fd = open(<span class="string">&quot;/path/to/file&quot;</span>, O_RDWR | O_DIRECT);</span><br></pre></td></tr></table></figure>
+<p>O_DIRECT 最初由 IRIX 系统在 XFS 文件系统中引入，主要服务于数据库工作负载。其设计目标是允许数据库绕过页缓存和缓冲区缓存，避免不必要的 I/O 重复。Linux 内核中的 O_DIRECT 实现由 Andrew Morton 于 2002 年 7 月 4 日完成初始版本。</p>
+<h2 id="二、O-DIRECT-与-Buffered-Write-的核心区别">二、O_DIRECT 与 Buffered Write 的核心区别</h2>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>Buffered Write（页缓存）</th>
+<th>O_DIRECT（直接 I/O）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>数据路径</td>
+<td>用户空间 → 页缓存 → 磁盘</td>
+<td>用户空间 → 磁盘（绕过页缓存）</td>
+</tr>
+<tr>
+<td>写回时机</td>
+<td>延迟写回（后台线程）</td>
+<td>立即提交到块设备层</td>
+</tr>
+<tr>
+<td>数据安全性</td>
+<td>崩溃可能丢失数据</td>
+<td>提交后即持久（需配合 O_SYNC）</td>
+</tr>
+<tr>
+<td>内存使用</td>
+<td>占用页缓存内存</td>
+<td>不占用页缓存</td>
+</tr>
+<tr>
+<td>对齐要求</td>
+<td>无特殊要求</td>
+<td>缓冲区、偏移、长度均需对齐</td>
+</tr>
+<tr>
+<td>适用场景</td>
+<td>通用文件操作</td>
+<td>数据库、大数据等自管理缓存的应用</td>
+</tr>
+</tbody>
+</table>
+<p>O_DIRECT 的关键特性是<strong>绕过页缓存</strong>。但 O_DIRECT 并不保证数据立即写入磁盘——数据可能仍然停留在块设备层的 I/O 队列中，或磁盘自身的硬件缓存中。如果需要确保数据真正落盘，必须结合 O_SYNC 标志或调用 fsync。</p>
+<h2 id="三、O-DIRECT-的对齐限制">三、O_DIRECT 的对齐限制</h2>
+<p>O_DIRECT 最重要的使用限制是<strong>对齐要求</strong>。由于直接 I/O 涉及对块设备的直接访问，Linux 内核要求：</p>
+<ol>
+<li><strong>缓冲区地址</strong>：用户空间缓冲区必须对齐到块大小的整数倍</li>
+<li><strong>文件偏移量</strong>：写入的起始位置必须是块大小的整数倍</li>
+<li><strong>传输长度</strong>：待写入的数据长度必须是块大小的整数倍</li>
+</ol>
+<p>这里的块大小通常指底层设备的物理块大小（通常是 512 字节或 4096 字节）。在 Linux 内核 2.6 以前，这项要求更加严格：在 Linux 内核 2.4 中，所有的操作都必须和文件系统的逻辑块大小对齐（一般是 4KB）。</p>
+<p>不遵守上述任一限制，write 系统调用将返回 <code>-EINVAL</code> 错误。</p>
+<p>从 Linux 6.1 开始，可以通过 <code>statx(2)</code> 系统调用配合 <code>STATX_DIOALIGN</code> 标志查询文件的 O_DIRECT 对齐限制。</p>
+<p>为了满足对齐要求，应用程序通常使用 <code>memalign()</code> 或 <code>posix_memalign()</code> 函数分配对齐的内存。</p>
+<h2 id="四、O-DIRECT-在内核中的实现">四、O_DIRECT 在内核中的实现</h2>
+<h3 id="1-从系统调用到-direct-IO">1 从系统调用到 direct_IO</h3>
+<p>O_DIRECT 写入的调用链从用户空间的 <code>write</code> 开始，与缓冲写入共享前几层：</p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">用户空间: write(fd, buf, count)   // fd 以 O_DIRECT 打开</span><br><span class="line">    ↓ (系统调用)</span><br><span class="line">内核入口: sys_write()                      [fs/read_write.c]</span><br><span class="line">    ↓</span><br><span class="line">ksys_write()                               [fs/read_write.c]</span><br><span class="line">    ├── fdget_pos()                        // 获取文件对象</span><br><span class="line">    ├── vfs_write()                        // VFS 层统一写入接口</span><br><span class="line">    │   ├── 权限检查</span><br><span class="line">    │   ├── access_ok()                    // 检查用户缓冲区</span><br><span class="line">    │   ├── rw_verify_area()               // 检查写入区域</span><br><span class="line">    │   └── file-&gt;f_op-&gt;write_iter()       // 具体文件系统的写入</span><br><span class="line">    │       └── ext4_file_write_iter()     [fs/ext4/file.c]</span><br><span class="line">    │           └── (检测到 O_DIRECT)</span><br><span class="line">    │               └── iomap_dio_rw()     [fs/iomap/direct-io.c]</span><br><span class="line">    │                   或 do_blockdev_direct_IO() [fs/direct-io.c]</span><br><span class="line">    ├── 更新 f_pos                         // 更新文件偏移</span><br><span class="line">    └── fdput_pos()                        // 释放文件引用</span><br></pre></td></tr></table></figure>
+<p>关键的分叉点在于 <code>vfs_write</code> 调用具体文件系统的 <code>write_iter</code> 方法时。对于 ext4 文件系统，<code>ext4_file_write_iter</code> 会根据文件是否以 O_DIRECT 打开，选择不同的路径：</p>
+<ul>
+<li><strong>缓冲写入</strong>：调用 <code>generic_file_buffered_write</code> → <code>generic_perform_write</code></li>
+<li><strong>直接写入</strong>：调用 <code>ext4_direct_IO</code> → <code>iomap_dio_rw</code> 或 <code>do_blockdev_direct_IO</code></li>
+</ul>
+<h3 id="2-direct-io-c：传统直接-I-O-的核心实现">2 direct-io.c：传统直接 I/O 的核心实现</h3>
+<p>O_DIRECT 的传统核心实现位于 <code>fs/direct-io.c</code>。其设计围绕 <code>dio_block</code> 这一概念展开——<code>dio_block</code> 的大小介于硬件扇区大小和文件系统块大小之间，在每次调用时确定。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * This code generally works in units of &quot;dio_blocks&quot;. A dio_block is</span></span><br><span class="line"><span class="comment"> * somewhere between the hard sector size and the filesystem block size. it</span></span><br><span class="line"><span class="comment"> * is determined on a per-invocation basis.</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
+<p>核心函数 <code>do_blockdev_direct_IO</code> 负责处理直接 I/O 的提交。其主要工作包括：</p>
+<ol>
+<li><strong>检查对齐</strong>：验证用户缓冲区、文件偏移量和数据长度是否满足对齐要求</li>
+<li><strong>映射用户页面</strong>：通过 <code>get_user_pages</code>（或更新的 <code>pin_user_pages_fast</code>）将用户空间的缓冲区页面固定（pin）在内存中，防止在 I/O 过程中被交换出去。<code>DIO_PAGES</code> 宏定义了单次调用映射的用户页数量</li>
+<li><strong>构建 BIO</strong>：将用户数据组织成块 I/O 请求（BIO），提交给块设备层</li>
+<li><strong>处理完成</strong>：I/O 完成后，释放固定的用户页面</li>
+</ol>
+<p><code>do_blockdev_direct_IO</code> 还会维护 <code>inode-&gt;i_dio_count</code> 计数器，用于保护文件在直接 I/O 进行中不被截断（truncate）。</p>
+<h3 id="3-iomap：现代文件系统的直接-I-O-路径">3 iomap：现代文件系统的直接 I/O 路径</h3>
+<p>较新的内核版本中，许多文件系统（如 XFS、ext4、btrfs）使用 <strong>iomap</strong> 框架来处理直接 I/O。<code>iomap_dio_rw</code> 是这一框架的核心函数，它提供了比传统 <code>direct-io.c</code> 更灵活、更高效的直接 I/O 实现。</p>
+<p>iomap 框架的优势在于：</p>
+<ul>
+<li>统一了文件系统和块设备的 I/O 映射逻辑</li>
+<li>更好地支持了现代存储特性（如原子写、稀疏文件等）</li>
+<li>与 io_uring 等异步 I/O 接口的集成更紧密</li>
+</ul>
+<p>许多文件系统已经从传统的 <code>__blockdev_direct_IO()</code> 切换到 <code>iomap_dio_rw()</code>。对于小块直接 I/O，iomap 框架还提供了简化的 DIO 路径来减少软件开销。</p>
+<h2 id="五、O-DIRECT-与-O-SYNC-的区别与结合">五、O_DIRECT 与 O_SYNC 的区别与结合</h2>
+<h3 id="1-O-DIRECT-≠-数据持久化">1 O_DIRECT ≠ 数据持久化</h3>
+<p>O_DIRECT 只保证<strong>绕过页缓存</strong>，并不保证数据已经写入物理磁盘。数据可能仍然停留在：</p>
+<ul>
+<li>块设备层的 I/O 队列中</li>
+<li>磁盘自身的硬件缓存中</li>
+</ul>
+<h3 id="2-O-SYNC：同步写入">2 O_SYNC：同步写入</h3>
+<p>O_SYNC 标志表示在进行写操作时，会采用 write-through 策略。这意味着在数据写入页面缓存后，系统会等待数据被安全地写入磁盘，然后再返回。</p>
+<h3 id="3-结合使用">3 结合使用</h3>
+<p>同时使用 <code>O_DIRECT | O_SYNC</code> 可以实现<strong>直接且同步</strong>的写入：</p>
+<ul>
+<li>O_DIRECT 绕过页缓存</li>
+<li>O_SYNC 确保数据落盘</li>
+</ul>
+<p><strong>性能权衡</strong>：同时使用两个标志会显著降低性能，因为每次写入都既要绕过缓存又要等待磁盘确认。在实际应用中，数据库系统（如 MySQL/InnoDB）通常对数据文件使用 O_DIRECT，对 redo 日志使用 O_SYNC。</p>
+<h2 id="六、O-DIRECT-的适用场景与注意事项">六、O_DIRECT 的适用场景与注意事项</h2>
+<h3 id="1-适用场景">1 适用场景</h3>
+<p>O_DIRECT 主要适用于以下场景：</p>
+<ul>
+<li><strong>数据库系统</strong>（MySQL、PostgreSQL 等）：数据库有自己的缓存管理，不希望内核再做一次缓存</li>
+<li><strong>大数据处理</strong>（Hadoop、Spark 等）：处理海量数据时需要高效的 I/O</li>
+<li><strong>需要可预测 I/O 延迟的应用</strong>：避免页缓存带来的不确定性</li>
+<li><strong>自管理缓存的应用程序</strong>：应用程序已经实现了自己的缓存策略</li>
+</ul>
+<h3 id="2-注意事项">2 注意事项</h3>
+<p><strong>性能可能降低</strong>：内核对页缓存做了大量优化（预读、簇写入、缓存共享等），绕过这些优化可能导致性能下降。</p>
+<p><strong>缓存一致性问题</strong>：如果同一文件被一个进程以 O_DIRECT 打开，另一个进程以普通（缓冲）方式打开，直接 I/O 读写的数据与页缓存中的数据之间不存在一致性。</p>
+<p><strong>并非所有文件系统都支持</strong>：某些文件系统或块设备可能不支持 O_DIRECT。</p>
+<p><strong>对齐限制</strong>：应用程序必须自行处理内存对齐、偏移对齐和长度对齐。</p>
+<h2 id="七、完整的-O-DIRECT-写入调用链">七、完整的 O_DIRECT 写入调用链</h2>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">用户空间: write(fd, buf, count)   // fd 以 O_DIRECT 打开</span><br><span class="line">    ↓ (系统调用)</span><br><span class="line">内核入口: sys_write()                      [fs/read_write.c]</span><br><span class="line">    ↓</span><br><span class="line">ksys_write()                               [fs/read_write.c]</span><br><span class="line">    ├── fdget_pos()                        // 获取文件对象</span><br><span class="line">    ├── vfs_write()                        // VFS 层统一写入接口</span><br><span class="line">    │   ├── 权限检查</span><br><span class="line">    │   ├── access_ok()                    // 检查用户缓冲区</span><br><span class="line">    │   ├── rw_verify_area()               // 检查写入区域</span><br><span class="line">    │   └── file-&gt;f_op-&gt;write_iter()       // 具体文件系统的写入</span><br><span class="line">    │       └── ext4_file_write_iter()     [fs/ext4/file.c]</span><br><span class="line">    │           └── (检测到 O_DIRECT)</span><br><span class="line">    │               └── iomap_dio_rw()     [fs/iomap/direct-io.c]</span><br><span class="line">    │                   或 do_blockdev_direct_IO() [fs/direct-io.c]</span><br><span class="line">    │                       ├── 检查对齐要求</span><br><span class="line">    │                       ├── get_user_pages() / pin_user_pages_fast()</span><br><span class="line">    │                       │   └── 固定用户页面（防止被交换）</span><br><span class="line">    │                       ├── 构建 BIO</span><br><span class="line">    │                       ├── submit_bio()          // 提交到块设备层</span><br><span class="line">    │                       └── 等待完成（同步）或返回（异步）</span><br><span class="line">    ├── 更新 f_pos                         // 更新文件偏移</span><br><span class="line">    └── fdput_pos()                        // 释放文件引用</span><br><span class="line">    ↓ (块设备层)</span><br><span class="line">块设备层 / I/O 调度器</span><br><span class="line">    ↓</span><br><span class="line">设备驱动</span><br><span class="line">    ↓</span><br><span class="line">物理磁盘</span><br></pre></td></tr></table></figure>
+<h2 id="八、总结">八、总结</h2>
+<p>O_DIRECT 是 Linux 提供给应用程序的一种特殊 I/O 模式，其核心特征是<strong>绕过页缓存</strong>，直接将数据从用户空间传输到存储设备。它与缓冲写入（Buffered Write）的主要区别在于：</p>
+<ol>
+<li><strong>数据路径不同</strong>：绕过页缓存，减少一次内存拷贝</li>
+<li><strong>数据持久性语义不同</strong>：O_DIRECT 本身不保证落盘，需配合 O_SYNC</li>
+<li><strong>有严格的对齐要求</strong>：缓冲区、偏移、长度均需对齐到块大小</li>
+<li><strong>适用场景特定</strong>：主要用于数据库等自管理缓存的应用</li>
+</ol>
+<p>O_DIRECT 在内核中的实现经历了从传统的 <code>direct-io.c</code> 到现代 <code>iomap</code> 框架的演进。其核心逻辑围绕用户页面固定（get_user_pages）、BIO 构建和块设备提交展开。</p>
+<p>对于大多数通用应用程序，缓冲写入是更好的选择——内核的页缓存优化（预读、簇写入、延迟回写等）能提供更好的综合性能。O_DIRECT 只有在应用程序有明确的低延迟、可预测 I/O 或自管理缓存需求时，才值得使用。</p>
+<h2 id="参考内容">参考内容</h2>
+<p><strong style="color: #db8ef7;">[1]</strong> <a target="_blank" rel="noopener" href="https://developer.aliyun.com/article/103569">Linux系统编程（第2版）- 2.5 直接I/O</a><br>
+<strong style="color: #db8ef7;">[2]</strong> <a target="_blank" rel="noopener" href="https://m.yisu.com/zixun/298583.html">Linux系统：保证数据安全落盘</a><br>
+<strong style="color: #db8ef7;">[3]</strong> <a target="_blank" rel="noopener" href="https://cloud.baidu.com/article/3077284">Linux下的数据安全落盘：O_DIRECT与O_SYNC的深入解析</a><br>
+<strong style="color: #db8ef7;">[4]</strong> <a target="_blank" rel="noopener" href="https://archive.softwareheritage.org/browse/content/sha1_git:bbd05f1a21453b931f9e6f7547abbc3b577ff9f9/">Linux内核源码 - fs/direct-io.c (O_DIRECT 传统实现)</a><br>
+<strong style="color: #db8ef7;">[5]</strong> <a target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/latest/source/fs/iomap/direct-io.c">Linux内核源码 - fs/iomap/direct-io.c (iomap DIO)</a><br>
+<strong style="color: #db8ef7;">[6]</strong> <a target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/latest/source/fs/read_write.c">Linux内核源码 - fs/read_write.c (read/write系统调用)</a><br>
+<strong style="color: #db8ef7;">[7]</strong> <a target="_blank" rel="noopener" href="https://man7.org/linux/man-pages/man2/open.2.html">Direct IO alignment restrictions - Linux man pages</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://dreamy-xay.github.io/blog">dreamy-xay</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://dreamy-xay.github.io/blog/posts/71fe51a6/">https://dreamy-xay.github.io/blog/posts/71fe51a6/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://dreamy-xay.github.io/blog" target="_blank">dreamyのblog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/%E8%99%9A%E6%8B%9F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">虚拟文件系统</a><a class="post-meta__tags" href="/blog/tags/C/">C</a><a class="post-meta__tags" href="/blog/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">源码分析</a></div><div class="post_share"><div class="social-share" data-image="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/7_1752075489299.jpg" data-sites="wechat,weibo,qq,qzone,facebook,twitter"></div><link rel="stylesheet" href="https://cdn.staticfile.net/butterfly-extsrc/1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.staticfile.net/butterfly-extsrc/1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赞助</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/wechat_1752075400337.png" target="_blank"><img class="post-qr-code-img" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/wechat_1752075400337.png" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/alipay_1752075397065.png" target="_blank"><img class="post-qr-code-img" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/alipay_1752075397065.png" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/blog/posts/3a98d6d7/" title="【Linux 内核】VFS 基础：close"><img class="cover" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/27_1785311487554.jpg" onerror="onerror=null;src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">【Linux 内核】VFS 基础：close</div></div></a></div><div class="next-post pull-right"><a href="/blog/posts/c615e5d3/" title="【Linux 内核】VFS 基础：writeback"><img class="cover" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/29_1785311495995.jpeg" onerror="onerror=null;src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">【Linux 内核】VFS 基础：writeback</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/blog/posts/3a98d6d7/" title="【Linux 内核】VFS 基础：close"><img class="cover" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/27_1785311487554.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-24</div><div class="title">【Linux 内核】VFS 基础：close</div></div></a></div><div><a href="/blog/posts/1370ad10/" title="【Linux 内核】VFS 基础：mount"><img class="cover" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/15_1752075427743.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-20</div><div class="title">【Linux 内核】VFS 基础：mount</div></div></a></div><div><a href="/blog/posts/d8c9ca1e/" title="【Linux 内核】VFS 基础：read"><img class="cover" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/22_1785311474212.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-23</div><div class="title">【Linux 内核】VFS 基础：read</div></div></a></div><div><a href="/blog/posts/e4ee08dd/" title="【Linux 内核】VFS 基础：open"><img class="cover" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/18_1752075443054.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-21</div><div class="title">【Linux 内核】VFS 基础：open</div></div></a></div><div><a href="/blog/posts/c615e5d3/" title="【Linux 内核】VFS 基础：writeback"><img class="cover" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/29_1785311495995.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-29</div><div class="title">【Linux 内核】VFS 基础：writeback</div></div></a></div><div><a href="/blog/posts/54f22d4c/" title="【Linux 内核】VFS 基础：write"><img class="cover" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/28_1785311493480.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-22</div><div class="title">【Linux 内核】VFS 基础：write</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/avatar_1752075331083.jpg" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">dreamy-xay</div><div class="author-info__description">只争朝夕，不负韶华</div></div><div class="card-info-data site-data is-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">26</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">45</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/dreamy-xay"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="http://wpa.qq.com/msgrd?v=3&amp;uin=1985332264&amp;site=qq&amp;menu=yes" target="_blank" title="QQ"><i class="fab fa-qq" style="color: #febcd5;"></i></a><a class="social-icon" href="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/weixin_1752075402432.png" target="_blank" title="WeChat"><i class="fab fa-weixin" style="color: #febcd5;"></i></a><a class="social-icon" href="mailto:dreamy-xay@foxmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #febcd5;"></i></a><a class="social-icon" href="https://space.bilibili.com/365741414" target="_blank" title="Bilibili"><i class="fa-brands fa-bilibili" style="color: #febcd5;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Hi~ o(*￣▽￣*)ブ，欢迎来到dreamy'blog，如果喜欢记得收藏奥～</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E4%BB%8E%E7%BC%93%E5%86%B2%E5%86%99%E5%85%A5%E5%88%B0%E7%9B%B4%E6%8E%A5%E5%86%99%E5%85%A5"><span class="toc-text">一、从缓冲写入到直接写入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81O-DIRECT-%E4%B8%8E-Buffered-Write-%E7%9A%84%E6%A0%B8%E5%BF%83%E5%8C%BA%E5%88%AB"><span class="toc-text">二、O_DIRECT 与 Buffered Write 的核心区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81O-DIRECT-%E7%9A%84%E5%AF%B9%E9%BD%90%E9%99%90%E5%88%B6"><span class="toc-text">三、O_DIRECT 的对齐限制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81O-DIRECT-%E5%9C%A8%E5%86%85%E6%A0%B8%E4%B8%AD%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="toc-text">四、O_DIRECT 在内核中的实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%BB%8E%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%88%B0-direct-IO"><span class="toc-text">1 从系统调用到 direct_IO</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-direct-io-c%EF%BC%9A%E4%BC%A0%E7%BB%9F%E7%9B%B4%E6%8E%A5-I-O-%E7%9A%84%E6%A0%B8%E5%BF%83%E5%AE%9E%E7%8E%B0"><span class="toc-text">2 direct-io.c：传统直接 I&#x2F;O 的核心实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-iomap%EF%BC%9A%E7%8E%B0%E4%BB%A3%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%9B%B4%E6%8E%A5-I-O-%E8%B7%AF%E5%BE%84"><span class="toc-text">3 iomap：现代文件系统的直接 I&#x2F;O 路径</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81O-DIRECT-%E4%B8%8E-O-SYNC-%E7%9A%84%E5%8C%BA%E5%88%AB%E4%B8%8E%E7%BB%93%E5%90%88"><span class="toc-text">五、O_DIRECT 与 O_SYNC 的区别与结合</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-O-DIRECT-%E2%89%A0-%E6%95%B0%E6%8D%AE%E6%8C%81%E4%B9%85%E5%8C%96"><span class="toc-text">1 O_DIRECT ≠ 数据持久化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-O-SYNC%EF%BC%9A%E5%90%8C%E6%AD%A5%E5%86%99%E5%85%A5"><span class="toc-text">2 O_SYNC：同步写入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E7%BB%93%E5%90%88%E4%BD%BF%E7%94%A8"><span class="toc-text">3 结合使用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81O-DIRECT-%E7%9A%84%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF%E4%B8%8E%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-text">六、O_DIRECT 的适用场景与注意事项</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-text">1 适用场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-text">2 注意事项</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E5%AE%8C%E6%95%B4%E7%9A%84-O-DIRECT-%E5%86%99%E5%85%A5%E8%B0%83%E7%94%A8%E9%93%BE"><span class="toc-text">七、完整的 O_DIRECT 写入调用链</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AB%E3%80%81%E6%80%BB%E7%BB%93"><span class="toc-text">八、总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E5%86%85%E5%AE%B9"><span class="toc-text">参考内容</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/posts/7fee99f/" title="【C】C语言面向对象实现"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/27_1785311487554.jpg" onerror="this.onerror=null;this.src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【C】C语言面向对象实现"/></a><div class="content"><a class="title" href="/blog/posts/7fee99f/" title="【C】C语言面向对象实现">【C】C语言面向对象实现</a><time datetime="2026-07-30T12:48:13.000Z" title="发表于 2026-07-30 20:48:13">2026-07-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/posts/c615e5d3/" title="【Linux 内核】VFS 基础：writeback"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/29_1785311495995.jpeg" onerror="this.onerror=null;this.src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【Linux 内核】VFS 基础：writeback"/></a><div class="content"><a class="title" href="/blog/posts/c615e5d3/" title="【Linux 内核】VFS 基础：writeback">【Linux 内核】VFS 基础：writeback</a><time datetime="2026-07-29T07:36:34.000Z" title="发表于 2026-07-29 15:36:34">2026-07-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/posts/71fe51a6/" title="【Linux 内核】VFS 基础：driect write"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/7_1752075489299.jpg" onerror="this.onerror=null;this.src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【Linux 内核】VFS 基础：driect write"/></a><div class="content"><a class="title" href="/blog/posts/71fe51a6/" title="【Linux 内核】VFS 基础：driect write">【Linux 内核】VFS 基础：driect write</a><time datetime="2026-07-28T07:34:51.000Z" title="发表于 2026-07-28 15:34:51">2026-07-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/posts/3a98d6d7/" title="【Linux 内核】VFS 基础：close"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/27_1785311487554.jpg" onerror="this.onerror=null;this.src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【Linux 内核】VFS 基础：close"/></a><div class="content"><a class="title" href="/blog/posts/3a98d6d7/" title="【Linux 内核】VFS 基础：close">【Linux 内核】VFS 基础：close</a><time datetime="2026-07-24T02:50:01.000Z" title="发表于 2026-07-24 10:50:01">2026-07-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/posts/d8c9ca1e/" title="【Linux 内核】VFS 基础：read"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/22_1785311474212.jpg" onerror="this.onerror=null;this.src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【Linux 内核】VFS 基础：read"/></a><div class="content"><a class="title" href="/blog/posts/d8c9ca1e/" title="【Linux 内核】VFS 基础：read">【Linux 内核】VFS 基础：read</a><time datetime="2026-07-23T05:35:12.000Z" title="发表于 2026-07-23 13:35:12">2026-07-23</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/7_1752075489299.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2025 - 2026 By dreamy-xay</div><div class="framework-info"><span>网站 </span><a target="_blank" rel="noopener" href="https://github.com/dreamy-xay/blog">Github</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://dreamy-xay.github.io/blog">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="https://cdn.staticfile.net/hexo-theme-butterfly/4.13.0/js/utils.min.js"></script><script src="https://cdn.staticfile.net/hexo-theme-butterfly/4.13.0/js/main.min.js"></script><script src="https://cdn.staticfile.net/hexo-theme-butterfly/4.13.0/js/tw_cn.min.js"></script><script src="https://cdn.staticfile.net/fancyapps-ui/5.0.33/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.staticfile.net/instant.page/5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.staticfile.net/node-snackbar/0.1.16/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.staticfile.net/pangu/4.0.7/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"><script>(() => {
+  const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaid.length === 0) return
+  const runMermaid = () => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    Array.from($mermaid).forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+      const mermaidID = 'mermaid-' + index
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+
+      const renderV10 = () => {
+        renderFn.then(({svg}) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svg)
+        })
+      }
+
+      const renderV9 = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      typeof renderFn === 'string' ? renderV9(renderFn) : renderV10()
+    })
+  }
+
+  const loadMermaid = () => {
+    window.loadMermaid ? runMermaid() : getScript('https://cdn.staticfile.net/mermaid/10.8.0/mermaid.min.js').then(runMermaid)
+  }
+
+  btf.addGlobalFn('themeChange', runMermaid, 'mermaid')
+
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script><script>(() => {
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-vercel-swart-pi.vercel.app/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = () => {
+    twikoo.init(Object.assign({
+      el: '#twikoo-wrap',
+      envId: 'https://twikoo-vercel-swart-pi.vercel.app/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      }
+    }, null))
+
+    GLOBAL_CONFIG_SITE.isPost && getCount()
+  }
+
+  const loadTwikoo = () => {
+    if (typeof twikoo === 'object') setTimeout(init,0)
+    else getScript('https://cdn.staticfile.net/twikoo/1.6.31/twikoo.all.min.js').then(init)
+  }
+
+  if ('Twikoo' === 'Twikoo' || !true) {
+    if (true) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script>window.addEventListener('load', () => {
+  const changeContent = (content) => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g,"") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0,150) + '...'
+    }
+    return content
+  }
+
+  const getComment = () => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo-vercel-swart-pi.vercel.app/',
+        region: '',
+        pageSize: 6,
+        includeReply: true
+      }).then(function (res) {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        saveToLocal.set('twikoo-newest-comments', JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray)
+      }).catch(function (err) {
+        const $dom = document.querySelector('#card-newest-comments .aside-list')
+        $dom.textContent= "无法获取评论，请确认相关配置是否正确"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      getScript('https://cdn.staticfile.net/twikoo/1.6.31/twikoo.all.min.js').then(runTwikoo)
+    }
+  }
+
+  const generateHtml = array => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class=\'aside-list-item\'>'
+
+        if (true) {
+          const name = 'src'
+          result += `<a href='${array[i].url}' class='thumbnail'><img ${name}='${array[i].avatar}' alt='${array[i].nick}'></a>`
+        }
+        
+        result += `<div class='content'>
+        <a class='comment' href='${array[i].url}' title='${array[i].content}'>${array[i].content}</a>
+        <div class='name'><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '没有评论'
+    }
+
+    let $dom = document.querySelector('#card-newest-comments .aside-list')
+    $dom && ($dom.innerHTML= result)
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh($dom)
+  }
+
+  const newestCommentInit = () => {
+    if (document.querySelector('#card-newest-comments .aside-list')) {
+      const data = saveToLocal.get('twikoo-newest-comments')
+      if (data) {
+        generateHtml(JSON.parse(data))
+      } else {
+        getComment()
+      }
+    }
+  }
+
+  newestCommentInit()
+  document.addEventListener('pjax:complete', newestCommentInit)
+})</script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script><script type="text/javascript" src="/blog/js/fireworks.min.js"></script><script src="https://cdn.staticfile.net/butterfly-extsrc/1.1.3/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><link rel="stylesheet" href="https://cdn.staticfile.net/aplayer/1.10.1/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.staticfile.net/aplayer/1.10.1/APlayer.min.js"></script><script src="https://cdn.staticfile.net/butterfly-extsrc/1.1.3/metingjs/dist/Meting.min.js"></script><script src="https://cdn.staticfile.net/pjax/0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/blog/404')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="https://cdn.staticfile.net/hexo-theme-butterfly/4.13.0/js/search/local-search.min.js"></script></div></div><script src="/blog/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"tagMode":false,"debug":false,"model":{"jsonPath":"/blog/live2dw/assets/shizuku.model.json"},"display":{"position":"left","width":150,"height":300,"hOffset":20,"vOffset":-20},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/"});</script></body></html>

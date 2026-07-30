@@ -1,0 +1,588 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>【Linux 内核】VFS 基础：writeback | dreamyのblog</title><meta name="author" content="dreamy-xay"><meta name="copyright" content="dreamy-xay"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="阅读本文前，请先学习《【存储初识】05-内核文件系统》。  一、从缓冲写入到数据回写 在前面的文章《【Linux 内核】VFS 基础：write》中，详细分析了带页缓存（Page Cache）的缓冲写入（Buffered Write）流程。缓冲写入的核心机制是：数据从用户空间拷贝到页缓存后，write 系统调用就返回了，完全不需要等待数据完全写入存储设备。这种设计大幅提升了写入性能，但同时也引入了">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Linux 内核】VFS 基础：writeback">
+<meta property="og:url" content="https://dreamy-xay.github.io/blog/posts/c615e5d3/">
+<meta property="og:site_name" content="dreamyのblog">
+<meta property="og:description" content="阅读本文前，请先学习《【存储初识】05-内核文件系统》。  一、从缓冲写入到数据回写 在前面的文章《【Linux 内核】VFS 基础：write》中，详细分析了带页缓存（Page Cache）的缓冲写入（Buffered Write）流程。缓冲写入的核心机制是：数据从用户空间拷贝到页缓存后，write 系统调用就返回了，完全不需要等待数据完全写入存储设备。这种设计大幅提升了写入性能，但同时也引入了">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/29_1785311495995.jpeg">
+<meta property="article:published_time" content="2026-07-29T07:36:34.000Z">
+<meta property="article:modified_time" content="2026-07-29T07:41:09.000Z">
+<meta property="article:author" content="dreamy-xay">
+<meta property="article:tag" content="虚拟文件系统">
+<meta property="article:tag" content="C">
+<meta property="article:tag" content="源码分析">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/29_1785311495995.jpeg"><link rel="shortcut icon" href="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/logo_1752075337653.png"><link rel="canonical" href="https://dreamy-xay.github.io/blog/posts/c615e5d3/"><link rel="preconnect" href="https://cdn.staticfile.net"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.staticfile.net/font-awesome/6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.staticfile.net/node-snackbar/0.1.16/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.staticfile.net/fancyapps-ui/5.0.33/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: {"path":"/blog/search.xml","preload":false,"top_n_per_article":1,"unescape":true,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":30,"languages":{"author":"作者: dreamy-xay","link":"链接: ","source":"来源: dreamyのblog","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体中文","cht_to_chs":"你已切换为简体中文","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#febcd5","bgDark":"#1f1f1f","position":"top-center"},
+  infinitegrid: {
+    js: 'https://cdn.staticfile.net/egjs-infinitegrid/4.11.1/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '【Linux 内核】VFS 基础：writeback',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2026-07-29 15:41:09'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="referrer" content="no-referrer" /><link rel="stylesheet" href="/blog/css/custom.css"><link rel="stylesheet" href="/blog/css/background.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="gear-loader"><div class="gear-loader_overlay"></div><div class="gear-loader_cogs"><div class="gear-loader_cogs__top"><div class="gear-top_part"></div><div class="gear-top_part"></div><div class="gear-top_part"></div><div class="gear-top_hole"></div></div><div class="gear-loader_cogs__left"><div class="gear-left_part"></div><div class="gear-left_part"></div><div class="gear-left_part"></div><div class="gear-left_hole"></div></div><div class="gear-loader_cogs__bottom"><div class="gear-bottom_part"></div><div class="gear-bottom_part"></div><div class="gear-bottom_part"></div><div class="gear-bottom_hole"></div></div></div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/avatar_1752075331083.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">26</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">45</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa-fw fas fa-book"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa-fw fas fa-list"></i><span> 娱乐库</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/blog/books/"><i class="fa-fw fas fa-book-open"></i><span> 阅读库</span></a></li><li><a class="site-page child" href="/blog/music/"><i class="fa-fw fas fa-music"></i><span> 音乐库</span></a></li><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 图片库</span></a></li><li><a class="site-page child" href="/blog/movies/"><i class="fa-fw fas fa-video"></i><span> 电影库</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/link/"><i class="fa-fw fas fa-link"></i><span> 友人帐</span></a></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/29_1785311495995.jpeg')"><nav id="nav"><span id="blog-info"><a href="/blog/" title="dreamyのblog"><img class="site-icon" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/logo2_1752075340714.png"/><span class="site-name">dreamyのblog</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa-fw fas fa-book"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa-fw fas fa-list"></i><span> 娱乐库</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/blog/books/"><i class="fa-fw fas fa-book-open"></i><span> 阅读库</span></a></li><li><a class="site-page child" href="/blog/music/"><i class="fa-fw fas fa-music"></i><span> 音乐库</span></a></li><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 图片库</span></a></li><li><a class="site-page child" href="/blog/movies/"><i class="fa-fw fas fa-video"></i><span> 电影库</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/link/"><i class="fa-fw fas fa-link"></i><span> 友人帐</span></a></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div><div id="nav-right"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i></a></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">【Linux 内核】VFS 基础：writeback</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-07-29T07:36:34.000Z" title="发表于 2026-07-29 15:36:34">2026-07-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-07-29T07:41:09.000Z" title="更新于 2026-07-29 15:41:09">2026-07-29</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/Linux-%E5%86%85%E6%A0%B8/">Linux 内核</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/Linux-%E5%86%85%E6%A0%B8/VFS/">VFS</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.6k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>9分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="【Linux 内核】VFS 基础：writeback"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><div class="note pink icon-padding modern"><i class="note-icon far fa-lightbulb"></i><p>阅读本文前，请先学习<a href="/blog/posts/35ae6dfa/">《【存储初识】05-内核文件系统》</a>。</p>
+</div>
+<h2 id="一、从缓冲写入到数据回写">一、从缓冲写入到数据回写</h2>
+<p>在前面的文章<a href="/blog/posts/54f22d4c/">《【Linux 内核】VFS 基础：write》</a>中，详细分析了带页缓存（Page Cache）的缓冲写入（Buffered Write）流程。缓冲写入的核心机制是：数据从用户空间拷贝到页缓存后，<code>write</code> 系统调用就返回了，完全不需要等待数据完全写入存储设备。这种设计大幅提升了写入性能，但同时也引入了一个关键问题：<strong>脏页（Dirty Page）必须被写回磁盘，否则数据将面临丢失的风险</strong>。</p>
+<p>脏页是指那些已经被修改但尚未写回存储设备的内存页面。将脏页写回磁盘的机制就是 <strong>writeback</strong>（回写）。writeback 机制是 Linux 内核 I/O 子系统中至关重要的一环，它负责在合适的时机将内存中修改过的数据同步到持久化存储设备上。</p>
+<p>writeback 机制需要回答三个核心问题：</p>
+<ol>
+<li><strong>何时回写</strong>：什么时机触发脏页的回写操作？</li>
+<li><strong>回写哪些</strong>：如何识别和管理需要回写的脏页和 inode？</li>
+<li><strong>如何回写</strong>：脏页通过怎样的路径最终写入磁盘？</li>
+</ol>
+<h2 id="二、writeback-的核心数据结构">二、writeback 的核心数据结构</h2>
+<h3 id="1-backing-dev-info：备用存储设备描述符">1 backing_dev_info：备用存储设备描述符</h3>
+<p>writeback 机制的管理基础是 <strong>BDI</strong>（Backing Device Info），即备用存储设备信息。BDI 描述了一个持久化存储设备（如硬盘、SSD），内核为每个存储设备创建一个 <code>backing_dev_info</code> 结构体。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">backing_dev_info</span> &#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">list_head</span> <span class="title">bdi_list</span>;</span></span><br><span class="line">    <span class="comment">/* ... */</span></span><br><span class="line">    <span class="comment">/* writeback 对象，承载具体的 writeback 工作进程和要处理的 inode */</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">bdi_writeback</span> <span class="title">wb</span>;</span>          <span class="comment">/* 默认的 writeback 信息 */</span></span><br><span class="line">    <span class="type">spinlock_t</span> wb_lock;               <span class="comment">/* 保护 work_list 和 wb.dwork 调度 */</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">list_head</span> <span class="title">work_list</span>;</span>       <span class="comment">/* 待处理的 writeback 工作链表 */</span></span><br><span class="line">    <span class="comment">/* ... */</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p><code>bdi_list</code> 将所有 BDI 设备链接成一个全局链表，方便内核遍历和管理所有存储设备的回写任务。</p>
+<h3 id="2-bdi-writeback：writeback-工作单元">2 bdi_writeback：writeback 工作单元</h3>
+<p>每个 BDI 设备都包含一个 <code>bdi_writeback</code> 结构（<code>bdi-&gt;wb</code>），这是 writeback 机制的核心工作单元。<code>bdi_writeback</code> 包含了执行回写所需的所有状态信息。</p>
+<h3 id="3-wb-writeback-work：回写任务描述">3 wb_writeback_work：回写任务描述</h3>
+<p>每个需要执行的回写操作都被封装成一个 <code>wb_writeback_work</code> 结构：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">wb_writeback_work</span> &#123;</span></span><br><span class="line">    <span class="type">long</span> nr_pages;                    <span class="comment">/* 要回写的页数 */</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">super_block</span> *<span class="title">sb</span>;</span>           <span class="comment">/* 所属超级块 */</span></span><br><span class="line">    <span class="class"><span class="keyword">enum</span> <span class="title">writeback_sync_modes</span> <span class="title">sync_mode</span>;</span>  <span class="comment">/* 同步模式 */</span></span><br><span class="line">    <span class="type">unsigned</span> <span class="type">int</span> for_kupdate:<span class="number">1</span>;       <span class="comment">/* 是否由定期更新触发 */</span></span><br><span class="line">    <span class="type">unsigned</span> <span class="type">int</span> range_cyclic:<span class="number">1</span>;      <span class="comment">/* 是否循环扫描 */</span></span><br><span class="line">    <span class="type">unsigned</span> <span class="type">int</span> for_background:<span class="number">1</span>;    <span class="comment">/* 是否为后台回写 */</span></span><br><span class="line">    <span class="type">unsigned</span> <span class="type">int</span> for_sync:<span class="number">1</span>;          <span class="comment">/* 是否为 sync(2) 调用 */</span></span><br><span class="line">    <span class="class"><span class="keyword">enum</span> <span class="title">wb_reason</span> <span class="title">reason</span>;</span>            <span class="comment">/* 回写发起的原因 */</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">list_head</span> <span class="title">list</span>;</span>            <span class="comment">/* 挂接到 work_list 链表 */</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">wb_completion</span> *<span class="title">done</span>;</span>       <span class="comment">/* 调用者等待的完成标志 */</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>这些 work 被挂载到 <code>backing_dev_info</code> 的 <code>work_list</code> 链表上。</p>
+<h3 id="4-inode-的脏状态管理">4 inode 的脏状态管理</h3>
+<p>每个 inode 使用 <code>i_state</code> 字段记录其脏状态：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> I_DIRTY_SYNC      (1 &lt;&lt; 0)  <span class="comment">/* 元数据脏（同步） */</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> I_DIRTY_DATASYNC  (1 &lt;&lt; 1)  <span class="comment">/* 数据脏（数据同步） */</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> I_DIRTY_PAGES     (1 &lt;&lt; 2)  <span class="comment">/* 页缓存脏 */</span></span></span><br></pre></td></tr></table></figure>
+<p><code>I_DIRTY_PAGES</code> 是最常见的情况——当通过 <code>write</code> 系统调用写入数据后，页缓存被标记为脏，进而触发 inode 的脏标记。</p>
+<h3 id="5-inode-的-writeback-队列">5 inode 的 writeback 队列</h3>
+<p>每个 <code>bdi_writeback</code> 维护了多个 inode 链表来管理脏 inode：</p>
+<ul>
+<li><strong>b_dirty</strong>：脏 inode 链表，存放所有需要回写的 inode</li>
+<li><strong>b_io</strong>：当前正在处理的 inode 链表</li>
+<li><strong>b_more_io</strong>：需要更多回写的 inode 链表</li>
+</ul>
+<p>当 inode 被标记为脏时，它会被加入到 <code>b_dirty</code> 链表中。回写时，内核将 inode 从 <code>b_dirty</code> 转移到 <code>b_io</code> 队列进行处理。</p>
+<h2 id="三、脏页标记：writeback-的起点">三、脏页标记：writeback 的起点</h2>
+<h3 id="1-脏页的形成路径">1 脏页的形成路径</h3>
+<p>不管应用程序以什么方式将数据变脏，最终都会调用 <code>__mark_inode_dirty</code> 将 inode 标记为脏。主要有以下几种情况：</p>
+<p><strong>I_DIRTY_PAGES（最常见）</strong>：通过 <code>write</code> 系统调用写文件，最后写入 page cache 后形成脏页。调用链为：</p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">write -&gt; generic_write_end -&gt; mark_inode_dirty -&gt; __mark_inode_dirty</span><br></pre></td></tr></table></figure>
+<p><strong>I_DIRTY_SYNC</strong>：更新文件的访问时间（atime）、修改时间（mtime）和状态变更时间（ctime）时触发。</p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">update_time -&gt; mark_inode_dirty_sync -&gt; __mark_inode_dirty</span><br></pre></td></tr></table></figure>
+<h3 id="2-mark-inode-dirty：标记-inode-脏的核心函数">2 __mark_inode_dirty：标记 inode 脏的核心函数</h3>
+<p><code>__mark_inode_dirty</code> 是 writeback 机制的入口函数，它完成以下核心工作：</p>
+<ol>
+<li><strong>将脏 inode 挂载到 BDI 设备的 b_dirty 队列上</strong></li>
+<li><strong>判断该 inode 是否是该 BDI 第一个脏 inode，决定是否需要唤醒 writeback 进程</strong></li>
+</ol>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">void</span> __mark_inode_dirty(<span class="keyword">struct</span> inode *inode, <span class="type">int</span> flags)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">/* ... */</span></span><br><span class="line">    <span class="keyword">if</span> (flags &amp; (I_DIRTY_SYNC | I_DIRTY_DATASYNC)) &#123;</span><br><span class="line">        <span class="comment">/* 对 I_DIRTY_SYNC、I_DIRTY_DATASYNC 的情况，向日志模块提交事务 */</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/* 把脏 inode 挂到 BDI 设备的 b_dirty 队列上 */</span></span><br><span class="line">    <span class="keyword">if</span> (!(inode-&gt;i_state &amp; I_DIRTY)) &#123;</span><br><span class="line">        <span class="comment">/* 第一个脏标记 */</span></span><br><span class="line">        list_move(&amp;inode-&gt;i_wb_list, &amp;wb-&gt;b_dirty);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/* 判断是否需要唤醒 writeback 进程 */</span></span><br><span class="line">    <span class="keyword">if</span> (!wb_has_dirty_io(wb)) &#123;</span><br><span class="line">        wb_wakeup_delayed(wb);  <span class="comment">/* 启动定时器触发回写 */</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/* ... */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="3-启动回写定时器">3 启动回写定时器</h3>
+<p>当 inode 被标记为脏后，<code>wb_wakeup_delayed</code> 会启动一个延迟工作队列（delayed work）：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">/* 启动定时器触发 delayed_work_timer_fn 函数 */</span></span><br><span class="line">wb_wakeup_delayed(wb);</span><br></pre></td></tr></table></figure>
+<p>这个定时器会在 <code>dirty_writeback_centisecs</code> 指定的时间间隔后触发回写操作。默认值为 5 秒（500 厘秒）：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> dirty_writeback_centisecs = <span class="number">5</span> * <span class="number">100</span>;  <span class="comment">/* 默认 5 秒 */</span></span><br></pre></td></tr></table></figure>
+<h2 id="四、writeback-的触发时机">四、writeback 的触发时机</h2>
+<p>脏页回写主要通过<strong>周期性回写</strong>、<strong>内存压力触发</strong>和<strong>主动回写</strong>三种方式触发。</p>
+<h3 id="1-周期性回写（Periodic-Writeback）">1 周期性回写（Periodic Writeback）</h3>
+<p>内核会定期唤醒 writeback 线程，扫描并回写那些已经存在超过一定时间的脏页。相关的内核参数：</p>
+<ul>
+<li><strong>dirty_writeback_centisecs</strong>：周期性回写的间隔，默认 500 厘秒（5 秒）</li>
+<li><strong>dirty_expire_centisecs</strong>：脏页的最长存活时间，默认 3000 厘秒（30 秒）</li>
+</ul>
+<p>当脏页的存活时间超过 <code>dirty_expire_centisecs</code> 时，它们会成为周期性回写的优先目标。</p>
+<h3 id="2-内存压力触发（Memory-Pressure）">2 内存压力触发（Memory Pressure）</h3>
+<p>当系统内存不足时，内核需要回收内存页。脏页因为内容未同步到磁盘而不能直接被回收，必须先写回磁盘。</p>
+<p><code>balance_dirty_pages</code> 函数负责在内存压力下控制脏页的数量。当脏页数量超过阈值时，写入进程会被阻塞，直到脏页被写回。</p>
+<h3 id="3-主动回写（Explicit-Sync）">3 主动回写（Explicit Sync）</h3>
+<p>用户程序可以主动调用 <code>sync()</code>、<code>fsync()</code> 或 <code>fdatasync()</code> 系统调用，强制将数据写回磁盘。</p>
+<h2 id="五、writeback-的核心执行流程">五、writeback 的核心执行流程</h2>
+<h3 id="1-工作队列处理：wb-workfn">1 工作队列处理：wb_workfn</h3>
+<p>当定时器触发或显式调用时，writeback 工作通过工作队列（workqueue）执行。在 3.10 内核及之后，writeback 由 workqueue 进行实际的回写工作。原先由一个 <code>pdflush</code> 进程统管所有磁盘的脏页回写，在磁盘数量多时容易出现 I/O 瓶颈，采用 workqueue 后相当于升级为多线程，提高了 I/O 吞吐量。</p>
+<p><code>wb_workfn</code> 是工作队列的处理函数：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">wb_workfn</span><span class="params">(<span class="keyword">struct</span> work_struct *work)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">bdi_writeback</span> *<span class="title">wb</span> =</span> container_of(work, ...);</span><br><span class="line">    wb_do_writeback(wb);   <span class="comment">/* 执行实际的回写 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="2-wb-do-writeback：调度回写">2 wb_do_writeback：调度回写</h3>
+<p><code>wb_do_writeback</code> 负责调度和执行回写任务：</p>
+<ol>
+<li>从 <code>work_list</code> 中取出待处理的 <code>wb_writeback_work</code></li>
+<li>调用 <code>writeback_inodes_wb</code> 处理脏 inode</li>
+<li>如果没有待处理的工作，检查是否需要执行周期性回写</li>
+</ol>
+<h3 id="3-writeback-inodes-wb：处理脏-inode">3 writeback_inodes_wb：处理脏 inode</h3>
+<p><code>writeback_inodes_wb</code> 将 <code>wb-&gt;b_dirty</code> 上的 inode 转移到 <code>wb-&gt;b_io</code> 队列：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">writeback_inodes_wb</span><span class="params">(<span class="keyword">struct</span> bdi_writeback *wb, <span class="keyword">struct</span> writeback_control *wbc)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">/* 将 inode 从 b_dirty 转移到 b_io */</span></span><br><span class="line">    queue_io(wb, wbc);</span><br><span class="line">    <span class="comment">/* 对 b_io 中的 inode 执行回写 */</span></span><br><span class="line">    __writeback_inodes_wb(wb, wbc);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>queue_io</code> 函数会扫描 <code>b_dirty</code> 链表，将需要回写的 inode 移动到 <code>b_io</code> 链表。</p>
+<h3 id="4-writeback-sb-inodes：按超级块回写">4 writeback_sb_inodes：按超级块回写</h3>
+<p><code>__writeback_inodes_wb</code> 会调用 <code>writeback_sb_inodes</code>，对属于同一个超级块（superblock）的 inode 进行批量回写：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">writeback_sb_inodes</span><span class="params">(<span class="keyword">struct</span> super_block *sb, <span class="keyword">struct</span> bdi_writeback *wb,</span></span><br><span class="line"><span class="params">                                <span class="keyword">struct</span> writeback_control *wbc)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">/* 遍历 b_io 链表中的 inode */</span></span><br><span class="line">    <span class="keyword">while</span> (!list_empty(&amp;wb-&gt;b_io)) &#123;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">inode</span> *<span class="title">inode</span> =</span> list_entry(...);</span><br><span class="line">        <span class="comment">/* 对每个 inode 执行回写 */</span></span><br><span class="line">        __writeback_single_inode(inode, wbc);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="5-writeback-single-inode：回写单个-inode">5 __writeback_single_inode：回写单个 inode</h3>
+<p><code>__writeback_single_inode</code> 负责回写单个 inode 的脏页：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">int</span> __writeback_single_inode(<span class="keyword">struct</span> inode *inode,</span><br><span class="line">                                    <span class="keyword">struct</span> writeback_control *wbc)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">/* 回写 inode 的脏页 */</span></span><br><span class="line">    do_writepages(mapping, wbc);</span><br><span class="line">    <span class="comment">/* 如果所有脏页都已写回，清除 I_DIRTY_PAGES 标志 */</span></span><br><span class="line">    <span class="keyword">if</span> (!mapping_tagged(mapping, PAGECACHE_TAG_DIRTY))</span><br><span class="line">        inode-&gt;i_state &amp;= ~I_DIRTY_PAGES;</span><br><span class="line">    <span class="comment">/* ... */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="6-do-writepages：实际页回写">6 do_writepages：实际页回写</h3>
+<p><code>do_writepages</code> 是真正执行页回写的函数：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">do_writepages</span><span class="params">(<span class="keyword">struct</span> address_space *mapping, <span class="keyword">struct</span> writeback_control *wbc)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (mapping-&gt;a_ops-&gt;writepages)</span><br><span class="line">        <span class="keyword">return</span> mapping-&gt;a_ops-&gt;writepages(mapping, wbc);</span><br><span class="line">    <span class="keyword">return</span> generic_writepages(mapping, wbc);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>对于大多数文件系统，最终会调用 <code>mapping-&gt;a_ops-&gt;writepages</code> 方法，将脏页转换为 BIO 请求提交给块设备层。</p>
+<h2 id="六、完整的-writeback-调用链">六、完整的 writeback 调用链</h2>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">应用程序写数据</span><br><span class="line">    ↓</span><br><span class="line">write 系统调用</span><br><span class="line">    ↓</span><br><span class="line">generic_perform_write()                        [mm/filemap.c]</span><br><span class="line">    ├── 数据拷贝到页缓存</span><br><span class="line">    └── write_end()</span><br><span class="line">        └── mark_inode_dirty()                             // 标记 inode 脏</span><br><span class="line">            └── __mark_inode_dirty()                   [fs/fs-writeback.c]</span><br><span class="line">                ├── list_move(..., &amp;wb-&gt;b_dirty)    // 加入脏 inode 链表</span><br><span class="line">                └── wb_wakeup_delayed()            // 启动定时器</span><br><span class="line">                    ↓ (dirty_writeback_centisecs 后)</span><br><span class="line">wb_workfn()                                     [fs/fs-writeback.c]</span><br><span class="line">    ↓</span><br><span class="line">wb_do_writeback()                            [fs/fs-writeback.c]</span><br><span class="line">    ├── 从 work_list 取出 wb_writeback_work</span><br><span class="line">    └── writeback_inodes_wb()                      [fs/fs-writeback.c]</span><br><span class="line">        ├── queue_io()                                // b_dirty → b_io</span><br><span class="line">        └── __writeback_inodes_wb()</span><br><span class="line">            └── writeback_sb_inodes()          // 按超级块处理</span><br><span class="line">                └── __writeback_single_inode()</span><br><span class="line">                    └── do_writepages()</span><br><span class="line">                        └── mapping-&gt;a_ops-&gt;writepages()</span><br><span class="line">                            ↓</span><br><span class="line">                        创建 BIO，提交到块设备层</span><br><span class="line">                            ↓</span><br><span class="line">                        I/O 调度器 → 设备驱动 → 磁盘</span><br></pre></td></tr></table></figure>
+<h2 id="七、writeback-的可调参数">七、writeback 的可调参数</h2>
+<p>Linux 提供了多个 <code>/proc/sys/vm/</code> 下的参数来调整 writeback 行为：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>默认值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dirty_writeback_centisecs</code></td>
+<td>500（5秒）</td>
+<td>周期性回写间隔</td>
+</tr>
+<tr>
+<td><code>dirty_expire_centisecs</code></td>
+<td>3000（30秒）</td>
+<td>脏页过期时间</td>
+</tr>
+<tr>
+<td><code>dirty_background_ratio</code></td>
+<td>10</td>
+<td>后台回写阈值（占内存百分比）</td>
+</tr>
+<tr>
+<td><code>dirty_ratio</code></td>
+<td>20</td>
+<td>阻塞写入阈值（占内存百分比）</td>
+</tr>
+<tr>
+<td><code>dirty_background_bytes</code></td>
+<td>0</td>
+<td>后台回写阈值（字节）</td>
+</tr>
+<tr>
+<td><code>dirty_bytes</code></td>
+<td>0</td>
+<td>阻塞写入阈值（字节）</td>
+</tr>
+</tbody>
+</table>
+<p>当脏页数量超过 <code>dirty_background_ratio</code> 时，内核会在后台开始回写；超过 <code>dirty_ratio</code> 时，写入进程会被阻塞。</p>
+<h2 id="八、总结">八、总结</h2>
+<p>Linux 内核的 writeback 机制通过以下设计实现了高效、可靠的脏页回写：</p>
+<ol>
+<li><strong>BDI 架构</strong>：通过 <code>backing_dev_info</code> 和 <code>bdi_writeback</code> 为每个存储设备独立管理回写任务</li>
+<li><strong>脏页标记</strong>：通过 <code>__mark_inode_dirty</code> 统一标记脏 inode，将其加入 <code>b_dirty</code> 链表并启动定时器</li>
+<li><strong>多级队列管理</strong>：<code>b_dirty</code> → <code>b_io</code> → <code>b_more_io</code> 三级队列高效管理脏 inode</li>
+<li><strong>灵活触发机制</strong>：支持周期性回写、内存压力触发和主动同步三种触发方式</li>
+<li><strong>工作队列执行</strong>：使用 workqueue 替代传统 pdflush，支持多线程并发回写</li>
+<li><strong>可调参数</strong>：提供丰富的 <code>/proc/sys/vm/</code> 参数，允许系统管理员根据负载调整回写策略</li>
+</ol>
+<p>writeback 机制在数据安全性和系统性能之间取得了平衡：既保证了数据最终会持久化到磁盘，又通过延迟回写最大化了写入性能。</p>
+<h2 id="参考内容">参考内容</h2>
+<p><strong style="color: #db8ef7;">[1]</strong> <a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_37517281/article/details/135148662">linux buffer的回写的触发链路</a><br>
+<strong style="color: #db8ef7;">[2]</strong> <a target="_blank" rel="noopener" href="https://blog.csdn.net/u010039418/article/details/105718320">BDI writeback脏页回写</a><br>
+<strong style="color: #db8ef7;">[3]</strong> <a target="_blank" rel="noopener" href="https://blog.csdn.net/u010039418/article/details/107500892">vm内核参数之内存脏页dirty_writeback_centisecs和dirty_expire_centisecs</a><br>
+<strong style="color: #db8ef7;">[4]</strong> <a target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/latest/source/fs/fs-writeback.c">Linux内核源码 - fs/fs-writeback.c</a><br>
+<strong style="color: #db8ef7;">[5]</strong> <a target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/latest/source/mm/page-writeback.c">Linux内核源码 - mm/page-writeback.c</a><br>
+<strong style="color: #db8ef7;">[6]</strong> <a target="_blank" rel="noopener" href="https://www.cnblogs.com/jzssuanfa/p/19212741">Linux 页缓存（Page Cache）与回写（Writeback）机制详解</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://dreamy-xay.github.io/blog">dreamy-xay</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://dreamy-xay.github.io/blog/posts/c615e5d3/">https://dreamy-xay.github.io/blog/posts/c615e5d3/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://dreamy-xay.github.io/blog" target="_blank">dreamyのblog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/%E8%99%9A%E6%8B%9F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">虚拟文件系统</a><a class="post-meta__tags" href="/blog/tags/C/">C</a><a class="post-meta__tags" href="/blog/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">源码分析</a></div><div class="post_share"><div class="social-share" data-image="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/29_1785311495995.jpeg" data-sites="wechat,weibo,qq,qzone,facebook,twitter"></div><link rel="stylesheet" href="https://cdn.staticfile.net/butterfly-extsrc/1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.staticfile.net/butterfly-extsrc/1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赞助</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/wechat_1752075400337.png" target="_blank"><img class="post-qr-code-img" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/wechat_1752075400337.png" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/alipay_1752075397065.png" target="_blank"><img class="post-qr-code-img" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/alipay_1752075397065.png" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/blog/posts/71fe51a6/" title="【Linux 内核】VFS 基础：driect write"><img class="cover" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/7_1752075489299.jpg" onerror="onerror=null;src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">【Linux 内核】VFS 基础：driect write</div></div></a></div><div class="next-post pull-right"><a href="/blog/posts/7fee99f/" title="【C】C语言面向对象实现"><img class="cover" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/27_1785311487554.jpg" onerror="onerror=null;src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">【C】C语言面向对象实现</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/blog/posts/71fe51a6/" title="【Linux 内核】VFS 基础：driect write"><img class="cover" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/7_1752075489299.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-28</div><div class="title">【Linux 内核】VFS 基础：driect write</div></div></a></div><div><a href="/blog/posts/3a98d6d7/" title="【Linux 内核】VFS 基础：close"><img class="cover" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/27_1785311487554.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-24</div><div class="title">【Linux 内核】VFS 基础：close</div></div></a></div><div><a href="/blog/posts/1370ad10/" title="【Linux 内核】VFS 基础：mount"><img class="cover" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/15_1752075427743.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-20</div><div class="title">【Linux 内核】VFS 基础：mount</div></div></a></div><div><a href="/blog/posts/d8c9ca1e/" title="【Linux 内核】VFS 基础：read"><img class="cover" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/22_1785311474212.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-23</div><div class="title">【Linux 内核】VFS 基础：read</div></div></a></div><div><a href="/blog/posts/e4ee08dd/" title="【Linux 内核】VFS 基础：open"><img class="cover" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/18_1752075443054.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-21</div><div class="title">【Linux 内核】VFS 基础：open</div></div></a></div><div><a href="/blog/posts/54f22d4c/" title="【Linux 内核】VFS 基础：write"><img class="cover" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/28_1785311493480.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-22</div><div class="title">【Linux 内核】VFS 基础：write</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/avatar_1752075331083.jpg" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">dreamy-xay</div><div class="author-info__description">只争朝夕，不负韶华</div></div><div class="card-info-data site-data is-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">26</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">45</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/dreamy-xay"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="http://wpa.qq.com/msgrd?v=3&amp;uin=1985332264&amp;site=qq&amp;menu=yes" target="_blank" title="QQ"><i class="fab fa-qq" style="color: #febcd5;"></i></a><a class="social-icon" href="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/weixin_1752075402432.png" target="_blank" title="WeChat"><i class="fab fa-weixin" style="color: #febcd5;"></i></a><a class="social-icon" href="mailto:dreamy-xay@foxmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #febcd5;"></i></a><a class="social-icon" href="https://space.bilibili.com/365741414" target="_blank" title="Bilibili"><i class="fa-brands fa-bilibili" style="color: #febcd5;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Hi~ o(*￣▽￣*)ブ，欢迎来到dreamy'blog，如果喜欢记得收藏奥～</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E4%BB%8E%E7%BC%93%E5%86%B2%E5%86%99%E5%85%A5%E5%88%B0%E6%95%B0%E6%8D%AE%E5%9B%9E%E5%86%99"><span class="toc-text">一、从缓冲写入到数据回写</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81writeback-%E7%9A%84%E6%A0%B8%E5%BF%83%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-text">二、writeback 的核心数据结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-backing-dev-info%EF%BC%9A%E5%A4%87%E7%94%A8%E5%AD%98%E5%82%A8%E8%AE%BE%E5%A4%87%E6%8F%8F%E8%BF%B0%E7%AC%A6"><span class="toc-text">1 backing_dev_info：备用存储设备描述符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-bdi-writeback%EF%BC%9Awriteback-%E5%B7%A5%E4%BD%9C%E5%8D%95%E5%85%83"><span class="toc-text">2 bdi_writeback：writeback 工作单元</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-wb-writeback-work%EF%BC%9A%E5%9B%9E%E5%86%99%E4%BB%BB%E5%8A%A1%E6%8F%8F%E8%BF%B0"><span class="toc-text">3 wb_writeback_work：回写任务描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-inode-%E7%9A%84%E8%84%8F%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86"><span class="toc-text">4 inode 的脏状态管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-inode-%E7%9A%84-writeback-%E9%98%9F%E5%88%97"><span class="toc-text">5 inode 的 writeback 队列</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E8%84%8F%E9%A1%B5%E6%A0%87%E8%AE%B0%EF%BC%9Awriteback-%E7%9A%84%E8%B5%B7%E7%82%B9"><span class="toc-text">三、脏页标记：writeback 的起点</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E8%84%8F%E9%A1%B5%E7%9A%84%E5%BD%A2%E6%88%90%E8%B7%AF%E5%BE%84"><span class="toc-text">1 脏页的形成路径</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-mark-inode-dirty%EF%BC%9A%E6%A0%87%E8%AE%B0-inode-%E8%84%8F%E7%9A%84%E6%A0%B8%E5%BF%83%E5%87%BD%E6%95%B0"><span class="toc-text">2 __mark_inode_dirty：标记 inode 脏的核心函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%90%AF%E5%8A%A8%E5%9B%9E%E5%86%99%E5%AE%9A%E6%97%B6%E5%99%A8"><span class="toc-text">3 启动回写定时器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81writeback-%E7%9A%84%E8%A7%A6%E5%8F%91%E6%97%B6%E6%9C%BA"><span class="toc-text">四、writeback 的触发时机</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%91%A8%E6%9C%9F%E6%80%A7%E5%9B%9E%E5%86%99%EF%BC%88Periodic-Writeback%EF%BC%89"><span class="toc-text">1 周期性回写（Periodic Writeback）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%86%85%E5%AD%98%E5%8E%8B%E5%8A%9B%E8%A7%A6%E5%8F%91%EF%BC%88Memory-Pressure%EF%BC%89"><span class="toc-text">2 内存压力触发（Memory Pressure）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E4%B8%BB%E5%8A%A8%E5%9B%9E%E5%86%99%EF%BC%88Explicit-Sync%EF%BC%89"><span class="toc-text">3 主动回写（Explicit Sync）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81writeback-%E7%9A%84%E6%A0%B8%E5%BF%83%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B"><span class="toc-text">五、writeback 的核心执行流程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%B7%A5%E4%BD%9C%E9%98%9F%E5%88%97%E5%A4%84%E7%90%86%EF%BC%9Awb-workfn"><span class="toc-text">1 工作队列处理：wb_workfn</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-wb-do-writeback%EF%BC%9A%E8%B0%83%E5%BA%A6%E5%9B%9E%E5%86%99"><span class="toc-text">2 wb_do_writeback：调度回写</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-writeback-inodes-wb%EF%BC%9A%E5%A4%84%E7%90%86%E8%84%8F-inode"><span class="toc-text">3 writeback_inodes_wb：处理脏 inode</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-writeback-sb-inodes%EF%BC%9A%E6%8C%89%E8%B6%85%E7%BA%A7%E5%9D%97%E5%9B%9E%E5%86%99"><span class="toc-text">4 writeback_sb_inodes：按超级块回写</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-writeback-single-inode%EF%BC%9A%E5%9B%9E%E5%86%99%E5%8D%95%E4%B8%AA-inode"><span class="toc-text">5 __writeback_single_inode：回写单个 inode</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-do-writepages%EF%BC%9A%E5%AE%9E%E9%99%85%E9%A1%B5%E5%9B%9E%E5%86%99"><span class="toc-text">6 do_writepages：实际页回写</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E5%AE%8C%E6%95%B4%E7%9A%84-writeback-%E8%B0%83%E7%94%A8%E9%93%BE"><span class="toc-text">六、完整的 writeback 调用链</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81writeback-%E7%9A%84%E5%8F%AF%E8%B0%83%E5%8F%82%E6%95%B0"><span class="toc-text">七、writeback 的可调参数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AB%E3%80%81%E6%80%BB%E7%BB%93"><span class="toc-text">八、总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E5%86%85%E5%AE%B9"><span class="toc-text">参考内容</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/posts/7fee99f/" title="【C】C语言面向对象实现"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/27_1785311487554.jpg" onerror="this.onerror=null;this.src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【C】C语言面向对象实现"/></a><div class="content"><a class="title" href="/blog/posts/7fee99f/" title="【C】C语言面向对象实现">【C】C语言面向对象实现</a><time datetime="2026-07-30T12:48:13.000Z" title="发表于 2026-07-30 20:48:13">2026-07-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/posts/c615e5d3/" title="【Linux 内核】VFS 基础：writeback"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/29_1785311495995.jpeg" onerror="this.onerror=null;this.src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【Linux 内核】VFS 基础：writeback"/></a><div class="content"><a class="title" href="/blog/posts/c615e5d3/" title="【Linux 内核】VFS 基础：writeback">【Linux 内核】VFS 基础：writeback</a><time datetime="2026-07-29T07:36:34.000Z" title="发表于 2026-07-29 15:36:34">2026-07-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/posts/71fe51a6/" title="【Linux 内核】VFS 基础：driect write"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/7_1752075489299.jpg" onerror="this.onerror=null;this.src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【Linux 内核】VFS 基础：driect write"/></a><div class="content"><a class="title" href="/blog/posts/71fe51a6/" title="【Linux 内核】VFS 基础：driect write">【Linux 内核】VFS 基础：driect write</a><time datetime="2026-07-28T07:34:51.000Z" title="发表于 2026-07-28 15:34:51">2026-07-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/posts/3a98d6d7/" title="【Linux 内核】VFS 基础：close"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/27_1785311487554.jpg" onerror="this.onerror=null;this.src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【Linux 内核】VFS 基础：close"/></a><div class="content"><a class="title" href="/blog/posts/3a98d6d7/" title="【Linux 内核】VFS 基础：close">【Linux 内核】VFS 基础：close</a><time datetime="2026-07-24T02:50:01.000Z" title="发表于 2026-07-24 10:50:01">2026-07-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/posts/d8c9ca1e/" title="【Linux 内核】VFS 基础：read"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/22_1785311474212.jpg" onerror="this.onerror=null;this.src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【Linux 内核】VFS 基础：read"/></a><div class="content"><a class="title" href="/blog/posts/d8c9ca1e/" title="【Linux 内核】VFS 基础：read">【Linux 内核】VFS 基础：read</a><time datetime="2026-07-23T05:35:12.000Z" title="发表于 2026-07-23 13:35:12">2026-07-23</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/29_1785311495995.jpeg')"><div id="footer-wrap"><div class="copyright">&copy;2025 - 2026 By dreamy-xay</div><div class="framework-info"><span>网站 </span><a target="_blank" rel="noopener" href="https://github.com/dreamy-xay/blog">Github</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://dreamy-xay.github.io/blog">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="https://cdn.staticfile.net/hexo-theme-butterfly/4.13.0/js/utils.min.js"></script><script src="https://cdn.staticfile.net/hexo-theme-butterfly/4.13.0/js/main.min.js"></script><script src="https://cdn.staticfile.net/hexo-theme-butterfly/4.13.0/js/tw_cn.min.js"></script><script src="https://cdn.staticfile.net/fancyapps-ui/5.0.33/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.staticfile.net/instant.page/5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.staticfile.net/node-snackbar/0.1.16/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.staticfile.net/pangu/4.0.7/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"><script>(() => {
+  const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaid.length === 0) return
+  const runMermaid = () => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    Array.from($mermaid).forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+      const mermaidID = 'mermaid-' + index
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+
+      const renderV10 = () => {
+        renderFn.then(({svg}) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svg)
+        })
+      }
+
+      const renderV9 = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      typeof renderFn === 'string' ? renderV9(renderFn) : renderV10()
+    })
+  }
+
+  const loadMermaid = () => {
+    window.loadMermaid ? runMermaid() : getScript('https://cdn.staticfile.net/mermaid/10.8.0/mermaid.min.js').then(runMermaid)
+  }
+
+  btf.addGlobalFn('themeChange', runMermaid, 'mermaid')
+
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script><script>(() => {
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-vercel-swart-pi.vercel.app/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = () => {
+    twikoo.init(Object.assign({
+      el: '#twikoo-wrap',
+      envId: 'https://twikoo-vercel-swart-pi.vercel.app/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      }
+    }, null))
+
+    GLOBAL_CONFIG_SITE.isPost && getCount()
+  }
+
+  const loadTwikoo = () => {
+    if (typeof twikoo === 'object') setTimeout(init,0)
+    else getScript('https://cdn.staticfile.net/twikoo/1.6.31/twikoo.all.min.js').then(init)
+  }
+
+  if ('Twikoo' === 'Twikoo' || !true) {
+    if (true) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script>window.addEventListener('load', () => {
+  const changeContent = (content) => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g,"") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0,150) + '...'
+    }
+    return content
+  }
+
+  const getComment = () => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo-vercel-swart-pi.vercel.app/',
+        region: '',
+        pageSize: 6,
+        includeReply: true
+      }).then(function (res) {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        saveToLocal.set('twikoo-newest-comments', JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray)
+      }).catch(function (err) {
+        const $dom = document.querySelector('#card-newest-comments .aside-list')
+        $dom.textContent= "无法获取评论，请确认相关配置是否正确"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      getScript('https://cdn.staticfile.net/twikoo/1.6.31/twikoo.all.min.js').then(runTwikoo)
+    }
+  }
+
+  const generateHtml = array => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class=\'aside-list-item\'>'
+
+        if (true) {
+          const name = 'src'
+          result += `<a href='${array[i].url}' class='thumbnail'><img ${name}='${array[i].avatar}' alt='${array[i].nick}'></a>`
+        }
+        
+        result += `<div class='content'>
+        <a class='comment' href='${array[i].url}' title='${array[i].content}'>${array[i].content}</a>
+        <div class='name'><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '没有评论'
+    }
+
+    let $dom = document.querySelector('#card-newest-comments .aside-list')
+    $dom && ($dom.innerHTML= result)
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh($dom)
+  }
+
+  const newestCommentInit = () => {
+    if (document.querySelector('#card-newest-comments .aside-list')) {
+      const data = saveToLocal.get('twikoo-newest-comments')
+      if (data) {
+        generateHtml(JSON.parse(data))
+      } else {
+        getComment()
+      }
+    }
+  }
+
+  newestCommentInit()
+  document.addEventListener('pjax:complete', newestCommentInit)
+})</script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script><script type="text/javascript" src="/blog/js/fireworks.min.js"></script><script src="https://cdn.staticfile.net/butterfly-extsrc/1.1.3/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><link rel="stylesheet" href="https://cdn.staticfile.net/aplayer/1.10.1/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.staticfile.net/aplayer/1.10.1/APlayer.min.js"></script><script src="https://cdn.staticfile.net/butterfly-extsrc/1.1.3/metingjs/dist/Meting.min.js"></script><script src="https://cdn.staticfile.net/pjax/0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/blog/404')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="https://cdn.staticfile.net/hexo-theme-butterfly/4.13.0/js/search/local-search.min.js"></script></div></div><script src="/blog/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"tagMode":false,"debug":false,"model":{"jsonPath":"/blog/live2dw/assets/shizuku.model.json"},"display":{"position":"left","width":150,"height":300,"hOffset":20,"vOffset":-20},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/"});</script></body></html>
