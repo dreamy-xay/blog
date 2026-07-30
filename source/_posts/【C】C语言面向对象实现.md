@@ -19,7 +19,7 @@ description: ""
 top_img: ""
 cover: ""
 date: 2026-07-30 20:48:13
-updated: 2026-07-30 20:55:05
+updated: 2026-07-30 20:56:31
 ---
 
 
@@ -894,7 +894,7 @@ int *vectori_back(vectori_t *this)
 #define TEST_START(name) printf("Running test: %s ... ", name)
 #define TEST_PASS() printf("PASS\n")
 
-void test_vertori_main();
+void test_vertori();
 
 #endif
 ```
