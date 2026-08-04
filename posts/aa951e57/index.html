@@ -1,0 +1,1921 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>【开发工具】Linux 其他常用命令 | dreamyのblog</title><meta name="author" content="dreamy-xay"><meta name="copyright" content="dreamy-xay"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Linux 系统提供了丰富的命令，用于文件管理、系统监控、磁盘操作、网络配置等日常任务。  建议：通过大量实践加深记忆，并善于利用 --help 或 man 查找不熟悉的选项。  一、文件与目录操作 1 cd —— 切换当前工作目录 命令概述 cd（Change Directory）用于切换当前工作目录。它是 Shell 内置命令，几乎每天都会用到。 基本格式 cd [目录路径] 常用用法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【开发工具】Linux 其他常用命令">
+<meta property="og:url" content="https://dreamy-xay.github.io/blog/posts/aa951e57/">
+<meta property="og:site_name" content="dreamyのblog">
+<meta property="og:description" content="Linux 系统提供了丰富的命令，用于文件管理、系统监控、磁盘操作、网络配置等日常任务。  建议：通过大量实践加深记忆，并善于利用 --help 或 man 查找不熟悉的选项。  一、文件与目录操作 1 cd —— 切换当前工作目录 命令概述 cd（Change Directory）用于切换当前工作目录。它是 Shell 内置命令，几乎每天都会用到。 基本格式 cd [目录路径] 常用用法">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/10_1752075498147.jpg">
+<meta property="article:published_time" content="2026-08-03T06:23:01.000Z">
+<meta property="article:modified_time" content="2026-08-04T01:24:27.000Z">
+<meta property="article:author" content="dreamy-xay">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="命令行工具">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/10_1752075498147.jpg"><link rel="shortcut icon" href="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/logo_1752075337653.png"><link rel="canonical" href="https://dreamy-xay.github.io/blog/posts/aa951e57/"><link rel="preconnect" href="https://cdn.staticfile.net"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.staticfile.net/font-awesome/6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.staticfile.net/node-snackbar/0.1.16/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.staticfile.net/fancyapps-ui/5.0.33/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: {"path":"/blog/search.xml","preload":false,"top_n_per_article":1,"unescape":true,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":800},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":30,"languages":{"author":"作者: dreamy-xay","link":"链接: ","source":"来源: dreamyのblog","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体中文","cht_to_chs":"你已切换为简体中文","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#febcd5","bgDark":"#1f1f1f","position":"top-center"},
+  infinitegrid: {
+    js: 'https://cdn.staticfile.net/egjs-infinitegrid/4.11.1/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '【开发工具】Linux 其他常用命令',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2026-08-04 09:24:27'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="referrer" content="no-referrer" /><link rel="stylesheet" href="/blog/css/custom.css"><link rel="stylesheet" href="/blog/css/background.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="gear-loader"><div class="gear-loader_overlay"></div><div class="gear-loader_cogs"><div class="gear-loader_cogs__top"><div class="gear-top_part"></div><div class="gear-top_part"></div><div class="gear-top_part"></div><div class="gear-top_hole"></div></div><div class="gear-loader_cogs__left"><div class="gear-left_part"></div><div class="gear-left_part"></div><div class="gear-left_part"></div><div class="gear-left_hole"></div></div><div class="gear-loader_cogs__bottom"><div class="gear-bottom_part"></div><div class="gear-bottom_part"></div><div class="gear-bottom_part"></div><div class="gear-bottom_hole"></div></div></div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/avatar_1752075331083.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">29</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">47</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa-fw fas fa-book"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa-fw fas fa-list"></i><span> 娱乐库</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/blog/books/"><i class="fa-fw fas fa-book-open"></i><span> 阅读库</span></a></li><li><a class="site-page child" href="/blog/music/"><i class="fa-fw fas fa-music"></i><span> 音乐库</span></a></li><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 图片库</span></a></li><li><a class="site-page child" href="/blog/movies/"><i class="fa-fw fas fa-video"></i><span> 电影库</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/link/"><i class="fa-fw fas fa-link"></i><span> 友人帐</span></a></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/10_1752075498147.jpg')"><nav id="nav"><span id="blog-info"><a href="/blog/" title="dreamyのblog"><img class="site-icon" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/logo2_1752075340714.png"/><span class="site-name">dreamyのblog</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa-fw fas fa-book"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa-fw fas fa-list"></i><span> 娱乐库</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/blog/books/"><i class="fa-fw fas fa-book-open"></i><span> 阅读库</span></a></li><li><a class="site-page child" href="/blog/music/"><i class="fa-fw fas fa-music"></i><span> 音乐库</span></a></li><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 图片库</span></a></li><li><a class="site-page child" href="/blog/movies/"><i class="fa-fw fas fa-video"></i><span> 电影库</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/link/"><i class="fa-fw fas fa-link"></i><span> 友人帐</span></a></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div><div id="nav-right"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i></a></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">【开发工具】Linux 其他常用命令</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-08-03T06:23:01.000Z" title="发表于 2026-08-03 14:23:01">2026-08-03</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-08-04T01:24:27.000Z" title="更新于 2026-08-04 09:24:27">2026-08-04</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/">开发工具</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">6k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>21分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="【开发工具】Linux 其他常用命令"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>Linux 系统提供了丰富的命令，用于文件管理、系统监控、磁盘操作、网络配置等日常任务。</p>
+<blockquote>
+<p><strong>建议</strong>：通过大量实践加深记忆，并善于利用 <code>--help</code> 或 <code>man</code> 查找不熟悉的选项。</p>
+</blockquote>
+<h2 id="一、文件与目录操作">一、文件与目录操作</h2>
+<h3 id="1-cd-——-切换当前工作目录">1 <code>cd</code> —— 切换当前工作目录</h3>
+<p><strong>命令概述</strong><br>
+<code>cd</code>（Change Directory）用于切换当前工作目录。它是 Shell 内置命令，几乎每天都会用到。</p>
+<p><strong>基本格式</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> [目录路径]</span><br></pre></td></tr></table></figure>
+<p><strong>常用用法</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">用法</th>
+<th style="text-align:center">说明</th>
+<th style="text-align:center">示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>cd</code> 或 <code>cd ~</code></td>
+<td style="text-align:center">切换到当前用户的主目录</td>
+<td style="text-align:center"><code>cd</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>cd -</code></td>
+<td style="text-align:center">切换到上一个工作目录</td>
+<td style="text-align:center"><code>cd -</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>cd ..</code></td>
+<td style="text-align:center">切换到上级目录</td>
+<td style="text-align:center"><code>cd ..</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>cd /</code></td>
+<td style="text-align:center">切换到根目录</td>
+<td style="text-align:center"><code>cd /</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>cd /path/to/dir</code></td>
+<td style="text-align:center">切换到指定绝对路径</td>
+<td style="text-align:center"><code>cd /etc/nginx</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>示例</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 切换到 /var/log 目录</span></span><br><span class="line"><span class="built_in">cd</span> /var/log</span><br><span class="line"><span class="comment"># 返回上一个目录</span></span><br><span class="line"><span class="built_in">cd</span> -</span><br><span class="line"><span class="comment"># 进入当前用户的家目录</span></span><br><span class="line"><span class="built_in">cd</span> ~</span><br></pre></td></tr></table></figure>
+<h3 id="2-pwd-——-显示当前工作目录的绝对路径">2 <code>pwd</code> —— 显示当前工作目录的绝对路径</h3>
+<p><strong>命令概述</strong><br>
+<code>pwd</code>（Print Working Directory）输出当前所在目录的完整绝对路径。</p>
+<p><strong>基本格式</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">pwd</span> [选项]</span><br></pre></td></tr></table></figure>
+<p><strong>常用选项</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">选项</th>
+<th style="text-align:center">功能描述</th>
+<th style="text-align:center">示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>-L</code></td>
+<td style="text-align:center">显示逻辑路径（跟随符号链接，默认）</td>
+<td style="text-align:center"><code>pwd -L</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-P</code></td>
+<td style="text-align:center">显示物理路径，忽略符号链接</td>
+<td style="text-align:center"><code>pwd -P</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>示例</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 显示当前目录</span></span><br><span class="line"><span class="built_in">pwd</span></span><br><span class="line"><span class="comment"># 输出示例：/home/user/projects</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 若当前目录是符号链接，显示真实物理路径</span></span><br><span class="line"><span class="built_in">pwd</span> -P</span><br></pre></td></tr></table></figure>
+<h3 id="3-mkdir-——-创建目录">3 <code>mkdir</code> —— 创建目录</h3>
+<p><strong>命令概述</strong><br>
+<code>mkdir</code>（Make Directory）用于创建新目录。</p>
+<p><strong>基本格式</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> [选项] 目录名...</span><br></pre></td></tr></table></figure>
+<p><strong>常用选项</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">选项</th>
+<th style="text-align:center">功能描述</th>
+<th style="text-align:center">示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>-p</code></td>
+<td style="text-align:center">递归创建多层目录，若父目录不存在则自动创建</td>
+<td style="text-align:center"><code>mkdir -p a/b/c/d</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-v</code></td>
+<td style="text-align:center">显示创建过程的详细信息</td>
+<td style="text-align:center"><code>mkdir -v newdir</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>示例</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 创建单个目录</span></span><br><span class="line"><span class="built_in">mkdir</span> myfolder</span><br><span class="line"></span><br><span class="line"><span class="comment"># 递归创建多级目录</span></span><br><span class="line"><span class="built_in">mkdir</span> -p project/src/main/java</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建多个目录</span></span><br><span class="line"><span class="built_in">mkdir</span> dir1 dir2 dir3</span><br></pre></td></tr></table></figure>
+<h3 id="4-rmdir-——-删除空目录">4 <code>rmdir</code> —— 删除空目录</h3>
+<p><strong>命令概述</strong><br>
+<code>rmdir</code>（Remove Directory）用于删除<strong>空</strong>目录。若目录非空，需使用 <code>rm -rf</code>。</p>
+<p><strong>基本格式</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">rmdir</span> [选项] 目录名...</span><br></pre></td></tr></table></figure>
+<p><strong>常用选项</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">选项</th>
+<th style="text-align:center">功能描述</th>
+<th style="text-align:center">示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>-p</code></td>
+<td style="text-align:center">递归删除父目录（若父目录为空）</td>
+<td style="text-align:center"><code>rmdir -p a/b/c</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>示例</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 删除空目录</span></span><br><span class="line"><span class="built_in">rmdir</span> empty_folder</span><br><span class="line"></span><br><span class="line"><span class="comment"># 递归删除空目录链</span></span><br><span class="line"><span class="built_in">rmdir</span> -p project/src/main   <span class="comment"># 若 main、src、project 均为空则全部删除</span></span><br></pre></td></tr></table></figure>
+<h3 id="5-ls-——-列出目录内容">5 <code>ls</code> —— 列出目录内容</h3>
+<p><strong>命令概述</strong><br>
+<code>ls</code>（List）是最常用的文件查看命令，用于显示目录中的文件和子目录。</p>
+<p><strong>基本格式</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">ls</span> [选项] [目录或文件]</span><br></pre></td></tr></table></figure>
+<p><strong>常用选项</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">选项</th>
+<th style="text-align:center">功能描述</th>
+<th style="text-align:center">示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>-l</code></td>
+<td style="text-align:center">以长格式显示详细信息（权限、大小、时间等）</td>
+<td style="text-align:center"><code>ls -l</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-a</code></td>
+<td style="text-align:center">显示所有文件（包括以<code>.</code>开头的隐藏文件）</td>
+<td style="text-align:center"><code>ls -a</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-h</code></td>
+<td style="text-align:center">人类可读的尺寸格式（与 <code>-l</code> 结合使用）</td>
+<td style="text-align:center"><code>ls -lh</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-R</code></td>
+<td style="text-align:center">递归列出子目录内容</td>
+<td style="text-align:center"><code>ls -R</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-S</code></td>
+<td style="text-align:center">按文件大小从大到小排序</td>
+<td style="text-align:center"><code>ls -lS</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-t</code></td>
+<td style="text-align:center">按修改时间从新到旧排序</td>
+<td style="text-align:center"><code>ls -lt</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-r</code></td>
+<td style="text-align:center">反向排序</td>
+<td style="text-align:center"><code>ls -lr</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>--color</code></td>
+<td style="text-align:center">高亮显示不同类型文件</td>
+<td style="text-align:center"><code>ls --color=auto</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>示例</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 详细列出当前目录所有文件（含隐藏）</span></span><br><span class="line"><span class="built_in">ls</span> -la</span><br><span class="line"></span><br><span class="line"><span class="comment"># 按大小排序并显示人类可读大小</span></span><br><span class="line"><span class="built_in">ls</span> -lhS</span><br><span class="line"></span><br><span class="line"><span class="comment"># 递归查看目录树</span></span><br><span class="line"><span class="built_in">ls</span> -R /home/project</span><br></pre></td></tr></table></figure>
+<h3 id="6-cp-——-复制文件或目录">6 <code>cp</code> —— 复制文件或目录</h3>
+<p><strong>命令概述</strong><br>
+<code>cp</code>（Copy）用于复制文件或目录。</p>
+<p><strong>基本格式</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cp</span> [选项] 源 目标</span><br></pre></td></tr></table></figure>
+<p><strong>常用选项</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">选项</th>
+<th style="text-align:center">功能描述</th>
+<th style="text-align:center">示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>-r</code></td>
+<td style="text-align:center">递归复制目录（复制目录时必须使用）</td>
+<td style="text-align:center"><code>cp -r src_dir/ dst_dir/</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-i</code></td>
+<td style="text-align:center">覆盖前交互式提示确认</td>
+<td style="text-align:center"><code>cp -i file1 file2</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-u</code></td>
+<td style="text-align:center">仅当源文件比目标新或目标不存在时才复制</td>
+<td style="text-align:center"><code>cp -u source target</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-p</code></td>
+<td style="text-align:center">保留源文件的属性（权限、时间戳等）</td>
+<td style="text-align:center"><code>cp -p file1 file2</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-a</code></td>
+<td style="text-align:center">存档模式，等价于 <code>-dpR</code>，保留所有属性</td>
+<td style="text-align:center"><code>cp -a dir1 dir2</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-v</code></td>
+<td style="text-align:center">显示复制过程详细信息</td>
+<td style="text-align:center"><code>cp -v file1 file2</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>示例</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 复制单个文件</span></span><br><span class="line"><span class="built_in">cp</span> file.txt /tmp/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 复制整个目录（递归）</span></span><br><span class="line"><span class="built_in">cp</span> -r myproject /backup/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 复制并保留权限和时间</span></span><br><span class="line"><span class="built_in">cp</span> -p config.conf config.bak</span><br></pre></td></tr></table></figure>
+<h3 id="7-mv-——-移动或重命名文件-目录">7 <code>mv</code> —— 移动或重命名文件/目录</h3>
+<p><strong>命令概述</strong><br>
+<code>mv</code>（Move）用于移动文件/目录到目标位置，也可用于重命名。</p>
+<p><strong>基本格式</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">mv</span> [选项] 源 目标</span><br></pre></td></tr></table></figure>
+<p><strong>常用选项</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">选项</th>
+<th style="text-align:center">功能描述</th>
+<th style="text-align:center">示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>-i</code></td>
+<td style="text-align:center">覆盖前交互式提示确认</td>
+<td style="text-align:center"><code>mv -i old new</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-u</code></td>
+<td style="text-align:center">仅当源文件比目标新或目标不存在时才移动</td>
+<td style="text-align:center"><code>mv -u source target</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-v</code></td>
+<td style="text-align:center">显示移动过程详细信息</td>
+<td style="text-align:center"><code>mv -v file /tmp/</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>示例</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 重命名文件</span></span><br><span class="line"><span class="built_in">mv</span> oldname.txt newname.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 移动文件到另一个目录</span></span><br><span class="line"><span class="built_in">mv</span> report.pdf ~/Documents/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 移动多个文件到目录</span></span><br><span class="line"><span class="built_in">mv</span> file1 file2 file3 /target_dir/</span><br></pre></td></tr></table></figure>
+<h3 id="8-rm-——-删除文件或目录">8 <code>rm</code> —— 删除文件或目录</h3>
+<p><strong>命令概述</strong><br>
+<code>rm</code>（Remove）用于删除文件或目录。<strong>注意：删除操作不可恢复，请谨慎使用。</strong></p>
+<p><strong>基本格式</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">rm</span> [选项] 目标...</span><br></pre></td></tr></table></figure>
+<p><strong>常用选项</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">选项</th>
+<th style="text-align:center">功能描述</th>
+<th style="text-align:center">示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>-r</code></td>
+<td style="text-align:center">递归删除目录及其内容（删除目录必须使用）</td>
+<td style="text-align:center"><code>rm -r mydir/</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-f</code></td>
+<td style="text-align:center">强制删除，不提示确认，忽略不存在的文件</td>
+<td style="text-align:center"><code>rm -f file.log</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-i</code></td>
+<td style="text-align:center">删除前逐个交互式确认</td>
+<td style="text-align:center"><code>rm -i *.txt</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-v</code></td>
+<td style="text-align:center">显示删除过程详细信息</td>
+<td style="text-align:center"><code>rm -v file</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>示例</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 删除单个文件</span></span><br><span class="line"><span class="built_in">rm</span> test.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 递归强制删除目录（慎用！）</span></span><br><span class="line"><span class="built_in">rm</span> -rf /tmp/cache/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 交互式删除所有 .log 文件</span></span><br><span class="line"><span class="built_in">rm</span> -i *.<span class="built_in">log</span></span><br></pre></td></tr></table></figure>
+<h2 id="二、文件传输与网络">二、文件传输与网络</h2>
+<h3 id="1-scp-——-安全远程文件复制（基于-SSH）">1 <code>scp</code> —— 安全远程文件复制（基于 SSH）</h3>
+<p><strong>命令概述</strong><br>
+<code>scp</code>（Secure Copy）用于在本地和远程主机之间安全地复制文件或目录，数据传输通过 SSH 加密。</p>
+<p><strong>基本格式</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">scp [选项] 源 目标</span><br></pre></td></tr></table></figure>
+<p><strong>常用选项</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">选项</th>
+<th style="text-align:center">功能描述</th>
+<th style="text-align:center">示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>-r</code></td>
+<td style="text-align:center">递归复制整个目录</td>
+<td style="text-align:center"><code>scp -r /local/dir user@host:/remote/</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-P</code></td>
+<td style="text-align:center">指定 SSH 端口（大写 P）</td>
+<td style="text-align:center"><code>scp -P 2222 file user@host:/</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-i</code></td>
+<td style="text-align:center">指定私钥文件进行身份验证</td>
+<td style="text-align:center"><code>scp -i key.pem file user@host:</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-C</code></td>
+<td style="text-align:center">启用压缩以加快传输速度</td>
+<td style="text-align:center"><code>scp -C largefile user@host:</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-v</code></td>
+<td style="text-align:center">显示调试信息（用于排错）</td>
+<td style="text-align:center"><code>scp -v file user@host:</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>示例</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 将本地文件复制到远程主机</span></span><br><span class="line">scp report.txt user@192.168.1.100:/home/user/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 从远程主机复制文件到本地</span></span><br><span class="line">scp user@192.168.1.100:/var/log/syslog /tmp/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 递归复制整个目录（指定端口）</span></span><br><span class="line">scp -r -P 2222 project/ user@remote:/backup/</span><br></pre></td></tr></table></figure>
+<h3 id="2-ifconfig-——-网络接口配置（已逐渐被-ip-替代，但仍常用）">2 <code>ifconfig</code> —— 网络接口配置（已逐渐被 <code>ip</code> 替代，但仍常用）</h3>
+<p><strong>命令概述</strong><br>
+<code>ifconfig</code>（Interface Configuration）用于查看和配置网络接口参数。在最新 Linux 发行版中推荐使用 <code>ip</code> 命令，但 <code>ifconfig</code> 仍广泛使用。</p>
+<p><strong>基本格式</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ifconfig [网络接口] [选项]</span><br></pre></td></tr></table></figure>
+<p><strong>常用用法</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">用法</th>
+<th style="text-align:center">描述</th>
+<th style="text-align:center">示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>ifconfig</code></td>
+<td style="text-align:center">显示所有活动网络接口信息</td>
+<td style="text-align:center"><code>ifconfig</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>ifconfig -a</code></td>
+<td style="text-align:center">显示所有接口（含非活动）</td>
+<td style="text-align:center"><code>ifconfig -a</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>ifconfig eth0 up/down</code></td>
+<td style="text-align:center">启用/禁用指定接口</td>
+<td style="text-align:center"><code>ifconfig eth0 down</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>ifconfig eth0 IP</code></td>
+<td style="text-align:center">为接口设置 IP 地址</td>
+<td style="text-align:center"><code>ifconfig eth0 192.168.1.10</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>示例</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 查看所有网卡信息</span></span><br><span class="line">ifconfig</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看特定网卡（如 eth0）</span></span><br><span class="line">ifconfig eth0</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启用网卡</span></span><br><span class="line">ifconfig eth0 up</span><br></pre></td></tr></table></figure>
+<h2 id="三、磁盘与文件系统管理">三、磁盘与文件系统管理</h2>
+<h3 id="1-mkfs-——-创建文件系统（格式化）">1 <code>mkfs</code> —— 创建文件系统（格式化）</h3>
+<p><strong>命令概述</strong><br>
+<code>mkfs</code>（Make FileSystem）用于在磁盘分区上创建文件系统（如 ext4、xfs、fat32 等）。</p>
+<p><strong>基本格式</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mkfs [选项] 设备名</span><br></pre></td></tr></table></figure>
+<p><strong>常用文件系统类型</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">命令</th>
+<th style="text-align:center">文件系统类型</th>
+<th style="text-align:center">示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>mkfs.ext4</code></td>
+<td style="text-align:center">ext4</td>
+<td style="text-align:center"><code>mkfs.ext4 /dev/sdb1</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>mkfs.xfs</code></td>
+<td style="text-align:center">xfs</td>
+<td style="text-align:center"><code>mkfs.xfs /dev/sdc1</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>mkfs.vfat</code></td>
+<td style="text-align:center">FAT32</td>
+<td style="text-align:center"><code>mkfs.vfat /dev/sdd1</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>常用选项</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">选项</th>
+<th style="text-align:center">功能描述</th>
+<th style="text-align:center">示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>-t</code></td>
+<td style="text-align:center">指定文件系统类型（与 <code>mkfs</code> 命令一起使用）</td>
+<td style="text-align:center"><code>mkfs -t ext4 /dev/sdb1</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-L</code></td>
+<td style="text-align:center">设置卷标</td>
+<td style="text-align:center"><code>mkfs.ext4 -L data /dev/sdb1</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-V</code></td>
+<td style="text-align:center">显示详细模式</td>
+<td style="text-align:center"><code>mkfs -V -t ext3 -c /dev/sda1</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-c</code></td>
+<td style="text-align:center">检查是否有坏轨</td>
+<td style="text-align:center"><code>mkfs -V -t ext3 -c /dev/sda1</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>示例</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 格式化 /dev/sdb1 为 ext4</span></span><br><span class="line">mkfs.ext4 /dev/sdb1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 格式化并设置卷标</span></span><br><span class="line">mkfs.xfs -L mydata /dev/sdc1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 未分区创建文件系统，检查坏道并详细显示</span></span><br><span class="line">mkfs -V -t ext3 -c /dev/sda1</span><br></pre></td></tr></table></figure>
+<h3 id="2-fdisk-——-磁盘分区工具">2 <code>fdisk</code> —— 磁盘分区工具</h3>
+<p><strong>命令概述</strong><br>
+<code>fdisk</code> 是传统的磁盘分区管理工具，用于创建、删除、查看磁盘分区表。</p>
+<p><strong>基本格式</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">fdisk [选项] 设备</span><br></pre></td></tr></table></figure>
+<p><strong>常用选项和子命令</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">命令/选项</th>
+<th style="text-align:center">功能描述</th>
+<th style="text-align:center">示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>-l</code></td>
+<td style="text-align:center">列出所有磁盘的分区表</td>
+<td style="text-align:center"><code>fdisk -l</code></td>
+</tr>
+<tr>
+<td style="text-align:center">进入交互后：</td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>m</code></td>
+<td style="text-align:center">显示帮助菜单</td>
+<td style="text-align:center">交互内按 <code>m</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>p</code></td>
+<td style="text-align:center">打印当前分区表</td>
+<td style="text-align:center">交互内按 <code>p</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>n</code></td>
+<td style="text-align:center">新建分区</td>
+<td style="text-align:center">交互内按 <code>n</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>d</code></td>
+<td style="text-align:center">删除分区</td>
+<td style="text-align:center">交互内按 <code>d</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>w</code></td>
+<td style="text-align:center">保存并退出</td>
+<td style="text-align:center">交互内按 <code>w</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>q</code></td>
+<td style="text-align:center">不保存退出</td>
+<td style="text-align:center">交互内按 <code>q</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>示例</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 查看所有磁盘分区情况</span></span><br><span class="line"><span class="built_in">sudo</span> fdisk -l</span><br><span class="line"></span><br><span class="line"><span class="comment"># 对 /dev/sdb 进行分区</span></span><br><span class="line"><span class="built_in">sudo</span> fdisk /dev/sdb</span><br><span class="line"><span class="comment"># 进入交互界面，依次按 n, p, 1, 回车, 回车, w</span></span><br></pre></td></tr></table></figure>
+<h3 id="3-dd-——-数据转换与复制（低级拷贝）">3 <code>dd</code> —— 数据转换与复制（低级拷贝）</h3>
+<p><strong>命令概述</strong><br>
+<code>dd</code> 用于按块复制文件或设备，常用于备份、恢复磁盘镜像、制作启动盘等。它直接操作底层数据，功能强大但使用不当可能造成数据丢失。</p>
+<p><strong>基本格式</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">dd</span> [选项]</span><br></pre></td></tr></table></figure>
+<p><strong>常用选项</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">选项</th>
+<th style="text-align:center">功能描述</th>
+<th style="text-align:center">示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>if=文件</code></td>
+<td style="text-align:center">输入文件（源）</td>
+<td style="text-align:center"><code>if=/dev/sda</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>of=文件</code></td>
+<td style="text-align:center">输出文件（目标）</td>
+<td style="text-align:center"><code>of=/tmp/backup.img</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>bs=大小</code></td>
+<td style="text-align:center">设置读写块大小（如 bs=1M）</td>
+<td style="text-align:center"><code>bs=4M</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>count=块数</code></td>
+<td style="text-align:center">复制的块数</td>
+<td style="text-align:center"><code>count=10</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>skip=块数</code></td>
+<td style="text-align:center">跳过输入开头的若干块</td>
+<td style="text-align:center"><code>skip=100</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>seek=块数</code></td>
+<td style="text-align:center">跳过输出开头的若干块</td>
+<td style="text-align:center"><code>seek=50</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>status=progress</code></td>
+<td style="text-align:center">显示进度（较新版 dd）</td>
+<td style="text-align:center"><code>status=progress</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>示例</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 将本地的 /dev/hdb 整盘备份到/ dev/hdd</span></span><br><span class="line"><span class="built_in">dd</span> <span class="keyword">if</span>=/dev/hdb of=/dev/hdd</span><br><span class="line"></span><br><span class="line"><span class="comment"># 备份 /dev/hdb 全盘数据，并利用 gzip 工具进行压缩，保存到指定路径</span></span><br><span class="line"><span class="built_in">dd</span> <span class="keyword">if</span>=dev/hdb | gzip&gt;/root/image.gz</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将备份文件恢复到指定盘</span></span><br><span class="line"><span class="built_in">dd</span> <span class="keyword">if</span>=/root/image of=/dev/hdb</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 备份整个磁盘到镜像文件</span></span><br><span class="line"><span class="built_in">dd</span> <span class="keyword">if</span>=/dev/sda of=/backup/disk.img bs=4M status=progress</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将镜像写入 U 盘（制作启动盘）</span></span><br><span class="line"><span class="built_in">dd</span> <span class="keyword">if</span>=ubuntu.iso of=/dev/sdb bs=4M status=progress</span><br><span class="line"></span><br><span class="line"><span class="comment"># 仅备份分区前 10 个块（每个块 512 字节）</span></span><br><span class="line"><span class="built_in">dd</span> <span class="keyword">if</span>=/dev/sda1 of=partition_header bs=512 count=10</span><br></pre></td></tr></table></figure>
+<h3 id="4-df-——-查看磁盘空间使用情况">4 <code>df</code> —— 查看磁盘空间使用情况</h3>
+<p><strong>命令概述</strong><br>
+<code>df</code>（Disk Free）显示文件系统的总容量、已用空间、可用空间及挂载点信息。</p>
+<p><strong>基本格式</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">df</span> [选项] [文件或目录]</span><br></pre></td></tr></table></figure>
+<p><strong>常用选项</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">选项</th>
+<th style="text-align:center">功能描述</th>
+<th style="text-align:center">示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>-h</code></td>
+<td style="text-align:center">人类可读格式（GB、MB）</td>
+<td style="text-align:center"><code>df -h</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-T</code></td>
+<td style="text-align:center">显示文件系统类型</td>
+<td style="text-align:center"><code>df -T</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-i</code></td>
+<td style="text-align:center">显示 inode 使用情况而非磁盘块</td>
+<td style="text-align:center"><code>df -i</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-a</code></td>
+<td style="text-align:center">显示所有文件系统（含虚拟文件系统）</td>
+<td style="text-align:center"><code>df -a</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>--total</code></td>
+<td style="text-align:center">显示总计行</td>
+<td style="text-align:center"><code>df --total</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>示例</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 以可读格式查看磁盘空间</span></span><br><span class="line"><span class="built_in">df</span> -h</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看 /home 所在分区的文件系统类型和使用情况</span></span><br><span class="line"><span class="built_in">df</span> -hT /home</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看 inode 使用情况</span></span><br><span class="line"><span class="built_in">df</span> -i</span><br></pre></td></tr></table></figure>
+<h2 id="四、进程与系统监控">四、进程与系统监控</h2>
+<h3 id="1-top-——-实时系统进程监控">1 <code>top</code> —— 实时系统进程监控</h3>
+<p><strong>命令概述</strong><br>
+<code>top</code> 提供系统进程、CPU、内存等资源的实时动态视图，是常用的性能监控工具。</p>
+<p><strong>基本格式</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">top [选项]</span><br></pre></td></tr></table></figure>
+<p><strong>常用选项与交互命令</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">选项/交互</th>
+<th style="text-align:center">功能描述</th>
+<th style="text-align:center">示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>-u 用户</code></td>
+<td style="text-align:center">仅显示指定用户的进程</td>
+<td style="text-align:center"><code>top -u root</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-p PID</code></td>
+<td style="text-align:center">仅显示指定进程</td>
+<td style="text-align:center"><code>top -p 1234</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-H</code></td>
+<td style="text-align:center">显示线程模式</td>
+<td style="text-align:center"><code>top -H</code></td>
+</tr>
+<tr>
+<td style="text-align:center">交互命令：</td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>P</code></td>
+<td style="text-align:center">按 CPU 使用率排序</td>
+<td style="text-align:center">交互内按 <code>P</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>M</code></td>
+<td style="text-align:center">按内存使用率排序</td>
+<td style="text-align:center">交互内按 <code>M</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>k</code></td>
+<td style="text-align:center">终止进程（需输入 PID）</td>
+<td style="text-align:center">交互内按 <code>k</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>q</code></td>
+<td style="text-align:center">退出 top</td>
+<td style="text-align:center">交互内按 <code>q</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>示例</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 启动 top</span></span><br><span class="line">top</span><br><span class="line"></span><br><span class="line"><span class="comment"># 只查看特定用户的进程</span></span><br><span class="line">top -u mysql</span><br></pre></td></tr></table></figure>
+<h3 id="2-htop-——-top-的增强版（需额外安装）">2 <code>htop</code> —— top 的增强版（需额外安装）</h3>
+<p><strong>命令概述</strong><br>
+<code>htop</code> 是 top 的改进版，界面更友好，支持颜色、鼠标操作、垂直/水平滚动，功能更强大。</p>
+<p><strong>基本格式</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">htop [选项]</span><br></pre></td></tr></table></figure>
+<p><strong>常用选项</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">选项</th>
+<th style="text-align:center">功能描述</th>
+<th style="text-align:center">示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>-u 用户</code></td>
+<td style="text-align:center">仅显示指定用户</td>
+<td style="text-align:center"><code>htop -u root</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-p PID</code></td>
+<td style="text-align:center">仅显示指定进程</td>
+<td style="text-align:center"><code>htop -p 1234</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>示例</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 启动 htop</span></span><br><span class="line">htop</span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示特定用户进程</span></span><br><span class="line">htop -u www-data</span><br></pre></td></tr></table></figure>
+<h3 id="3-uname-——-系统信息查询">3 <code>uname</code> —— 系统信息查询</h3>
+<p><strong>命令概述</strong><br>
+<code>uname</code>（Unix Name）显示操作系统和硬件相关信息。</p>
+<p><strong>基本格式</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">uname</span> [选项]</span><br></pre></td></tr></table></figure>
+<p><strong>常用选项</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">选项</th>
+<th style="text-align:center">功能描述</th>
+<th style="text-align:center">示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>-a</code></td>
+<td style="text-align:center">显示所有信息</td>
+<td style="text-align:center"><code>uname -a</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-s</code></td>
+<td style="text-align:center">内核名称</td>
+<td style="text-align:center"><code>uname -s</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-n</code></td>
+<td style="text-align:center">网络主机名</td>
+<td style="text-align:center"><code>uname -n</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-r</code></td>
+<td style="text-align:center">内核版本</td>
+<td style="text-align:center"><code>uname -r</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-v</code></td>
+<td style="text-align:center">内核版本（编译信息）</td>
+<td style="text-align:center"><code>uname -v</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-m</code></td>
+<td style="text-align:center">硬件架构（如 x86_64）</td>
+<td style="text-align:center"><code>uname -m</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-p</code></td>
+<td style="text-align:center">处理器类型</td>
+<td style="text-align:center"><code>uname -p</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-i</code></td>
+<td style="text-align:center">硬件平台</td>
+<td style="text-align:center"><code>uname -i</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-o</code></td>
+<td style="text-align:center">操作系统名称</td>
+<td style="text-align:center"><code>uname -o</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>示例</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 显示所有系统信息</span></span><br><span class="line"><span class="built_in">uname</span> -a</span><br><span class="line"><span class="comment"># 输出示例：Linux hostname 5.10.0-13-amd64 #1 SMP Debian 5.10.106-1 (2022-03-17) x86_64 GNU/Linux</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 只查看内核版本</span></span><br><span class="line"><span class="built_in">uname</span> -r</span><br></pre></td></tr></table></figure>
+<h3 id="4-history-——-查看命令历史">4 <code>history</code> —— 查看命令历史</h3>
+<p><strong>命令概述</strong><br>
+<code>history</code> 显示当前 Shell 会话中执行过的命令列表，常用于重复执行或查阅操作记录。</p>
+<p><strong>基本格式</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">history</span> [选项] [n]</span><br></pre></td></tr></table></figure>
+<p><strong>常用选项</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">选项</th>
+<th style="text-align:center">功能描述</th>
+<th style="text-align:center">示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>-c</code></td>
+<td style="text-align:center">清空当前会话的历史记录</td>
+<td style="text-align:center"><code>history -c</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-w</code></td>
+<td style="text-align:center">将历史写入历史文件</td>
+<td style="text-align:center"><code>history -w</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-r</code></td>
+<td style="text-align:center">从历史文件读取历史记录</td>
+<td style="text-align:center"><code>history -r</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>数字</code></td>
+<td style="text-align:center">显示最近 n 条命令</td>
+<td style="text-align:center"><code>history 10</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>示例</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 显示所有历史命令</span></span><br><span class="line"><span class="built_in">history</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示最近 5 条</span></span><br><span class="line"><span class="built_in">history</span> 5</span><br><span class="line"></span><br><span class="line"><span class="comment"># 清空历史</span></span><br><span class="line"><span class="built_in">history</span> -c</span><br><span class="line"></span><br><span class="line"><span class="comment"># 执行历史中的第 100 条命令</span></span><br><span class="line">!100</span><br><span class="line"></span><br><span class="line"><span class="comment"># 重新执行上一条命令</span></span><br><span class="line">!!</span><br></pre></td></tr></table></figure>
+<h2 id="五、文本查看与处理（辅助类）">五、文本查看与处理（辅助类）</h2>
+<h3 id="1-less-——-分页查看文件内容">1 <code>less</code> —— 分页查看文件内容</h3>
+<p><strong>命令概述</strong><br>
+<code>less</code> 是 <code>more</code> 的增强版，允许向前/向后滚动查看文件内容，支持搜索和多种交互操作。</p>
+<p><strong>基本格式</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">less [选项] 文件</span><br></pre></td></tr></table></figure>
+<p><strong>常用选项</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">选项</th>
+<th style="text-align:center">功能描述</th>
+<th style="text-align:center">示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>-N</code></td>
+<td style="text-align:center">显示行号</td>
+<td style="text-align:center"><code>less -N file.log</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-S</code></td>
+<td style="text-align:center">禁用自动换行（长行可横向滚动）</td>
+<td style="text-align:center"><code>less -S file.log</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-g</code></td>
+<td style="text-align:center">高亮搜索匹配项</td>
+<td style="text-align:center"><code>less -g file.log</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>+/pattern</code></td>
+<td style="text-align:center">打开文件后立即搜索指定模式</td>
+<td style="text-align:center"><code>less +/error log.txt</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>常用交互命令</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">命令</th>
+<th style="text-align:center">功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>Space</code> 或 <code>f</code></td>
+<td style="text-align:center">向下翻一页</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>b</code></td>
+<td style="text-align:center">向上翻一页</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>d</code></td>
+<td style="text-align:center">向下翻半页</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>u</code></td>
+<td style="text-align:center">向上翻半页</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Enter</code> 或 <code>j</code></td>
+<td style="text-align:center">向下翻一行</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>k</code></td>
+<td style="text-align:center">向上翻一行</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>g</code></td>
+<td style="text-align:center">跳转到文件开头</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>G</code></td>
+<td style="text-align:center">跳转到文件末尾</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>/pattern</code></td>
+<td style="text-align:center">向下搜索模式</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>?pattern</code></td>
+<td style="text-align:center">向上搜索模式</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>n</code></td>
+<td style="text-align:center">下一个匹配项</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>N</code></td>
+<td style="text-align:center">上一个匹配项</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>q</code></td>
+<td style="text-align:center">退出</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>h</code></td>
+<td style="text-align:center">帮助</td>
+</tr>
+</tbody>
+</table>
+<p><strong>多文件交互命令（<code>less a.long b.long</code>）</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">命令</th>
+<th style="text-align:center">功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>:e</code></td>
+<td style="text-align:center">打开指定文件（示例：e a.log）</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>:n</code></td>
+<td style="text-align:center">浏览下个文件</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>:p</code></td>
+<td style="text-align:center">浏览上个文件</td>
+</tr>
+</tbody>
+</table>
+<p><strong>示例</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 查看系统日志</span></span><br><span class="line">less /var/log/syslog</span><br><span class="line"></span><br><span class="line"><span class="comment"># 带行号查看配置文件</span></span><br><span class="line">less -N /etc/nginx/nginx.conf</span><br></pre></td></tr></table></figure>
+<h3 id="2-tail-——-查看文件尾部内容（常用于实时日志）">2 <code>tail</code> —— 查看文件尾部内容（常用于实时日志）</h3>
+<p><strong>命令概述</strong><br>
+<code>tail</code> 显示文件的末尾部分，常用 <code>-f</code> 选项实时跟踪文件更新。</p>
+<p><strong>基本格式</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">tail</span> [选项] 文件</span><br></pre></td></tr></table></figure>
+<p><strong>常用选项</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">选项</th>
+<th style="text-align:center">功能描述</th>
+<th style="text-align:center">示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>-n n</code></td>
+<td style="text-align:center">显示最后 n 行（默认 10 行）</td>
+<td style="text-align:center"><code>tail -n 20 file.log</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-f</code></td>
+<td style="text-align:center">实时追踪文件新增内容（常用于监控日志）</td>
+<td style="text-align:center"><code>tail -f /var/log/nginx/access.log</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-F</code></td>
+<td style="text-align:center">类似于 <code>-f</code>，但文件被轮转后会重新打开</td>
+<td style="text-align:center"><code>tail -F app.log</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-q</code></td>
+<td style="text-align:center">不显示文件名（多文件时）</td>
+<td style="text-align:center"><code>tail -q file1 file2</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>示例</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 查看最后 10 行</span></span><br><span class="line"><span class="built_in">tail</span> file.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 实时查看日志</span></span><br><span class="line"><span class="built_in">tail</span> -f /var/log/syslog</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看最后 50 行并持续刷新</span></span><br><span class="line"><span class="built_in">tail</span> -n 50 -f access.log</span><br></pre></td></tr></table></figure>
+<h3 id="3-cat-——-连接文件并输出到标准输出">3 <code>cat</code> —— 连接文件并输出到标准输出</h3>
+<p><strong>命令概述</strong><br>
+<code>cat</code>（Concatenate）常用于查看小文件、合并文件或快速创建文件。</p>
+<p><strong>基本格式</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cat</span> [选项] 文件...</span><br></pre></td></tr></table></figure>
+<p><strong>常用选项</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">选项</th>
+<th style="text-align:center">功能描述</th>
+<th style="text-align:center">示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>-n</code></td>
+<td style="text-align:center">显示行号（包括空行）</td>
+<td style="text-align:center"><code>cat -n file.txt</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-b</code></td>
+<td style="text-align:center">仅对非空行编号</td>
+<td style="text-align:center"><code>cat -b file.txt</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-s</code></td>
+<td style="text-align:center">压缩连续的空行为一行</td>
+<td style="text-align:center"><code>cat -s file.txt</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-E</code></td>
+<td style="text-align:center">在每行末尾显示 <code>$</code> 符号</td>
+<td style="text-align:center"><code>cat -E file.txt</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>示例</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 查看文件内容</span></span><br><span class="line"><span class="built_in">cat</span> /etc/hosts</span><br><span class="line"></span><br><span class="line"><span class="comment"># 合并两个文件并输出</span></span><br><span class="line"><span class="built_in">cat</span> file1.txt file2.txt &gt; merged.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 快速创建文件（Ctrl+D 结束）</span></span><br><span class="line"><span class="built_in">cat</span> &gt; newfile.txt</span><br></pre></td></tr></table></figure>
+<h2 id="六、权限与属性管理">六、权限与属性管理</h2>
+<h3 id="1-chmod-——-修改文件或目录的权限">1 <code>chmod</code> —— 修改文件或目录的权限</h3>
+<p><strong>命令概述</strong><br>
+<code>chmod</code>（Change Mode）用于更改文件或目录的读、写、执行权限。</p>
+<p><strong>基本格式</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">chmod</span> [选项] 权限 文件...</span><br></pre></td></tr></table></figure>
+<p><strong>权限表示方式</strong></p>
+<ul>
+<li><strong>符号模式</strong>：<code>u</code>(用户), <code>g</code>(组), <code>o</code>(其他), <code>a</code>(全部)；<code>+</code>(添加), <code>-</code>(移除), <code>=</code>(设置)；<code>r</code>(读), <code>w</code>(写), <code>x</code>(执行)<br>
+示例：<code>chmod u+x file</code>（给所有者添加执行权限）</li>
+<li><strong>数字模式</strong>：三位八进制数，每位分别表示所有者、组、其他，各数字为 <code>r=4, w=2, x=1</code> 之和。<br>
+示例：<code>755</code> = <code>rwxr-xr-x</code></li>
+</ul>
+<p><strong>常用选项</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">选项</th>
+<th style="text-align:center">功能描述</th>
+<th style="text-align:center">示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>-R</code></td>
+<td style="text-align:center">递归修改目录及其下所有文件</td>
+<td style="text-align:center"><code>chmod -R 755 /path/dir</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-v</code></td>
+<td style="text-align:center">显示修改过程</td>
+<td style="text-align:center"><code>chmod -v 644 file</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>--reference=文件</code></td>
+<td style="text-align:center">以指定文件的权限为参考设置</td>
+<td style="text-align:center"><code>chmod --reference=ref.txt target.txt</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>示例</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 给脚本添加执行权限</span></span><br><span class="line"><span class="built_in">chmod</span> +x script.sh</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置文件权限为 rw-r--r--</span></span><br><span class="line"><span class="built_in">chmod</span> 644 config.conf</span><br><span class="line"></span><br><span class="line"><span class="comment"># 递归修改目录及文件权限</span></span><br><span class="line"><span class="built_in">chmod</span> -R 750 /home/project</span><br></pre></td></tr></table></figure>
+<h3 id="2-chown-——-修改文件或目录的所有者和所属组">2 <code>chown</code> —— 修改文件或目录的所有者和所属组</h3>
+<p><strong>命令概述</strong><br>
+<code>chown</code>（Change Owner）用于更改文件或目录的用户所有权。</p>
+<p><strong>基本格式</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">chown</span> [选项] 所有者[:组] 文件...</span><br></pre></td></tr></table></figure>
+<p><strong>常用用法</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">用法</th>
+<th style="text-align:center">描述</th>
+<th style="text-align:center">示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>chown 用户 文件</code></td>
+<td style="text-align:center">更改文件的所有者为指定用户</td>
+<td style="text-align:center"><code>chown john file.txt</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>chown :组 文件</code></td>
+<td style="text-align:center">更改文件的所属组为指定组（保留所有者不变）</td>
+<td style="text-align:center"><code>chown :staff file.txt</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>chown 用户:组 文件</code></td>
+<td style="text-align:center">同时更改所有者和所属组</td>
+<td style="text-align:center"><code>chown john:staff file.txt</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-R</code></td>
+<td style="text-align:center">递归修改目录及其内容</td>
+<td style="text-align:center"><code>chown -R www-data:www-data /var/www</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>示例</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 更改文件所有者</span></span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">chown</span> alice report.pdf</span><br><span class="line"></span><br><span class="line"><span class="comment"># 更改文件所属组</span></span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">chown</span> :developers project.conf</span><br><span class="line"></span><br><span class="line"><span class="comment"># 递归更改目录所有权</span></span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">chown</span> -R user:group /home/user/data</span><br></pre></td></tr></table></figure>
+<h2 id="七、压缩与归档">七、压缩与归档</h2>
+<h3 id="1-tar-——-归档工具（常与压缩结合）">1 <code>tar</code> —— 归档工具（常与压缩结合）</h3>
+<p><strong>命令概述</strong><br>
+<code>tar</code>（Tape Archive）用于创建和解压归档文件（.tar），常配合 gzip、bzip2、xz 等压缩。</p>
+<p><strong>基本格式</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">tar [选项] [归档文件] [源文件/目录]</span><br></pre></td></tr></table></figure>
+<p><strong>常用选项</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">选项</th>
+<th style="text-align:center">功能描述</th>
+<th style="text-align:center">示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>-c</code></td>
+<td style="text-align:center">创建归档文件</td>
+<td style="text-align:center"><code>tar -cf archive.tar /path</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-x</code></td>
+<td style="text-align:center">解压归档文件</td>
+<td style="text-align:center"><code>tar -xf archive.tar</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-t</code></td>
+<td style="text-align:center">查看归档文件内容</td>
+<td style="text-align:center"><code>tar -tf archive.tar</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-z</code></td>
+<td style="text-align:center">通过 gzip 压缩/解压（.tar.gz）</td>
+<td style="text-align:center"><code>tar -czf archive.tar.gz dir/</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-j</code></td>
+<td style="text-align:center">通过 bzip2 压缩/解压（.tar.bz2）</td>
+<td style="text-align:center"><code>tar -cjf archive.tar.bz2 dir/</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-J</code></td>
+<td style="text-align:center">通过 xz 压缩/解压（.tar.xz）</td>
+<td style="text-align:center"><code>tar -cJf archive.tar.xz dir/</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-v</code></td>
+<td style="text-align:center">显示处理过程详细信息（verbose）</td>
+<td style="text-align:center"><code>tar -xvf archive.tar</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-p</code></td>
+<td style="text-align:center">保留文件权限</td>
+<td style="text-align:center"><code>tar -cpf archive.tar /etc</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-C</code></td>
+<td style="text-align:center">指定解压目标目录</td>
+<td style="text-align:center"><code>tar -xf archive.tar -C /target</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>--exclude</code></td>
+<td style="text-align:center">排除特定文件/目录</td>
+<td style="text-align:center"><code>tar -czf backup.tar.gz --exclude='*.log' /home</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>示例</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 创建 tar.gz 压缩包</span></span><br><span class="line">tar -czvf project.tar.gz project/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 解压 tar.gz 到当前目录</span></span><br><span class="line">tar -xzvf project.tar.gz</span><br><span class="line"></span><br><span class="line"><span class="comment"># 解压到指定目录</span></span><br><span class="line">tar -xvf archive.tar -C /tmp/out/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看压缩包内容</span></span><br><span class="line">tar -tzvf archive.tar.gz</span><br></pre></td></tr></table></figure>
+<h3 id="2-zip-unzip-——-ZIP-压缩-解压">2 <code>zip</code> / <code>unzip</code> —— ZIP 压缩/解压</h3>
+<p><strong>命令概述</strong><br>
+<code>zip</code> 和 <code>unzip</code> 用于处理 ZIP 格式的压缩包，在 Windows/Linux 间交换文件时常用。</p>
+<p><strong>基本格式</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">zip [选项] 压缩包名 源文件...</span><br><span class="line">unzip [选项] 压缩包名</span><br></pre></td></tr></table></figure>
+<p><strong>常用选项</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">命令</th>
+<th style="text-align:center">选项</th>
+<th style="text-align:center">功能描述</th>
+<th style="text-align:center">示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>zip</code></td>
+<td style="text-align:center"><code>-r</code></td>
+<td style="text-align:center">递归压缩目录</td>
+<td style="text-align:center"><code>zip -r archive.zip dir/</code></td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"><code>-q</code></td>
+<td style="text-align:center">静默模式（不输出信息）</td>
+<td style="text-align:center"><code>zip -q file.zip file</code></td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"><code>-d</code></td>
+<td style="text-align:center">从压缩包中删除文件</td>
+<td style="text-align:center"><code>zip -d archive.zip file.txt</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>unzip</code></td>
+<td style="text-align:center"><code>-l</code></td>
+<td style="text-align:center">查看压缩包内容列表</td>
+<td style="text-align:center"><code>unzip -l archive.zip</code></td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"><code>-d</code></td>
+<td style="text-align:center">指定解压目录</td>
+<td style="text-align:center"><code>unzip archive.zip -d /target</code></td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"><code>-o</code></td>
+<td style="text-align:center">覆盖已存在的文件而不提示</td>
+<td style="text-align:center"><code>unzip -o archive.zip</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>示例</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 压缩目录</span></span><br><span class="line">zip -r backup.zip /home/user/docs</span><br><span class="line"></span><br><span class="line"><span class="comment"># 解压到指定目录</span></span><br><span class="line">unzip backup.zip -d /tmp/restore/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看压缩包内容</span></span><br><span class="line">unzip -l archive.zip</span><br></pre></td></tr></table></figure>
+<h2 id="八、时间与日期">八、时间与日期</h2>
+<h3 id="1-date-——-显示或设置系统日期时间">1 <code>date</code> —— 显示或设置系统日期时间</h3>
+<p><strong>命令概述</strong><br>
+<code>date</code> 用于显示当前日期和时间，也可根据指定格式输出，管理员可用来设置系统时间。</p>
+<p><strong>基本格式</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">date</span> [选项] [+格式]</span><br><span class="line"><span class="built_in">date</span> -s <span class="string">&quot;时间字符串&quot;</span></span><br></pre></td></tr></table></figure>
+<p><strong>常用格式符</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">格式符</th>
+<th style="text-align:center">含义</th>
+<th style="text-align:center">示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>%Y</code></td>
+<td style="text-align:center">年份（四位数）</td>
+<td style="text-align:center"><code>2026</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>%m</code></td>
+<td style="text-align:center">月份（01-12）</td>
+<td style="text-align:center"><code>08</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>%d</code></td>
+<td style="text-align:center">日期（01-31）</td>
+<td style="text-align:center"><code>03</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>%H</code></td>
+<td style="text-align:center">小时（00-23）</td>
+<td style="text-align:center"><code>14</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>%M</code></td>
+<td style="text-align:center">分钟（00-59）</td>
+<td style="text-align:center"><code>30</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>%S</code></td>
+<td style="text-align:center">秒（00-60）</td>
+<td style="text-align:center"><code>45</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>%A</code></td>
+<td style="text-align:center">星期几（完整）</td>
+<td style="text-align:center"><code>Monday</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>%B</code></td>
+<td style="text-align:center">月份名称（完整）</td>
+<td style="text-align:center"><code>August</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>%s</code></td>
+<td style="text-align:center">自 1970-01-01 00:00:00 UTC 以来的秒数（时间戳）</td>
+<td style="text-align:center"><code>1691087445</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>示例</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 默认显示</span></span><br><span class="line"><span class="built_in">date</span></span><br><span class="line"><span class="comment"># 输出示例：Mon Aug  3 14:30:45 CST 2026</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 自定义格式</span></span><br><span class="line"><span class="built_in">date</span> <span class="string">&quot;+%Y-%m-%d %H:%M:%S&quot;</span></span><br><span class="line"><span class="comment"># 输出：2026-08-03 14:30:45</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示时间戳</span></span><br><span class="line"><span class="built_in">date</span> +%s</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置系统时间（需要 root）</span></span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">date</span> -s <span class="string">&quot;2026-08-03 15:00:00&quot;</span></span><br></pre></td></tr></table></figure>
+<h3 id="2-cal-——-显示日历">2 <code>cal</code> —— 显示日历</h3>
+<p><strong>命令概述</strong><br>
+<code>cal</code>（Calendar）在终端显示日历，可指定月份和年份。</p>
+<p><strong>基本格式</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cal [选项] [[月份] 年份]</span><br></pre></td></tr></table></figure>
+<p><strong>常用选项</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">选项</th>
+<th style="text-align:center">功能描述</th>
+<th style="text-align:center">示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>-3</code></td>
+<td style="text-align:center">显示前一个月、本月、下一个月</td>
+<td style="text-align:center"><code>cal -3</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-y</code></td>
+<td style="text-align:center">显示当前年份的完整日历</td>
+<td style="text-align:center"><code>cal -y</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-m</code></td>
+<td style="text-align:center">以星期一作为每周第一天</td>
+<td style="text-align:center"><code>cal -m</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-j</code></td>
+<td style="text-align:center">显示儒略日（从1月1日起算的天数）</td>
+<td style="text-align:center"><code>cal -j</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>示例</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 显示当前月的日历</span></span><br><span class="line">cal</span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示 2026 年 12 月的日历</span></span><br><span class="line">cal 12 2026</span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示整个 2026 年日历</span></span><br><span class="line">cal -y 2026</span><br></pre></td></tr></table></figure>
+<h3 id="3-bc-——-命令行计算器">3 <code>bc</code> —— 命令行计算器</h3>
+<p><strong>命令概述</strong><br>
+<code>bc</code>（Basic Calculator）是一款支持任意精度算术和表达式的命令行计算器，支持变量、函数、逻辑运算等。</p>
+<p><strong>基本格式</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">bc [选项] [文件]</span><br></pre></td></tr></table></figure>
+<p><strong>常用选项</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">选项</th>
+<th style="text-align:center">功能描述</th>
+<th style="text-align:center">示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>-l</code></td>
+<td style="text-align:center">加载标准数学库（支持 <code>s()</code>, <code>c()</code>, <code>l()</code> 等）</td>
+<td style="text-align:center"><code>bc -l</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-q</code></td>
+<td style="text-align:center">安静模式（不显示版权信息）</td>
+<td style="text-align:center"><code>bc -q</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-s</code></td>
+<td style="text-align:center">使用 POSIX 标准模式</td>
+<td style="text-align:center"><code>bc -s</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>示例</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 启动交互式计算器</span></span><br><span class="line">bc</span><br><span class="line"><span class="comment"># 输入表达式，如 1+2，回车显示结果；输入 quit 退出</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 非交互式计算</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;scale=2; 10/3&quot;</span> | bc   <span class="comment"># 输出 3.33</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;sqrt(100)&quot;</span> | bc -l    <span class="comment"># 输出 10.00000000000000000000</span></span><br></pre></td></tr></table></figure>
+<h2 id="九、系统控制与关停">九、系统控制与关停</h2>
+<h3 id="1-shutdown-——-系统关机或重启">1 <code>shutdown</code> —— 系统关机或重启</h3>
+<p><strong>命令概述</strong><br>
+<code>shutdown</code> 用于安全地关闭系统、重启或进入单用户模式。需要 root 权限。</p>
+<p><strong>基本格式</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">shutdown [选项] [时间] [消息]</span><br></pre></td></tr></table></figure>
+<p><strong>常用选项</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">选项</th>
+<th style="text-align:center">功能描述</th>
+<th style="text-align:center">示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>-h</code></td>
+<td style="text-align:center">停止系统（关机）</td>
+<td style="text-align:center"><code>shutdown -h now</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-r</code></td>
+<td style="text-align:center">重启系统</td>
+<td style="text-align:center"><code>shutdown -r +5</code>（5分钟后重启）</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-c</code></td>
+<td style="text-align:center">取消已经计划的关机</td>
+<td style="text-align:center"><code>shutdown -c</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-k</code></td>
+<td style="text-align:center">仅发送警告消息，不实际关机</td>
+<td style="text-align:center"><code>shutdown -k now &quot;System will reboot&quot;</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>示例</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 立即关机</span></span><br><span class="line"><span class="built_in">sudo</span> shutdown -h now</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在今天的 20:00 关机</span></span><br><span class="line"><span class="built_in">sudo</span> shutdown -h 20:00</span><br><span class="line"></span><br><span class="line"><span class="comment"># 10 分钟后重启</span></span><br><span class="line"><span class="built_in">sudo</span> shutdown -r +10</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定具体时间重启（如 23:00）</span></span><br><span class="line"><span class="built_in">sudo</span> shutdown -r 23:00</span><br><span class="line"></span><br><span class="line"><span class="comment"># 取消关机计划</span></span><br><span class="line"><span class="built_in">sudo</span> shutdown -c</span><br></pre></td></tr></table></figure>
+<h3 id="2-poweroff-——-立即切断电源关机">2 <code>poweroff</code> —— 立即切断电源关机</h3>
+<p><strong>命令概述</strong><br>
+<code>poweroff</code> 直接发送 ACPI 信号关闭系统电源，相当于 <code>shutdown -h now</code> 的快捷方式。通常用于快速关机，但不会给其他用户发送警告，也不会等待后台进程安全结束（不如 <code>shutdown</code> 优雅）。</p>
+<p><strong>基本格式</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">poweroff [选项]</span><br></pre></td></tr></table></figure>
+<p><strong>常用选项</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">选项</th>
+<th style="text-align:center">功能描述</th>
+<th style="text-align:center">示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>-f</code></td>
+<td style="text-align:center">强制关机，不调用 <code>shutdown</code>，直接切换运行级别</td>
+<td style="text-align:center"><code>poweroff -f</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-w</code></td>
+<td style="text-align:center">仅写入 wtmp 日志（/var/log/wtmp），不实际关机</td>
+<td style="text-align:center"><code>poweroff -w</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>示例</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 立即关机（推荐使用 shutdown 更安全）</span></span><br><span class="line"><span class="built_in">sudo</span> poweroff</span><br><span class="line"></span><br><span class="line"><span class="comment"># 强制关机（绕过正常关机流程，可能丢失数据）</span></span><br><span class="line"><span class="built_in">sudo</span> poweroff -f</span><br></pre></td></tr></table></figure>
+<h3 id="3-reboot-——-重启系统">3 <code>reboot</code> —— 重启系统</h3>
+<p><strong>命令概述</strong><br>
+<code>reboot</code> 直接重启系统，相当于 <code>shutdown -r now</code> 的快捷方式。同样地，建议优先使用 <code>shutdown -r</code> 以便给用户提醒。</p>
+<p><strong>基本格式</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">reboot [选项]</span><br></pre></td></tr></table></figure>
+<p><strong>常用选项</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">选项</th>
+<th style="text-align:center">功能描述</th>
+<th style="text-align:center">示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>-f</code></td>
+<td style="text-align:center">强制重启，不调用 <code>shutdown</code></td>
+<td style="text-align:center"><code>reboot -f</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-p</code></td>
+<td style="text-align:center">重启后切断电源（若硬件支持）</td>
+<td style="text-align:center"><code>reboot -p</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>示例</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 立即重启</span></span><br><span class="line"><span class="built_in">sudo</span> reboot</span><br><span class="line"></span><br><span class="line"><span class="comment"># 强制重启</span></span><br><span class="line"><span class="built_in">sudo</span> reboot -f</span><br></pre></td></tr></table></figure>
+<h3 id="4-halt-——-停止所有-CPU-活动（停止系统）">4 <code>halt</code> —— 停止所有 CPU 活动（停止系统）</h3>
+<p><strong>命令概述</strong><br>
+<code>halt</code> 停止所有进程并让系统进入停机状态，但通常不切断电源（与 <code>poweroff</code> 区别在于后者会关电）。在现代系统中，<code>halt</code> 默认行为与 <code>poweroff</code> 类似，但具体取决于系统配置。</p>
+<p><strong>基本格式</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">halt [选项]</span><br></pre></td></tr></table></figure>
+<p><strong>常用选项</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">选项</th>
+<th style="text-align:center">功能描述</th>
+<th style="text-align:center">示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>-f</code></td>
+<td style="text-align:center">强制停机，不调用 <code>shutdown</code></td>
+<td style="text-align:center"><code>halt -f</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>-p</code></td>
+<td style="text-align:center">停机后切断电源（等同于 poweroff）</td>
+<td style="text-align:center"><code>halt -p</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>示例</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 停止系统（不关电）</span></span><br><span class="line"><span class="built_in">sudo</span> halt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 停止并关电</span></span><br><span class="line"><span class="built_in">sudo</span> halt -p</span><br></pre></td></tr></table></figure></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://dreamy-xay.github.io/blog">dreamy-xay</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://dreamy-xay.github.io/blog/posts/aa951e57/">https://dreamy-xay.github.io/blog/posts/aa951e57/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://dreamy-xay.github.io/blog" target="_blank">dreamyのblog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/Linux/">Linux</a><a class="post-meta__tags" href="/blog/tags/%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7/">命令行工具</a></div><div class="post_share"><div class="social-share" data-image="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/10_1752075498147.jpg" data-sites="wechat,weibo,qq,qzone,facebook,twitter"></div><link rel="stylesheet" href="https://cdn.staticfile.net/butterfly-extsrc/1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.staticfile.net/butterfly-extsrc/1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赞助</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/wechat_1752075400337.png" target="_blank"><img class="post-qr-code-img" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/wechat_1752075400337.png" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/alipay_1752075397065.png" target="_blank"><img class="post-qr-code-img" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/alipay_1752075397065.png" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/blog/posts/13dcfb97/" title="【开发工具】Linux 文本处理常用命令"><img class="cover" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/9_1752075495937.jpg" onerror="onerror=null;src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">【开发工具】Linux 文本处理常用命令</div></div></a></div><div class="next-post pull-right"><a href="/blog/posts/f415298d/" title="【开发工具】Linux 常用文本编辑器 Vim"><img class="cover" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/19_1785311463847.jpg" onerror="onerror=null;src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">【开发工具】Linux 常用文本编辑器 Vim</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/blog/posts/f415298d/" title="【开发工具】Linux 常用文本编辑器 Vim"><img class="cover" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/19_1785311463847.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-04</div><div class="title">【开发工具】Linux 常用文本编辑器 Vim</div></div></a></div><div><a href="/blog/posts/13dcfb97/" title="【开发工具】Linux 文本处理常用命令"><img class="cover" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/9_1752075495937.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-03</div><div class="title">【开发工具】Linux 文本处理常用命令</div></div></a></div><div><a href="/blog/posts/bce25c9a/" title="【Doxygen】Linux下的配置与使用"><img class="cover" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/31_1785311502644.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-05-23</div><div class="title">【Doxygen】Linux下的配置与使用</div></div></a></div><div><a href="/blog/posts/35ae6dfa/" title="【存储初识】05-内核文件系统"><img class="cover" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/3_1752075518457.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-06</div><div class="title">【存储初识】05-内核文件系统</div></div></a></div><div><a href="/blog/posts/97daf1b0/" title="【存储初识】06-用户态文件系统FUSE"><img class="cover" src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/19_1785311463847.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-06</div><div class="title">【存储初识】06-用户态文件系统FUSE</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/avatar_1752075331083.jpg" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">dreamy-xay</div><div class="author-info__description">只争朝夕，不负韶华</div></div><div class="card-info-data site-data is-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">29</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">47</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/dreamy-xay"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="http://wpa.qq.com/msgrd?v=3&amp;uin=1985332264&amp;site=qq&amp;menu=yes" target="_blank" title="QQ"><i class="fab fa-qq" style="color: #febcd5;"></i></a><a class="social-icon" href="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/weixin_1752075402432.png" target="_blank" title="WeChat"><i class="fab fa-weixin" style="color: #febcd5;"></i></a><a class="social-icon" href="mailto:dreamy-xay@foxmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #febcd5;"></i></a><a class="social-icon" href="https://space.bilibili.com/365741414" target="_blank" title="Bilibili"><i class="fa-brands fa-bilibili" style="color: #febcd5;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Hi~ o(*￣▽￣*)ブ，欢迎来到dreamy'blog，如果喜欢记得收藏奥～</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%96%87%E4%BB%B6%E4%B8%8E%E7%9B%AE%E5%BD%95%E6%93%8D%E4%BD%9C"><span class="toc-text">一、文件与目录操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-cd-%E2%80%94%E2%80%94-%E5%88%87%E6%8D%A2%E5%BD%93%E5%89%8D%E5%B7%A5%E4%BD%9C%E7%9B%AE%E5%BD%95"><span class="toc-text">1 cd —— 切换当前工作目录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-pwd-%E2%80%94%E2%80%94-%E6%98%BE%E7%A4%BA%E5%BD%93%E5%89%8D%E5%B7%A5%E4%BD%9C%E7%9B%AE%E5%BD%95%E7%9A%84%E7%BB%9D%E5%AF%B9%E8%B7%AF%E5%BE%84"><span class="toc-text">2 pwd —— 显示当前工作目录的绝对路径</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-mkdir-%E2%80%94%E2%80%94-%E5%88%9B%E5%BB%BA%E7%9B%AE%E5%BD%95"><span class="toc-text">3 mkdir —— 创建目录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-rmdir-%E2%80%94%E2%80%94-%E5%88%A0%E9%99%A4%E7%A9%BA%E7%9B%AE%E5%BD%95"><span class="toc-text">4 rmdir —— 删除空目录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-ls-%E2%80%94%E2%80%94-%E5%88%97%E5%87%BA%E7%9B%AE%E5%BD%95%E5%86%85%E5%AE%B9"><span class="toc-text">5 ls —— 列出目录内容</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-cp-%E2%80%94%E2%80%94-%E5%A4%8D%E5%88%B6%E6%96%87%E4%BB%B6%E6%88%96%E7%9B%AE%E5%BD%95"><span class="toc-text">6 cp —— 复制文件或目录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-mv-%E2%80%94%E2%80%94-%E7%A7%BB%E5%8A%A8%E6%88%96%E9%87%8D%E5%91%BD%E5%90%8D%E6%96%87%E4%BB%B6-%E7%9B%AE%E5%BD%95"><span class="toc-text">7 mv —— 移动或重命名文件&#x2F;目录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-rm-%E2%80%94%E2%80%94-%E5%88%A0%E9%99%A4%E6%96%87%E4%BB%B6%E6%88%96%E7%9B%AE%E5%BD%95"><span class="toc-text">8 rm —— 删除文件或目录</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%96%87%E4%BB%B6%E4%BC%A0%E8%BE%93%E4%B8%8E%E7%BD%91%E7%BB%9C"><span class="toc-text">二、文件传输与网络</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-scp-%E2%80%94%E2%80%94-%E5%AE%89%E5%85%A8%E8%BF%9C%E7%A8%8B%E6%96%87%E4%BB%B6%E5%A4%8D%E5%88%B6%EF%BC%88%E5%9F%BA%E4%BA%8E-SSH%EF%BC%89"><span class="toc-text">1 scp —— 安全远程文件复制（基于 SSH）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-ifconfig-%E2%80%94%E2%80%94-%E7%BD%91%E7%BB%9C%E6%8E%A5%E5%8F%A3%E9%85%8D%E7%BD%AE%EF%BC%88%E5%B7%B2%E9%80%90%E6%B8%90%E8%A2%AB-ip-%E6%9B%BF%E4%BB%A3%EF%BC%8C%E4%BD%86%E4%BB%8D%E5%B8%B8%E7%94%A8%EF%BC%89"><span class="toc-text">2 ifconfig —— 网络接口配置（已逐渐被 ip 替代，但仍常用）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E7%A3%81%E7%9B%98%E4%B8%8E%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86"><span class="toc-text">三、磁盘与文件系统管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-mkfs-%E2%80%94%E2%80%94-%E5%88%9B%E5%BB%BA%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%EF%BC%88%E6%A0%BC%E5%BC%8F%E5%8C%96%EF%BC%89"><span class="toc-text">1 mkfs —— 创建文件系统（格式化）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-fdisk-%E2%80%94%E2%80%94-%E7%A3%81%E7%9B%98%E5%88%86%E5%8C%BA%E5%B7%A5%E5%85%B7"><span class="toc-text">2 fdisk —— 磁盘分区工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-dd-%E2%80%94%E2%80%94-%E6%95%B0%E6%8D%AE%E8%BD%AC%E6%8D%A2%E4%B8%8E%E5%A4%8D%E5%88%B6%EF%BC%88%E4%BD%8E%E7%BA%A7%E6%8B%B7%E8%B4%9D%EF%BC%89"><span class="toc-text">3 dd —— 数据转换与复制（低级拷贝）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-df-%E2%80%94%E2%80%94-%E6%9F%A5%E7%9C%8B%E7%A3%81%E7%9B%98%E7%A9%BA%E9%97%B4%E4%BD%BF%E7%94%A8%E6%83%85%E5%86%B5"><span class="toc-text">4 df —— 查看磁盘空间使用情况</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%B3%BB%E7%BB%9F%E7%9B%91%E6%8E%A7"><span class="toc-text">四、进程与系统监控</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-top-%E2%80%94%E2%80%94-%E5%AE%9E%E6%97%B6%E7%B3%BB%E7%BB%9F%E8%BF%9B%E7%A8%8B%E7%9B%91%E6%8E%A7"><span class="toc-text">1 top —— 实时系统进程监控</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-htop-%E2%80%94%E2%80%94-top-%E7%9A%84%E5%A2%9E%E5%BC%BA%E7%89%88%EF%BC%88%E9%9C%80%E9%A2%9D%E5%A4%96%E5%AE%89%E8%A3%85%EF%BC%89"><span class="toc-text">2 htop —— top 的增强版（需额外安装）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-uname-%E2%80%94%E2%80%94-%E7%B3%BB%E7%BB%9F%E4%BF%A1%E6%81%AF%E6%9F%A5%E8%AF%A2"><span class="toc-text">3 uname —— 系统信息查询</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-history-%E2%80%94%E2%80%94-%E6%9F%A5%E7%9C%8B%E5%91%BD%E4%BB%A4%E5%8E%86%E5%8F%B2"><span class="toc-text">4 history —— 查看命令历史</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E6%96%87%E6%9C%AC%E6%9F%A5%E7%9C%8B%E4%B8%8E%E5%A4%84%E7%90%86%EF%BC%88%E8%BE%85%E5%8A%A9%E7%B1%BB%EF%BC%89"><span class="toc-text">五、文本查看与处理（辅助类）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-less-%E2%80%94%E2%80%94-%E5%88%86%E9%A1%B5%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9"><span class="toc-text">1 less —— 分页查看文件内容</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-tail-%E2%80%94%E2%80%94-%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6%E5%B0%BE%E9%83%A8%E5%86%85%E5%AE%B9%EF%BC%88%E5%B8%B8%E7%94%A8%E4%BA%8E%E5%AE%9E%E6%97%B6%E6%97%A5%E5%BF%97%EF%BC%89"><span class="toc-text">2 tail —— 查看文件尾部内容（常用于实时日志）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-cat-%E2%80%94%E2%80%94-%E8%BF%9E%E6%8E%A5%E6%96%87%E4%BB%B6%E5%B9%B6%E8%BE%93%E5%87%BA%E5%88%B0%E6%A0%87%E5%87%86%E8%BE%93%E5%87%BA"><span class="toc-text">3 cat —— 连接文件并输出到标准输出</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E6%9D%83%E9%99%90%E4%B8%8E%E5%B1%9E%E6%80%A7%E7%AE%A1%E7%90%86"><span class="toc-text">六、权限与属性管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-chmod-%E2%80%94%E2%80%94-%E4%BF%AE%E6%94%B9%E6%96%87%E4%BB%B6%E6%88%96%E7%9B%AE%E5%BD%95%E7%9A%84%E6%9D%83%E9%99%90"><span class="toc-text">1 chmod —— 修改文件或目录的权限</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-chown-%E2%80%94%E2%80%94-%E4%BF%AE%E6%94%B9%E6%96%87%E4%BB%B6%E6%88%96%E7%9B%AE%E5%BD%95%E7%9A%84%E6%89%80%E6%9C%89%E8%80%85%E5%92%8C%E6%89%80%E5%B1%9E%E7%BB%84"><span class="toc-text">2 chown —— 修改文件或目录的所有者和所属组</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E5%8E%8B%E7%BC%A9%E4%B8%8E%E5%BD%92%E6%A1%A3"><span class="toc-text">七、压缩与归档</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-tar-%E2%80%94%E2%80%94-%E5%BD%92%E6%A1%A3%E5%B7%A5%E5%85%B7%EF%BC%88%E5%B8%B8%E4%B8%8E%E5%8E%8B%E7%BC%A9%E7%BB%93%E5%90%88%EF%BC%89"><span class="toc-text">1 tar —— 归档工具（常与压缩结合）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-zip-unzip-%E2%80%94%E2%80%94-ZIP-%E5%8E%8B%E7%BC%A9-%E8%A7%A3%E5%8E%8B"><span class="toc-text">2 zip &#x2F; unzip —— ZIP 压缩&#x2F;解压</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AB%E3%80%81%E6%97%B6%E9%97%B4%E4%B8%8E%E6%97%A5%E6%9C%9F"><span class="toc-text">八、时间与日期</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-date-%E2%80%94%E2%80%94-%E6%98%BE%E7%A4%BA%E6%88%96%E8%AE%BE%E7%BD%AE%E7%B3%BB%E7%BB%9F%E6%97%A5%E6%9C%9F%E6%97%B6%E9%97%B4"><span class="toc-text">1 date —— 显示或设置系统日期时间</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-cal-%E2%80%94%E2%80%94-%E6%98%BE%E7%A4%BA%E6%97%A5%E5%8E%86"><span class="toc-text">2 cal —— 显示日历</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-bc-%E2%80%94%E2%80%94-%E5%91%BD%E4%BB%A4%E8%A1%8C%E8%AE%A1%E7%AE%97%E5%99%A8"><span class="toc-text">3 bc —— 命令行计算器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B9%9D%E3%80%81%E7%B3%BB%E7%BB%9F%E6%8E%A7%E5%88%B6%E4%B8%8E%E5%85%B3%E5%81%9C"><span class="toc-text">九、系统控制与关停</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-shutdown-%E2%80%94%E2%80%94-%E7%B3%BB%E7%BB%9F%E5%85%B3%E6%9C%BA%E6%88%96%E9%87%8D%E5%90%AF"><span class="toc-text">1 shutdown —— 系统关机或重启</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-poweroff-%E2%80%94%E2%80%94-%E7%AB%8B%E5%8D%B3%E5%88%87%E6%96%AD%E7%94%B5%E6%BA%90%E5%85%B3%E6%9C%BA"><span class="toc-text">2 poweroff —— 立即切断电源关机</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-reboot-%E2%80%94%E2%80%94-%E9%87%8D%E5%90%AF%E7%B3%BB%E7%BB%9F"><span class="toc-text">3 reboot —— 重启系统</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-halt-%E2%80%94%E2%80%94-%E5%81%9C%E6%AD%A2%E6%89%80%E6%9C%89-CPU-%E6%B4%BB%E5%8A%A8%EF%BC%88%E5%81%9C%E6%AD%A2%E7%B3%BB%E7%BB%9F%EF%BC%89"><span class="toc-text">4 halt —— 停止所有 CPU 活动（停止系统）</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/posts/f415298d/" title="【开发工具】Linux 常用文本编辑器 Vim"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/19_1785311463847.jpg" onerror="this.onerror=null;this.src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【开发工具】Linux 常用文本编辑器 Vim"/></a><div class="content"><a class="title" href="/blog/posts/f415298d/" title="【开发工具】Linux 常用文本编辑器 Vim">【开发工具】Linux 常用文本编辑器 Vim</a><time datetime="2026-08-04T02:54:51.000Z" title="发表于 2026-08-04 10:54:51">2026-08-04</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/posts/aa951e57/" title="【开发工具】Linux 其他常用命令"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/10_1752075498147.jpg" onerror="this.onerror=null;this.src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【开发工具】Linux 其他常用命令"/></a><div class="content"><a class="title" href="/blog/posts/aa951e57/" title="【开发工具】Linux 其他常用命令">【开发工具】Linux 其他常用命令</a><time datetime="2026-08-03T06:23:01.000Z" title="发表于 2026-08-03 14:23:01">2026-08-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/posts/13dcfb97/" title="【开发工具】Linux 文本处理常用命令"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/9_1752075495937.jpg" onerror="this.onerror=null;this.src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【开发工具】Linux 文本处理常用命令"/></a><div class="content"><a class="title" href="/blog/posts/13dcfb97/" title="【开发工具】Linux 文本处理常用命令">【开发工具】Linux 文本处理常用命令</a><time datetime="2026-08-03T01:19:35.000Z" title="发表于 2026-08-03 09:19:35">2026-08-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/posts/7fee99f/" title="【C】C语言面向对象实现"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/11_1752075500877.jpg" onerror="this.onerror=null;this.src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【C】C语言面向对象实现"/></a><div class="content"><a class="title" href="/blog/posts/7fee99f/" title="【C】C语言面向对象实现">【C】C语言面向对象实现</a><time datetime="2026-07-30T12:48:13.000Z" title="发表于 2026-07-30 20:48:13">2026-07-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/posts/c615e5d3/" title="【Linux 内核】VFS 基础：writeback"><img src="https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/5_1752075479273.jpg" onerror="this.onerror=null;this.src='https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【Linux 内核】VFS 基础：writeback"/></a><div class="content"><a class="title" href="/blog/posts/c615e5d3/" title="【Linux 内核】VFS 基础：writeback">【Linux 内核】VFS 基础：writeback</a><time datetime="2026-07-29T07:36:34.000Z" title="发表于 2026-07-29 15:36:34">2026-07-29</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/10_1752075498147.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2025 - 2026 By dreamy-xay</div><div class="framework-info"><span>网站 </span><a target="_blank" rel="noopener" href="https://github.com/dreamy-xay/blog">Github</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://dreamy-xay.github.io/blog">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="https://cdn.staticfile.net/hexo-theme-butterfly/4.13.0/js/utils.min.js"></script><script src="https://cdn.staticfile.net/hexo-theme-butterfly/4.13.0/js/main.min.js"></script><script src="https://cdn.staticfile.net/hexo-theme-butterfly/4.13.0/js/tw_cn.min.js"></script><script src="https://cdn.staticfile.net/fancyapps-ui/5.0.33/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.staticfile.net/instant.page/5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.staticfile.net/node-snackbar/0.1.16/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.staticfile.net/pangu/4.0.7/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"><script>(() => {
+  const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaid.length === 0) return
+  const runMermaid = () => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    Array.from($mermaid).forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+      const mermaidID = 'mermaid-' + index
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+
+      const renderV10 = () => {
+        renderFn.then(({svg}) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svg)
+        })
+      }
+
+      const renderV9 = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      typeof renderFn === 'string' ? renderV9(renderFn) : renderV10()
+    })
+  }
+
+  const loadMermaid = () => {
+    window.loadMermaid ? runMermaid() : getScript('https://cdn.staticfile.net/mermaid/10.8.0/mermaid.min.js').then(runMermaid)
+  }
+
+  btf.addGlobalFn('themeChange', runMermaid, 'mermaid')
+
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script><script>(() => {
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-vercel-swart-pi.vercel.app/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = () => {
+    twikoo.init(Object.assign({
+      el: '#twikoo-wrap',
+      envId: 'https://twikoo-vercel-swart-pi.vercel.app/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      }
+    }, null))
+
+    GLOBAL_CONFIG_SITE.isPost && getCount()
+  }
+
+  const loadTwikoo = () => {
+    if (typeof twikoo === 'object') setTimeout(init,0)
+    else getScript('https://cdn.staticfile.net/twikoo/1.6.31/twikoo.all.min.js').then(init)
+  }
+
+  if ('Twikoo' === 'Twikoo' || !true) {
+    if (true) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script>window.addEventListener('load', () => {
+  const changeContent = (content) => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g,"") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0,150) + '...'
+    }
+    return content
+  }
+
+  const getComment = () => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo-vercel-swart-pi.vercel.app/',
+        region: '',
+        pageSize: 6,
+        includeReply: true
+      }).then(function (res) {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        saveToLocal.set('twikoo-newest-comments', JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray)
+      }).catch(function (err) {
+        const $dom = document.querySelector('#card-newest-comments .aside-list')
+        $dom.textContent= "无法获取评论，请确认相关配置是否正确"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      getScript('https://cdn.staticfile.net/twikoo/1.6.31/twikoo.all.min.js').then(runTwikoo)
+    }
+  }
+
+  const generateHtml = array => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class=\'aside-list-item\'>'
+
+        if (true) {
+          const name = 'src'
+          result += `<a href='${array[i].url}' class='thumbnail'><img ${name}='${array[i].avatar}' alt='${array[i].nick}'></a>`
+        }
+        
+        result += `<div class='content'>
+        <a class='comment' href='${array[i].url}' title='${array[i].content}'>${array[i].content}</a>
+        <div class='name'><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '没有评论'
+    }
+
+    let $dom = document.querySelector('#card-newest-comments .aside-list')
+    $dom && ($dom.innerHTML= result)
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh($dom)
+  }
+
+  const newestCommentInit = () => {
+    if (document.querySelector('#card-newest-comments .aside-list')) {
+      const data = saveToLocal.get('twikoo-newest-comments')
+      if (data) {
+        generateHtml(JSON.parse(data))
+      } else {
+        getComment()
+      }
+    }
+  }
+
+  newestCommentInit()
+  document.addEventListener('pjax:complete', newestCommentInit)
+})</script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script><script type="text/javascript" src="/blog/js/fireworks.min.js"></script><script src="https://cdn.staticfile.net/butterfly-extsrc/1.1.3/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><link rel="stylesheet" href="https://cdn.staticfile.net/aplayer/1.10.1/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.staticfile.net/aplayer/1.10.1/APlayer.min.js"></script><script src="https://cdn.staticfile.net/butterfly-extsrc/1.1.3/metingjs/dist/Meting.min.js"></script><script src="https://cdn.staticfile.net/pjax/0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/blog/404')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="https://cdn.staticfile.net/hexo-theme-butterfly/4.13.0/js/search/local-search.min.js"></script></div></div><script src="/blog/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"tagMode":false,"debug":false,"model":{"jsonPath":"/blog/live2dw/assets/shizuku.model.json"},"display":{"position":"left","width":150,"height":300,"hOffset":20,"vOffset":-20},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/"});</script></body></html>
