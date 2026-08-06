@@ -59,6 +59,7 @@ updated: 2026-07-27 16:01:02
 - **Merge（合并）**：将两个分支的改动整合到一起（如功能分支合并回主分支）。
 
 ## 二、Git 操作指南
+
 ### 1 准备工作：克隆或初始化仓库
 
 #### 1.1 克隆已有项目
@@ -98,34 +99,99 @@ git remote add origin https://github.com/yourname/your-repo.git
 git push -u origin main   # 或 master
 ```
 
+#### 1.3 Git 配置（`git config`）
+
+Git 使用配置文件来存储用户信息和行为偏好，配置分为三个级别（优先级由低到高）：
+
+|   级别    |   作用范围    |     命令参数      |                  存储位置                   |
+| :-----: | :-------: | :-----------: | :-------------------------------------: |
+| **系统级** | 所有用户、所有仓库 |  `--system`   |            `/etc/gitconfig`             |
+| **全局级** | 当前用户的所有仓库 |  `--global`   | `~/.gitconfig` 或 `~/.config/git/config` |
+| **仓库级** |   仅当前仓库   | `--local`（默认） |              `.git/config`              |
+
+**常用配置项及示例**：
+
+```bash
+# 必须设置：用户名和邮箱（每次提交都会记录）
+git config --global user.name "Your Name"
+git config --global user.email "your.email@example.com"
+
+# 设置默认编辑器（如解决 commit 时进入 vim 的问题）
+git config --global core.editor "code --wait"   # VS Code
+# 或
+git config --global core.editor "nano"
+
+# 设置别名（简化常用命令）
+git config --global alias.co checkout
+git config --global alias.br branch
+git config --global alias.st status
+git config --global alias.ci commit
+git config --global alias.lg "log --oneline --graph --all"
+# 之后可用 git lg 查看漂亮的提交图
+
+# 查看所有配置
+git config --list
+# 查看特定配置
+git config user.name
+```
+
+**配置解决常见问题**：
+
+- **换行符跨平台冲突**（Windows vs Linux/macOS）：
+  ```bash
+  # 检出时自动转换 CRLF 为 LF，提交时转换回 CRLF（Windows 推荐）
+  git config --global core.autocrlf true
+  # 检出时不转换，提交时转换为 LF（Linux/macOS 推荐）
+  git config --global core.autocrlf input
+  ```
+
+- **文件名大小写敏感**（解决因大小写重命名导致的诡异问题）：
+  ```bash
+  git config --global core.ignorecase false
+  ```
+
+- **解决推送时 SSL 证书错误**（内网环境）：
+  ```bash
+  git config --global http.sslVerify false   # 不推荐生产环境
+  ```
+
+- **解决中文文件名显示为乱码**：
+  ```bash
+  git config --global core.quotepath false
+  ```
+
 ### 2 日常开发核心循环
 
-每次开发遵循 **编辑 → 暂存 → 提交 → 推送** 的标准流程：
+每次开发遵循 **编辑 → 暂存 → 提交 → 推送** 的标准流程：
 
 1. **查看当前状态**（养成习惯，随时检查）
-
-```bash
+   ```bash
    git status
-```
+   ```
 
-2. **将改动添加到暂存区**（按需添加，避免无脑 `add .`）
-  
-```bash
+2. **将改动添加到暂存区**（按需添加，避免无脑 `add .`）
+   ```bash
    git add main.py rag/rag_chain.py   # 指定文件
-   git add .                          # 添加所有改动
-```
-    
-3. **提交并书写有意义的提交信息**
-   
-```bash
-   git commit -m "feat: add RRF result fusion to search pipeline"
-```
-    
-4. **推送到远程仓库**
+   git add .                          # 添加所有改动（包括新文件）
+   ```
 
- ```bash
+    > **清理未跟踪文件：** 若工作目录中有临时文件（如编译输出等），可用 `git clean` 删除：
+    > ```bash
+    > git clean -n          # 预览将要删除的文件（安全）
+    > git clean -f          # 强制删除未跟踪的文件
+    > git clean -fd         # 同时删除未跟踪的目录
+    > git clean -fx         # 同时删除 .gitignore 中忽略的文件（慎用）
+    > ```
+
+3. **提交并书写有意义的提交信息**
+   ```bash
+   git commit -m "feat: add RRF result fusion to search pipeline"
+   ```
+
+4. **推送到远程仓库**
+   ```bash
    git push
- ```
+   ```
 
 ### 3 分支管理
 
@@ -145,8 +211,37 @@ git checkout feature/new-search
 # 创建并切换（一步到位，推荐）
 git checkout -b feature/new-search
 
-# 查看所有分支（* 标记当前所在分支）
+# 查看所有本地分支（* 标记当前所在分支）
 git branch
+
+# 查看所有分支（包括远程跟踪分支）
+git branch -a
+# 输出示例：
+#   feature/rerank
+# * main
+#   remotes/origin/HEAD -> origin/main
+#   remotes/origin/feature/rerank
+#   remotes/origin/main
+
+# 仅查看远程分支
+git branch -r
+
+# 查看分支与上游跟踪关系（详细信息）
+git branch -vv
+
+# 查看已合并到当前分支的分支
+git branch --merged
+
+# 查看尚未合并到当前分支的分支
+git branch --no-merged
+
+# 删除本地分支（-d 安全删除，需已合并；-D 强制删除）
+git branch -d feature/new-search   # 已合并可安全删除
+git branch -D hotfix/abandoned     # 强制丢弃未合并分支
+
+# 重命名分支（当前分支或指定分支）
+git branch -m new-name             # 重命名当前分支
+git branch -m old-name new-name    # 重命名指定分支
 
 # 切回主分支
 git checkout main
@@ -155,24 +250,25 @@ git checkout main
 git checkout main
 git merge feature/new-search
 
-# 删除已合并的本地分支（可选）
+# 合并后删除已合并的本地分支（可选）
 git branch -d feature/new-search
 ```
 
 #### 3.3 推荐工作流：功能分支工作流（Feature Branch Workflow）
 
-- `main` 分支始终保持可部署状态。
-- 每个新功能/修复均从 `main` 分出独立分支。
-- 完成后合并回 `main`，随后可删除功能分支。
+- `main` 分支始终保持可部署状态。
+- 每个新功能/修复均从 `main` 分出独立分支。
+- 完成后合并回 `main`，随后可删除功能分支。
 
 **分支命名规范**：
-- `feat/xxx` 或 `feature/xxx` —— 新功能
-- `fix/xxx` 或 `bugfix/xxx` —— Bug 修复
-- `refactor/xxx` —— 重构
-- `docs/xxx` —— 文档
-- `hotfix/xxx` —— 紧急修复
 
-#### 3.4 实战示例：为 RAG 系统增加重排序功能
+- `feat/xxx` 或 `feature/xxx` —— 新功能
+- `fix/xxx` 或 `bugfix/xxx` —— Bug 修复
+- `refactor/xxx` —— 重构
+- `docs/xxx` —— 文档
+- `hotfix/xxx` —— 紧急修复
+
+#### 3.4 实战示例
 
 ```bash
 # 1. 确保本地 main 与远程同步
@@ -231,7 +327,7 @@ git pull
 git fetch
 ```
 
-**`fetch` 与 `pull` 的选择**：
+**`fetch` 与 `pull` 的选择**：
 - `git fetch`：只下载，不改变工作区，适合先审查远程变化再决定合并。
 - `git pull`：下载并自动合并，适用于日常同步且确信无冲突时。
 
@@ -274,7 +370,7 @@ git push -u origin feat/my-feature
 # 6. Review 通过后合并到 main
 ```
 
-### 5.2 开源贡献（Fork + Pull Request）
+#### 5.2 开源贡献（Fork + Pull Request）
 
 ```bash
 # 1. 在 GitHub 上 Fork 原仓库至个人账号
@@ -357,11 +453,11 @@ git commit -m "fix: resolve merge conflict in main.py"
 
 |  策略  |              说明              |
 | :--: | :--------------------------: |
-| 频繁拉取 |   每天开工前执行 `git pull`，减少差异    |
+| 频繁拉取 |   每天开工前执行 `git pull`，减少差异    |
 | 小步提交 |        每次提交改动量小，冲突概率低        |
 | 分工明确 |        团队协商避免同时修改同一文件        |
 | 及时合并 |        功能完成即合并，避免长期分支        |
-| 定期同步 | 长期分支定期 `git merge main` 保持同步 |
+| 定期同步 | 长期分支定期 `git merge main` 保持同步 |
 
 ### 7 常见场景实战
 
@@ -446,43 +542,7 @@ git diff <hash1> <hash2>            # 比较两次提交的差异
 |      提交超大文件（>100MB）       |   GitHub 拒绝，后续处理复杂   |
 |           长期不提交           | 改动量大，Review 困难，冲突风险高 |
 
-#### 8.2 必须配置的 .gitignore（Python 示例）
-
-```text
-# Python 缓存
-__pycache__/
-*.pyc
-*.pyo
-*.egg-info/
-# 虚拟环境
-.venv/
-venv/
-# 环境变量
-.env
-.env.local
-.env.production
-# IDE 配置
-.idea/
-.vscode/
-# 操作系统
-.DS_Store
-Thumbs.db
-# 本地数据（大文件）
-*.db
-*.sqlite
-data/raw/
-```
-
-#### 8.3 Git 黄金法则
-
-- **频繁提交，小步前进**：每次提交只做一个小改动。
-- **提交前检查**：使用 `git diff` 复核改动内容。
-- **提交消息清晰**：说明“为什么改”，而非仅“改了什么”。
-- **保持 main 可用**：不稳定代码只留在功能分支。
-- **每日同步**：`git pull` 保持与远程一致。
-- **敏感信息不入库**：使用环境变量或密钥管理服务。
-
-#### 8.4 终极恢复工具：`git reflog`
+#### 8.2 终极恢复工具：`git reflog`
 
 当误删分支、错误 reset 后，`git reflog` 记录了所有 HEAD 变动，可助你找回丢失状态：
 
@@ -491,6 +551,126 @@ git reflog
 # 找到目标状态对应的索引，如 HEAD@{5}
 git reset --hard HEAD@{5}
 ```
+
+### 9 常见问题与配置（FAQ）
+
+#### Q1：如何修改已提交的作者信息？
+
+若提交时未正确设置 `user.name` 或 `user.email`，可用以下方式修正：
+
+```bash
+# 修正最近一次提交的作者信息
+git commit --amend --author="New Name <new.email@example.com>"
+
+# 批量修改历史提交（使用 git filter-branch 或 git rebase），需谨慎
+```
+
+建议在克隆或初始化后第一时间配置全局信息。
+
+#### Q2：如何解决换行符警告（CRLF / LF）？
+
+Windows 和 Linux/macOS 换行符不同，Git 默认会提示 `CRLF will be replaced by LF`。根据团队环境统一配置：
+
+```bash
+# Windows 开发环境（检出时转为 CRLF，提交时转为 LF）
+git config --global core.autocrlf true
+
+# Linux/macOS（检出时不转，提交时转为 LF）
+git config --global core.autocrlf input
+
+# 完全禁用转换（不推荐，易导致跨平台混乱）
+git config --global core.autocrlf false
+```
+
+项目根目录可添加 `.gitattributes` 文件强制特定文件类型规则，例如：
+
+```text
+*.py text eol=lf
+*.sh text eol=lf
+*.bat text eol=crlf
+```
+
+#### Q3：如何撤销 `git add` 添加的文件？
+
+```bash
+# 从暂存区移除特定文件（保留工作区改动）
+git reset HEAD <file>
+
+# 移除所有暂存文件
+git reset HEAD
+```
+
+#### Q4：如何丢弃工作区未提交的改动？
+
+```bash
+# 丢弃单个文件的修改
+git checkout -- <file>
+
+# 丢弃所有文件的修改（谨慎！）
+git restore .   # Git 2.23+ 推荐
+# 或
+git checkout .
+```
+
+#### Q5：`git clean` 误删了文件，能恢复吗？
+
+`git clean` 删除的是**未跟踪**的文件，它们从未被 Git 记录，因此无法通过 Git 恢复。建议先用 `git clean -n` 预览，或先 `git stash -u`（包含未跟踪文件）后再清理。
+
+#### Q6：如何查看某个文件的修改历史？
+
+```bash
+# 查看文件的每次提交及其改动
+git log -p <file>
+
+# 查看文件每一行最后修改的提交和作者（blame）
+git blame <file>
+```
+
+#### Q7：如何让 `git pull` 默认使用 rebase 而非 merge？
+
+```bash
+# 全局配置
+git config --global pull.rebase true
+# 或仅当前仓库
+git config pull.rebase true
+```
+
+这样执行 `git pull` 时会自动 `git pull --rebase`，避免产生多余的合并提交。
+
+#### Q8：如何设置命令别名提升效率？
+
+除了前文介绍的 `git config --global alias.*`，您还可以在 `~/.gitconfig` 中直接编辑：
+
+```text
+[alias]
+  co = checkout
+  br = branch
+  ci = commit
+  st = status
+  lg = log --oneline --graph --all
+  unstage = reset HEAD --
+  last = log -1 HEAD
+```
+
+之后可用 `git lg` 查看漂亮的提交历史图。
+
+#### Q9：如何让 Git 忽略文件权限变化？
+
+```bash
+git config --global core.filemode false
+```
+
+避免因 `chmod` 等权限调整产生不必要的改动。
+
+#### Q10：如何查看当前仓库的配置？
+
+```bash
+git config --local --list   # 仓库级配置
+git config --global --list  # 全局配置
+git config --system --list  # 系统级配置
+```
+
+优先级：仓库级 > 全局级 > 系统级。
 
 ## 附录：命令速查卡
 
