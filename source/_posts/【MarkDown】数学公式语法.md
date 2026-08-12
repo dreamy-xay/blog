@@ -160,7 +160,7 @@ $$
 |       垂直       |        $\perp$        |         \perp          |
 |       弧度       | $\overset{\frown}{AB}$ | \overset{\frown} {...} |
 |      上划线      |   $\overline{ABC}$    |     \overline{...}     |
-|      绝对值      |        $|x+y|$         |          \|\|          |
+|      绝对值      |$\left\vert x+y \right\vert$|          \left\| \right\|  |
 |      平行线      |      $\parallel$       |       \parallel        |
 |       单线       |         $\mid$         |          \mid          |
 
