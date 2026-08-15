@@ -3,7 +3,7 @@
 # --------------------------------------
 
 nav:
-  logo: https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/logo2_1752075340714.png # image
+  logo: https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/logo2_1752075340714.png # image
   display_title: true
   fixed: false # fixed navigation bar
 
@@ -38,7 +38,7 @@ formal:
   icon: link || the description || color
 social:
   fab fa-qq: http://wpa.qq.com/msgrd?v=3&uin=1985332264&site=qq&menu=yes || QQ || '#febcd5'
-  fab fa-weixin: https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/weixin_1752075402432.png || WeChat || '#febcd5'
+  fab fa-weixin: https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/weixin_1752075402432.png || WeChat || '#febcd5'
   fas fa-envelope: mailto:dreamy-xay@foxmail.com || Email || '#febcd5'
   fa-brands fa-bilibili: https://space.bilibili.com/365741414 || Bilibili || '#febcd5'
 
@@ -46,28 +46,28 @@ social:
 # --------------------------------------
 
 # Favicon（网站图标）
-favicon: https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/logo_1752075337653.png
+favicon: https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/logo_1752075337653.png
 
 # Avatar (头像)
 avatar:
-  img: https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/avatar_1752075331083.jpg
+  img: https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/avatar_1752075331083.jpg
   effect: false
 
 # Disable all banner image
 disable_top_img: false
 
 # The banner image of home page
-index_img: https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/top_1752075448265.png
+index_img: https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/top_1752075448265.png
 
 # If the banner of page not setting, it will show the top_img
-default_top_img: https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/top_1752075452959.webp
+default_top_img: https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/top_1752075452959.webp
 
 # The banner image of archive page
-archive_img: https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/others_1752075445986.jpg
+archive_img: https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/others_1752075445986.jpg
 
 # If the banner of tag page not setting, it will show the top_img
 # note: tag page, not tags page (子標籤頁面的 top_img)
-tag_img: https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/18_1752075443054.png
+tag_img: https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/18_1752075443054.png
 
 # The banner image of tag page
 # format:
@@ -76,7 +76,7 @@ tag_per_img:
 
 # If the banner of category page not setting, it will show the top_img
 # note: category page, not categories page (子分類頁面的 top_img)
-category_img: https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/15_1752075427743.png
+category_img: https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/15_1752075427743.png
 
 # The banner image of category page
 # format:
@@ -93,47 +93,47 @@ cover:
   position: both
   # When cover is not set, the default cover is displayed (當沒有設置cover時，默認的封面顯示)
   default_cover:
-    - https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/1_1752075509616.png
-    - https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/2_1752075514363.jpeg
-    - https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/3_1752075518457.jpeg
-    - https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/4_1752075476601.jpg
-    - https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/5_1752075479273.jpg
-    - https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/6_1752075481704.jpeg
-    - https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/7_1752075489299.jpg
-    - https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/8_1752075493263.jpg
-    - https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/9_1752075495937.jpg
-    - https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/10_1752075498147.jpg
-    - https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/11_1752075500877.jpg
-    - https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/12_1752075503046.jpg
-    - https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/13_1752075505242.jpg
-    - https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/14_1752075507422.jpg
-    - https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/15_1752075427743.png
-    - https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/16_1752075433113.png
-    - https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/17_1752075438171.png
-    - https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/18_1752075443054.png
-    - https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/19_1785311463847.jpg
-    - https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/20_1785311467698.jpeg
-    - https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/21_1785311470126.jpg
-    - https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/22_1785311474212.jpg
-    - https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/23_1785311476464.jpg
-    - https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/24_1785311480531.jpg
-    - https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/25_1785311482846.jpg
-    - https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/26_1785311485212.jpg
-    - https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/27_1785311487554.jpg
-    - https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/28_1785311493480.jpg
-    - https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/29_1785311495995.jpeg
-    - https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/30_1785311499914.jpeg
-    - https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/31_1785311502644.jpg
-    - https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/32_1785311505666.jpg
-    - https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/33_1785311508020.jpg
-    - https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/34_1785311510717.jpg
-    - https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/35_1785311513568.jpg
-    - https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2026-07/36_1785311516520.jpg
+    - https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/1_1752075509616.png
+    - https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/2_1752075514363.jpeg
+    - https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/3_1752075518457.jpeg
+    - https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/4_1752075476601.jpg
+    - https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/5_1752075479273.jpg
+    - https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/6_1752075481704.jpeg
+    - https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/7_1752075489299.jpg
+    - https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/8_1752075493263.jpg
+    - https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/9_1752075495937.jpg
+    - https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/10_1752075498147.jpg
+    - https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/11_1752075500877.jpg
+    - https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/12_1752075503046.jpg
+    - https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/13_1752075505242.jpg
+    - https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/14_1752075507422.jpg
+    - https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/15_1752075427743.png
+    - https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/16_1752075433113.png
+    - https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/17_1752075438171.png
+    - https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/18_1752075443054.png
+    - https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2026-07/19_1785311463847.jpg
+    - https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2026-07/20_1785311467698.jpeg
+    - https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2026-07/21_1785311470126.jpg
+    - https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2026-07/22_1785311474212.jpg
+    - https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2026-07/23_1785311476464.jpg
+    - https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2026-07/24_1785311480531.jpg
+    - https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2026-07/25_1785311482846.jpg
+    - https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2026-07/26_1785311485212.jpg
+    - https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2026-07/27_1785311487554.jpg
+    - https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2026-07/28_1785311493480.jpg
+    - https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2026-07/29_1785311495995.jpeg
+    - https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2026-07/30_1785311499914.jpeg
+    - https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2026-07/31_1785311502644.jpg
+    - https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2026-07/32_1785311505666.jpg
+    - https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2026-07/33_1785311508020.jpg
+    - https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2026-07/34_1785311510717.jpg
+    - https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2026-07/35_1785311513568.jpg
+    - https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2026-07/36_1785311516520.jpg
 
 # Replace Broken Images (替换无法显示的图片)
 error_img:
   flink: /img/friend_404.gif
-  post_page: https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif
+  post_page: https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif
 
 # A simple 404 page
 error_404:
@@ -206,10 +206,10 @@ reward:
   enable: true
   text:
   QR_code:
-    - img: https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/wechat_1752075400337.png
+    - img: https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/wechat_1752075400337.png
       link:
       text: 微信
-    - img: https://gcore.jsdelivr.net/gh/dreamy-xay/figurebed@main/2025-07/alipay_1752075397065.png
+    - img: https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/alipay_1752075397065.png
       link:
       text: 支付宝
 
