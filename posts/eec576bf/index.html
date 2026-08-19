@@ -1,0 +1,689 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>【开发工具】存储性能测试工具 Vdbench | dreamyのblog</title><meta name="author" content="dreamy-xay"><meta name="copyright" content="dreamy-xay"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Vdbench 是一款开源的 I&#x2F;O 工作负载生成器，主要用于测量存储性能并验证数据完整性。它支持对裸盘（块设备） 和文件系统进行基准测试。 一、核心名词与参数 Vdbench 通过一个文本配置文件（参数文件） 来定义测试的所有细节。配置文件中参数的定义顺序至关重要，否则会导致运行失败。其核心名词解释如下：    概念 缩写 说明 适用场景     主机定义 HD 定义参与测试的主机信息，如 IP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【开发工具】存储性能测试工具 Vdbench">
+<meta property="og:url" content="https://dreamy-xay.github.io/blog/posts/eec576bf/">
+<meta property="og:site_name" content="dreamyのblog">
+<meta property="og:description" content="Vdbench 是一款开源的 I&#x2F;O 工作负载生成器，主要用于测量存储性能并验证数据完整性。它支持对裸盘（块设备） 和文件系统进行基准测试。 一、核心名词与参数 Vdbench 通过一个文本配置文件（参数文件） 来定义测试的所有细节。配置文件中参数的定义顺序至关重要，否则会导致运行失败。其核心名词解释如下：    概念 缩写 说明 适用场景     主机定义 HD 定义参与测试的主机信息，如 IP">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/15_1752075427743.png">
+<meta property="article:published_time" content="2026-08-18T04:15:22.000Z">
+<meta property="article:modified_time" content="2026-08-19T01:14:18.000Z">
+<meta property="article:author" content="dreamy-xay">
+<meta property="article:tag" content="块存储">
+<meta property="article:tag" content="性能测试">
+<meta property="article:tag" content="测试工具">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/15_1752075427743.png"><link rel="shortcut icon" href="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/logo_1752075337653.png"><link rel="canonical" href="https://dreamy-xay.github.io/blog/posts/eec576bf/"><link rel="preconnect" href="https://cdn.staticfile.net"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.staticfile.net/font-awesome/6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.staticfile.net/node-snackbar/0.1.16/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.staticfile.net/fancyapps-ui/5.0.33/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: {"path":"/blog/search.xml","preload":false,"top_n_per_article":1,"unescape":true,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":800},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":30,"languages":{"author":"作者: dreamy-xay","link":"链接: ","source":"来源: dreamyのblog","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体中文","cht_to_chs":"你已切换为简体中文","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#febcd5","bgDark":"#1f1f1f","position":"top-center"},
+  infinitegrid: {
+    js: 'https://cdn.staticfile.net/egjs-infinitegrid/4.11.1/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '【开发工具】存储性能测试工具 Vdbench',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2026-08-19 09:14:18'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="referrer" content="no-referrer" /><link rel="stylesheet" href="/blog/css/custom.css"><link rel="stylesheet" href="/blog/css/background.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="gear-loader"><div class="gear-loader_overlay"></div><div class="gear-loader_cogs"><div class="gear-loader_cogs__top"><div class="gear-top_part"></div><div class="gear-top_part"></div><div class="gear-top_part"></div><div class="gear-top_hole"></div></div><div class="gear-loader_cogs__left"><div class="gear-left_part"></div><div class="gear-left_part"></div><div class="gear-left_part"></div><div class="gear-left_hole"></div></div><div class="gear-loader_cogs__bottom"><div class="gear-bottom_part"></div><div class="gear-bottom_part"></div><div class="gear-bottom_part"></div><div class="gear-bottom_hole"></div></div></div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/avatar_1752075331083.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">32</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">50</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa-fw fas fa-book"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa-fw fas fa-list"></i><span> 娱乐库</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/blog/books/"><i class="fa-fw fas fa-book-open"></i><span> 阅读库</span></a></li><li><a class="site-page child" href="/blog/music/"><i class="fa-fw fas fa-music"></i><span> 音乐库</span></a></li><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 图片库</span></a></li><li><a class="site-page child" href="/blog/movies/"><i class="fa-fw fas fa-video"></i><span> 电影库</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/link/"><i class="fa-fw fas fa-link"></i><span> 友人帐</span></a></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/15_1752075427743.png')"><nav id="nav"><span id="blog-info"><a href="/blog/" title="dreamyのblog"><img class="site-icon" src="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/logo2_1752075340714.png"/><span class="site-name">dreamyのblog</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa-fw fas fa-book"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa-fw fas fa-list"></i><span> 娱乐库</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/blog/books/"><i class="fa-fw fas fa-book-open"></i><span> 阅读库</span></a></li><li><a class="site-page child" href="/blog/music/"><i class="fa-fw fas fa-music"></i><span> 音乐库</span></a></li><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 图片库</span></a></li><li><a class="site-page child" href="/blog/movies/"><i class="fa-fw fas fa-video"></i><span> 电影库</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/link/"><i class="fa-fw fas fa-link"></i><span> 友人帐</span></a></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div><div id="nav-right"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i></a></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">【开发工具】存储性能测试工具 Vdbench</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-08-18T04:15:22.000Z" title="发表于 2026-08-18 12:15:22">2026-08-18</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-08-19T01:14:18.000Z" title="更新于 2026-08-19 09:14:18">2026-08-19</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/">开发工具</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>7分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="【开发工具】存储性能测试工具 Vdbench"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p><strong>Vdbench</strong> 是一款开源的 I/O 工作负载生成器，主要用于测量存储性能并验证数据完整性。它支持对<strong>裸盘（块设备）</strong> 和<strong>文件系统</strong>进行基准测试。</p>
+<h2 id="一、核心名词与参数">一、核心名词与参数</h2>
+<p>Vdbench 通过一个<strong>文本配置文件（参数文件）</strong> 来定义测试的所有细节。配置文件中参数的<strong>定义顺序至关重要</strong>，否则会导致运行失败。其核心名词解释如下：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">概念</th>
+<th style="text-align:center">缩写</th>
+<th style="text-align:center">说明</th>
+<th style="text-align:center">适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><strong>主机定义</strong></td>
+<td style="text-align:center"><strong>HD</strong></td>
+<td style="text-align:center">定义参与测试的主机信息，如 IP、用户名、通信方式等。单机测试时可省略。</td>
+<td style="text-align:center">裸盘 &amp; 文件系统</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>存储定义</strong></td>
+<td style="text-align:center"><strong>SD</strong></td>
+<td style="text-align:center">定义被测试的块设备（LUN），如设备路径、并发线程数等。</td>
+<td style="text-align:center"><strong>裸盘测试</strong></td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>工作负载定义</strong></td>
+<td style="text-align:center"><strong>WD</strong></td>
+<td style="text-align:center">定义具体的 I/O 模式，如数据块大小、读写比例、随机/顺序等。</td>
+<td style="text-align:center"><strong>裸盘测试</strong></td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>文件系统定义</strong></td>
+<td style="text-align:center"><strong>FSD</strong></td>
+<td style="text-align:center">定义测试文件的目录结构、文件数量、大小等。</td>
+<td style="text-align:center"><strong>文件系统测试</strong></td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>文件工作负载定义</strong></td>
+<td style="text-align:center"><strong>FWD</strong></td>
+<td style="text-align:center">定义对文件系统的操作，如读、写、创建、删除等。</td>
+<td style="text-align:center"><strong>文件系统测试</strong></td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>运行定义</strong></td>
+<td style="text-align:center"><strong>RD</strong></td>
+<td style="text-align:center">定义测试如何执行，如测试时长、预热时间、报告间隔等。</td>
+<td style="text-align:center">裸盘 &amp; 文件系统</td>
+</tr>
+</tbody>
+</table>
+<h3 id="1-裸盘测试参数详解">1 裸盘测试参数详解</h3>
+<p>参数定义顺序为：<code>HD</code> → <code>SD</code> → <code>WD</code> → <code>RD</code>。</p>
+<h4 id="1-1-HD-Host-Define">1.1 HD (Host Define)</h4>
+<ul>
+<li><code>hd</code>: 主机标识名称</li>
+<li><code>system</code>: 主机 IP 或主机名</li>
+<li><code>vdbench</code>: Vdbench 安装路径</li>
+<li><code>user</code>: 用于 SSH 通信的用户名</li>
+<li><code>shell</code>: 多主机通信方式，Linux 下常用 <code>ssh</code></li>
+</ul>
+<h4 id="1-2-SD-Storage-Define">1.2 SD (Storage Define)</h4>
+<ul>
+<li><code>sd</code>: 存储设备标识名称</li>
+<li><code>lun</code>: 块设备路径。Linux 如 <code>/dev/sdb</code>，Windows 如 <code>\\.\G:</code></li>
+<li><code>openflags</code>: 建议设为 <code>o_direct</code>，以绕过系统缓存，获取真实设备性能</li>
+<li><code>threads</code>: 对该设备的<strong>最大并发 I/O 请求数量</strong>，默认 8。<strong>注意</strong>：裸盘测试的线程数在此处定义</li>
+</ul>
+<h4 id="1-3-WD-Workload-Define">1.3 WD (Workload Define)</h4>
+<ul>
+<li><code>wd</code>: 工作负载标识名称</li>
+<li><code>sd</code>: 引用已定义的存储设备 (SD)</li>
+<li><code>xfersize</code>: 单次 I/O 的数据块大小，如 <code>4k</code>, <code>1M</code></li>
+<li><code>rdpct</code>: 读取请求的百分比。<code>100</code> 为纯读，<code>0</code> 为纯写</li>
+<li><code>seekpct</code>: 随机寻道的百分比。<code>100</code> 为全随机，<code>0</code> 为全顺序</li>
+</ul>
+<h4 id="1-4-RD-Run-Define">1.4 RD (Run Define)</h4>
+<ul>
+<li><code>rd</code>: 运行标识名称</li>
+<li><code>wd</code>: 引用已定义的工作负载 (WD)</li>
+<li><code>iorate</code>: I/O 速率。设为 <code>max</code> 表示以最大性能运行</li>
+<li><code>elapsed</code>: 测试运行持续时间，单位秒，默认 30</li>
+<li><code>warmup</code>: 预热时间，单位秒，此期间数据不计入最终结果</li>
+<li><code>interval</code>: 报告输出的时间间隔，单位秒</li>
+</ul>
+<h4 id="2-文件系统测试参数详解">2 文件系统测试参数详解</h4>
+<p>参数定义顺序为：<code>HD</code> → <code>FSD</code> → <code>FWD</code> → <code>RD</code>。</p>
+<h4 id="2-1-FSD-File-System-Define">2.1 FSD (File System Define)</h4>
+<ul>
+<li><code>fsd</code>: 文件系统定义标识名称</li>
+<li><code>anchor</code>: 测试目录的根路径</li>
+<li><code>depth</code>: 目录层级深度</li>
+<li><code>width</code>: 每层目录的数量</li>
+<li><code>files</code>: 最深层目录下的文件数量</li>
+<li><code>size</code>: 每个文件的大小，如 <code>200M</code></li>
+<li><code>distribution</code>： 仅在最低级别创建文件（<code>bottom</code>），在所有目录中创建文件（<code>all</code>）</li>
+<li><code>openflags</code>：用于打开一个文件系统（<code>Solaris</code>）的 <code>flag_list</code></li>
+</ul>
+<h4 id="2-2-FWD-FileSystem-Workload-Define">2.2 FWD (FileSystem Workload Define)</h4>
+<ul>
+<li><code>fwd</code>: 文件工作负载标识名称</li>
+<li><code>fsd</code>: 引用已定义的文件系统 (FSD)</li>
+<li><code>operation</code>: 文件操作，如 <code>read</code>, <code>write</code>, <code>create</code>, <code>delete</code>，<code>open</code>，<code>close</code>，<code>mkdir</code>，<code>rmdir</code> 等</li>
+<li><code>xfersize</code>: 数据传输（读写操作）处理的数据大小</li>
+<li><code>fileio</code>: I/O 模式，<code>random</code>（随机）或 <code>sequential</code>（顺序）</li>
+<li><code>fileselect</code>: 文件选择方式，<code>random</code> 或 <code>sequential</code></li>
+<li><code>threads</code>: <strong>并发线程数</strong></li>
+<li><code>host</code>：工作负载的主机 ID</li>
+<li><code>rdpct</code>：（仅）读取的写入操作的百分比</li>
+</ul>
+<h2 id="二、运行测试">二、运行测试</h2>
+<h3 id="1-单机测试">1 单机测试</h3>
+<h4 id="1-1-裸盘测试示例">1.1 裸盘测试示例</h4>
+<p>此示例对 <code>/dev/sdb</code> 进行 1MB 块大小的顺序写测试，时长 600 秒：</p>
+  <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 配置文件内容</span></span><br><span class="line">sd=sd1,lun=/dev/sdb,openflags=o_direct</span><br><span class="line">wd=wd1,sd=sd1,seekpct=0,rdpct=0,xfersize=1M</span><br><span class="line">rd=rd1,wd=wd1,iorate=max,warmup=60,elapsed=600,interval=2</span><br><span class="line"></span><br><span class="line"><span class="comment"># 执行命令</span></span><br><span class="line">./vdbench -f Single-RawDisk.html -o /path/to/output</span><br></pre></td></tr></table></figure>
+<h4 id="1-2-文件系统测试示例">1.2 文件系统测试示例</h4>
+<p>此示例在 <code>/path/to/Sigle-FileSystem</code> 目录下创建多级目录和文件，并进行 1MB 块大小的顺序写测试：</p>
+  <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 配置文件内容</span></span><br><span class="line">fsd=fsd1,anchor=/path/to/SigleFileSystem,depth=2,width=3,files=10,size=200M</span><br><span class="line">fwd=fwd1,fsd=fsd1,operation=write,xfersize=1M,fileio=sequential,fileselect=random,threads=2</span><br><span class="line">rd=rd1,fwd=fwd1,fwdrate=max,format=<span class="built_in">yes</span>,elapsed=600,interval=5</span><br><span class="line"></span><br><span class="line"><span class="comment"># 执行命令</span></span><br><span class="line">vdbench -f <span class="string">&quot;SingleFileSystem.txt&quot;</span></span><br></pre></td></tr></table></figure>
+<h3 id="2-多主机联机测试">2 多主机联机测试</h3>
+<ol>
+<li>
+<p><strong>配置 SSH 互信</strong>：确保 Master 节点可以免密 SSH 登录到所有 Slave 节点</p>
+</li>
+<li>
+<p><strong>定义 HD</strong>：在配置文件中定义所有主机：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hd=default,vdbench=/root/vdbench50406,user=root,shell=ssh</span><br><span class="line">hd=hd1,system=node241</span><br><span class="line">hd=hd2,system=node242</span><br><span class="line">hd=hd3,system=node243</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p><strong>分配 SD</strong>：为每个主机指定各自的存储设备：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sd=sd1,hd=hd1,lun=/dev/sdb,openflags=o_direct</span><br><span class="line">sd=sd2,hd=hd2,lun=/dev/sdb,openflags=o_direct</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p><strong>执行测试</strong>：仅在 Master 节点上运行 Vdbench 命令即可</p>
+</li>
+</ol>
+<h2 id="四、结果分析">四、结果分析</h2>
+<p>测试完成后，Vdbench 会在输出目录（默认为 <code>output/</code>）生成报告：</p>
+<ul>
+<li><strong><code>summary.html</code></strong>：包含测试的总体摘要信息（每个报告间隔及除第一个间隔外的所有间隔加权平均），如总 IOPS、总吞吐量（带宽）和平均延迟：
+<ul>
+<li><code>interval</code>：报告间隔序号</li>
+<li><code>I/O rate</code>：每秒平均 I/O 速率</li>
+<li><code>MB sec</code>：传输的数据的平均 MB 数</li>
+<li><code>bytes I/O</code>：平均数据传输大小</li>
+<li><code>read pct</code>：平均读取百分比</li>
+<li><code>resp time</code>：以读/写请求持续时间度量的平均响应时间（所有时间均以毫秒为单位）</li>
+<li><code>resp max</code>：在此间隔中观察到的最大响应时间（最后一行包含最大值总数）</li>
+<li><code>resp stddev</code>：响应时间的标准偏差</li>
+<li><code>cpu% sys+usr</code>：处理器繁忙（系统+用户时间，Solaris、Windows、Linux）</li>
+<li><code>cpu% sys</code>：处理器利用率（系统时间）</li>
+<li><strong>…</strong></li>
+</ul>
+</li>
+<li><strong><code>&lt;hostname&gt;_&lt;timestamp&gt;.html</code></strong>：每个主机详细的性能报告，按时间间隔（<code>interval</code> 参数）展示了 IOPS、带宽和延迟的变化</li>
+<li><strong><code>errorlog.html</code></strong>：记录测试过程中发生的任何错误，当启用了数据验证（<code>-jn</code>）时，包含一些数据块错误的相关信息：
+<ul>
+<li>无效的密钥读取</li>
+<li>无效的 lba（Logical byte address，一个扇区的逻辑字节地址）读取</li>
+<li>无效的 SD 或 FSD 名称读物</li>
+<li>数据损坏（即使在使用错误的 lba 或密钥时）</li>
+<li>坏扇区</li>
+<li><strong>…</strong></li>
+</ul>
+</li>
+<li><code>flatfile.htm|</code>：vdbench 生成的一种逐列 ASCII 格式信息</li>
+<li><code>histogram.html</code>：柱状图的响应时间、文本格式的报告</li>
+<li><code>logfile.html</code>：Java 代码写入控制台窗口的每行信息的副本（主要用于调试用途）</li>
+<li><code>parmfile.html</code>：用于测试的每项内容的最终结果</li>
+<li><strong>…</strong></li>
+</ul>
+<p>可以将这些 <code>.html</code> 文件在浏览器中打开，或将数据导出到电子表格软件中生成图表进行深入分析。</p>
+<h2 id="五、常用参数速查">五、常用参数速查</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">参数</th>
+<th style="text-align:center">所属部分</th>
+<th style="text-align:center">说明</th>
+<th style="text-align:center">示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>openflags=o_direct</code></td>
+<td style="text-align:center">SD / FSD</td>
+<td style="text-align:center">绕过缓存，直接读写磁盘</td>
+<td style="text-align:center"><code>openflags=o_direct</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>threads=</code></td>
+<td style="text-align:center">SD / FWD</td>
+<td style="text-align:center">并发 I/O 线程数</td>
+<td style="text-align:center"><code>threads=8</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>xfersize=</code></td>
+<td style="text-align:center">WD / FWD</td>
+<td style="text-align:center">I/O 数据块大小</td>
+<td style="text-align:center"><code>xfersize=64k</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>rdpct=</code></td>
+<td style="text-align:center">WD</td>
+<td style="text-align:center">读操作百分比（0-100）</td>
+<td style="text-align:center"><code>rdpct=70</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>seekpct=</code></td>
+<td style="text-align:center">WD</td>
+<td style="text-align:center">随机访问百分比（0-100）</td>
+<td style="text-align:center"><code>seekpct=100</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>iorate=</code></td>
+<td style="text-align:center">RD</td>
+<td style="text-align:center">I/O 速率，<code>max</code> 表示最大</td>
+<td style="text-align:center"><code>iorate=max</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>elapsed=</code></td>
+<td style="text-align:center">RD</td>
+<td style="text-align:center">测试时长（秒）</td>
+<td style="text-align:center"><code>elapsed=300</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>warmup=</code></td>
+<td style="text-align:center">RD</td>
+<td style="text-align:center">预热时间（秒）</td>
+<td style="text-align:center"><code>warmup=30</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>interval=</code></td>
+<td style="text-align:center">RD</td>
+<td style="text-align:center">结果报告间隔（秒）</td>
+<td style="text-align:center"><code>interval=5</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="六、常见问题">六、常见问题</h2>
+<ol>
+<li>
+<p><strong><code>./vdbench -t</code> 测试失败？</strong><br>
+通常是由于 Java 环境未正确安装或配置，请检查 <code>java -version</code>。也可能是文件权限问题，尝试 <code>chmod -R 777</code> 赋予 Vdbench 目录权限。</p>
+</li>
+<li>
+<p><strong>多主机运行时连接失败？</strong><br>
+检查 Master（主） 和 Slave（从） 之间的 SSH 互信是否配置正确。确认配置文件中的 <code>system</code> IP 和 <code>user</code> 用户名无误。</p>
+</li>
+<li>
+<p><strong>测试结果波动大？</strong><br>
+确保测试期间系统无其他负载。可适当增加 <code>elapsed</code> 测试时长和 <code>warmup</code> 预热时间，以获得更稳定的数据。</p>
+</li>
+</ol>
+<h2 id="参考内容">参考内容</h2>
+<p><strong style="color: #db8ef7;">[1]</strong> <a target="_blank" rel="noopener" href="https://www.cnblogs.com/luxf0/p/13321077.html">存储测试：vdbench存储性能测试工具</a><br>
+<strong style="color: #db8ef7;">[2]</strong> <a target="_blank" rel="noopener" href="https://blog.csdn.net/Gwumingzhibei/article/details/162275902">存储测试：Vdbench 存储测试工具完整使用教程</a><br>
+<strong style="color: #db8ef7;">[3]</strong> <a target="_blank" rel="noopener" href="https://www.cnblogs.com/cc-notes/p/19461059">[Vdbench 5.04.07] vdbench的介绍与使用</a><br>
+<strong style="color: #db8ef7;">[4]</strong> <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/1956035835838313203">手把手教你用VDbench：存储性能测试全流程解析</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://dreamy-xay.github.io/blog">dreamy-xay</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://dreamy-xay.github.io/blog/posts/eec576bf/">https://dreamy-xay.github.io/blog/posts/eec576bf/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://dreamy-xay.github.io/blog" target="_blank">dreamyのblog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/%E5%9D%97%E5%AD%98%E5%82%A8/">块存储</a><a class="post-meta__tags" href="/blog/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/">性能测试</a><a class="post-meta__tags" href="/blog/tags/%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7/">测试工具</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/15_1752075427743.png" data-sites="wechat,weibo,qq,qzone,facebook,twitter"></div><link rel="stylesheet" href="https://cdn.staticfile.net/butterfly-extsrc/1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.staticfile.net/butterfly-extsrc/1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赞助</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/wechat_1752075400337.png" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/wechat_1752075400337.png" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/alipay_1752075397065.png" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/alipay_1752075397065.png" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-full"><a href="/blog/posts/db6c46bb/" title="【开发工具】代码覆盖率测试工具 GCOV"><img class="cover" src="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/1_1752075509616.png" onerror="onerror=null;src='https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">【开发工具】代码覆盖率测试工具 GCOV</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/blog/posts/6daf612c/" title="【存储初识】01-块、文件、对象存储"><img class="cover" src="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/9_1752075495937.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-03</div><div class="title">【存储初识】01-块、文件、对象存储</div></div></a></div><div><a href="/blog/posts/db6c46bb/" title="【开发工具】代码覆盖率测试工具 GCOV"><img class="cover" src="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/1_1752075509616.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-12</div><div class="title">【开发工具】代码覆盖率测试工具 GCOV</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/avatar_1752075331083.jpg" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">dreamy-xay</div><div class="author-info__description">只争朝夕，不负韶华</div></div><div class="card-info-data site-data is-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">32</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">50</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/dreamy-xay"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="http://wpa.qq.com/msgrd?v=3&amp;uin=1985332264&amp;site=qq&amp;menu=yes" target="_blank" title="QQ"><i class="fab fa-qq" style="color: #febcd5;"></i></a><a class="social-icon" href="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/weixin_1752075402432.png" target="_blank" title="WeChat"><i class="fab fa-weixin" style="color: #febcd5;"></i></a><a class="social-icon" href="mailto:dreamy-xay@foxmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #febcd5;"></i></a><a class="social-icon" href="https://space.bilibili.com/365741414" target="_blank" title="Bilibili"><i class="fa-brands fa-bilibili" style="color: #febcd5;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Hi~ o(*￣▽￣*)ブ，欢迎来到dreamy'blog，如果喜欢记得收藏奥～</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%A0%B8%E5%BF%83%E5%90%8D%E8%AF%8D%E4%B8%8E%E5%8F%82%E6%95%B0"><span class="toc-text">一、核心名词与参数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E8%A3%B8%E7%9B%98%E6%B5%8B%E8%AF%95%E5%8F%82%E6%95%B0%E8%AF%A6%E8%A7%A3"><span class="toc-text">1 裸盘测试参数详解</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1-HD-Host-Define"><span class="toc-text">1.1 HD (Host Define)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2-SD-Storage-Define"><span class="toc-text">1.2 SD (Storage Define)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-3-WD-Workload-Define"><span class="toc-text">1.3 WD (Workload Define)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-4-RD-Run-Define"><span class="toc-text">1.4 RD (Run Define)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E6%B5%8B%E8%AF%95%E5%8F%82%E6%95%B0%E8%AF%A6%E8%A7%A3"><span class="toc-text">2 文件系统测试参数详解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-FSD-File-System-Define"><span class="toc-text">2.1 FSD (File System Define)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-FWD-FileSystem-Workload-Define"><span class="toc-text">2.2 FWD (FileSystem Workload Define)</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E8%BF%90%E8%A1%8C%E6%B5%8B%E8%AF%95"><span class="toc-text">二、运行测试</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%8D%95%E6%9C%BA%E6%B5%8B%E8%AF%95"><span class="toc-text">1 单机测试</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1-%E8%A3%B8%E7%9B%98%E6%B5%8B%E8%AF%95%E7%A4%BA%E4%BE%8B"><span class="toc-text">1.1 裸盘测试示例</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2-%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E6%B5%8B%E8%AF%95%E7%A4%BA%E4%BE%8B"><span class="toc-text">1.2 文件系统测试示例</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%A4%9A%E4%B8%BB%E6%9C%BA%E8%81%94%E6%9C%BA%E6%B5%8B%E8%AF%95"><span class="toc-text">2 多主机联机测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E7%BB%93%E6%9E%9C%E5%88%86%E6%9E%90"><span class="toc-text">四、结果分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E5%B8%B8%E7%94%A8%E5%8F%82%E6%95%B0%E9%80%9F%E6%9F%A5"><span class="toc-text">五、常用参数速查</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98"><span class="toc-text">六、常见问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E5%86%85%E5%AE%B9"><span class="toc-text">参考内容</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/posts/eec576bf/" title="【开发工具】存储性能测试工具 Vdbench"><img src="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/15_1752075427743.png" onerror="this.onerror=null;this.src='https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【开发工具】存储性能测试工具 Vdbench"/></a><div class="content"><a class="title" href="/blog/posts/eec576bf/" title="【开发工具】存储性能测试工具 Vdbench">【开发工具】存储性能测试工具 Vdbench</a><time datetime="2026-08-18T04:15:22.000Z" title="发表于 2026-08-18 12:15:22">2026-08-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/posts/db6c46bb/" title="【开发工具】代码覆盖率测试工具 GCOV"><img src="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/1_1752075509616.png" onerror="this.onerror=null;this.src='https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【开发工具】代码覆盖率测试工具 GCOV"/></a><div class="content"><a class="title" href="/blog/posts/db6c46bb/" title="【开发工具】代码覆盖率测试工具 GCOV">【开发工具】代码覆盖率测试工具 GCOV</a><time datetime="2026-08-12T06:39:41.000Z" title="发表于 2026-08-12 14:39:41">2026-08-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/posts/630be539/" title="【Linux 内核】链表 list_head 和 hlist_head 解析"><img src="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/1_1752075509616.png" onerror="this.onerror=null;this.src='https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【Linux 内核】链表 list_head 和 hlist_head 解析"/></a><div class="content"><a class="title" href="/blog/posts/630be539/" title="【Linux 内核】链表 list_head 和 hlist_head 解析">【Linux 内核】链表 list_head 和 hlist_head 解析</a><time datetime="2026-08-05T02:31:14.000Z" title="发表于 2026-08-05 10:31:14">2026-08-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/posts/f415298d/" title="【开发工具】Linux 常用文本编辑器 Vim"><img src="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/12_1752075503046.jpg" onerror="this.onerror=null;this.src='https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【开发工具】Linux 常用文本编辑器 Vim"/></a><div class="content"><a class="title" href="/blog/posts/f415298d/" title="【开发工具】Linux 常用文本编辑器 Vim">【开发工具】Linux 常用文本编辑器 Vim</a><time datetime="2026-08-04T02:54:51.000Z" title="发表于 2026-08-04 10:54:51">2026-08-04</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/posts/aa951e57/" title="【开发工具】Linux 其他常用命令"><img src="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/1_1752075509616.png" onerror="this.onerror=null;this.src='https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/loading_1752075335004.gif'" alt="【开发工具】Linux 其他常用命令"/></a><div class="content"><a class="title" href="/blog/posts/aa951e57/" title="【开发工具】Linux 其他常用命令">【开发工具】Linux 其他常用命令</a><time datetime="2026-08-03T06:23:01.000Z" title="发表于 2026-08-03 14:23:01">2026-08-03</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2025-07/15_1752075427743.png')"><div id="footer-wrap"><div class="copyright">&copy;2025 - 2026 By dreamy-xay</div><div class="framework-info"><span>网站 </span><a target="_blank" rel="noopener" href="https://github.com/dreamy-xay/blog">Github</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://dreamy-xay.github.io/blog">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="https://cdn.staticfile.net/hexo-theme-butterfly/4.13.0/js/utils.min.js"></script><script src="https://cdn.staticfile.net/hexo-theme-butterfly/4.13.0/js/main.min.js"></script><script src="https://cdn.staticfile.net/hexo-theme-butterfly/4.13.0/js/tw_cn.min.js"></script><script src="https://cdn.staticfile.net/fancyapps-ui/5.0.33/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.staticfile.net/instant.page/5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.staticfile.net/node-snackbar/0.1.16/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.staticfile.net/pangu/4.0.7/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"><script>(() => {
+  const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaid.length === 0) return
+  const runMermaid = () => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    Array.from($mermaid).forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+      const mermaidID = 'mermaid-' + index
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+
+      const renderV10 = () => {
+        renderFn.then(({svg}) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svg)
+        })
+      }
+
+      const renderV9 = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      typeof renderFn === 'string' ? renderV9(renderFn) : renderV10()
+    })
+  }
+
+  const loadMermaid = () => {
+    window.loadMermaid ? runMermaid() : getScript('https://cdn.staticfile.net/mermaid/10.8.0/mermaid.min.js').then(runMermaid)
+  }
+
+  btf.addGlobalFn('themeChange', runMermaid, 'mermaid')
+
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script><script>(() => {
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-vercel-swart-pi.vercel.app/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = () => {
+    twikoo.init(Object.assign({
+      el: '#twikoo-wrap',
+      envId: 'https://twikoo-vercel-swart-pi.vercel.app/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      }
+    }, null))
+
+    GLOBAL_CONFIG_SITE.isPost && getCount()
+  }
+
+  const loadTwikoo = () => {
+    if (typeof twikoo === 'object') setTimeout(init,0)
+    else getScript('https://cdn.staticfile.net/twikoo/1.6.31/twikoo.all.min.js').then(init)
+  }
+
+  if ('Twikoo' === 'Twikoo' || !true) {
+    if (true) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script>window.addEventListener('load', () => {
+  const changeContent = (content) => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g,"") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0,150) + '...'
+    }
+    return content
+  }
+
+  const getComment = () => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo-vercel-swart-pi.vercel.app/',
+        region: '',
+        pageSize: 6,
+        includeReply: true
+      }).then(function (res) {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        saveToLocal.set('twikoo-newest-comments', JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray)
+      }).catch(function (err) {
+        const $dom = document.querySelector('#card-newest-comments .aside-list')
+        $dom.textContent= "无法获取评论，请确认相关配置是否正确"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      getScript('https://cdn.staticfile.net/twikoo/1.6.31/twikoo.all.min.js').then(runTwikoo)
+    }
+  }
+
+  const generateHtml = array => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class=\'aside-list-item\'>'
+
+        if (true) {
+          const name = 'src'
+          result += `<a href='${array[i].url}' class='thumbnail'><img ${name}='${array[i].avatar}' alt='${array[i].nick}'></a>`
+        }
+        
+        result += `<div class='content'>
+        <a class='comment' href='${array[i].url}' title='${array[i].content}'>${array[i].content}</a>
+        <div class='name'><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '没有评论'
+    }
+
+    let $dom = document.querySelector('#card-newest-comments .aside-list')
+    $dom && ($dom.innerHTML= result)
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh($dom)
+  }
+
+  const newestCommentInit = () => {
+    if (document.querySelector('#card-newest-comments .aside-list')) {
+      const data = saveToLocal.get('twikoo-newest-comments')
+      if (data) {
+        generateHtml(JSON.parse(data))
+      } else {
+        getComment()
+      }
+    }
+  }
+
+  newestCommentInit()
+  document.addEventListener('pjax:complete', newestCommentInit)
+})</script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script><script type="text/javascript" src="/blog/js/fireworks.min.js"></script><script src="https://cdn.staticfile.net/butterfly-extsrc/1.1.3/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><link rel="stylesheet" href="https://cdn.staticfile.net/aplayer/1.10.1/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.staticfile.net/aplayer/1.10.1/APlayer.min.js"></script><script src="https://cdn.staticfile.net/butterfly-extsrc/1.1.3/metingjs/dist/Meting.min.js"></script><script src="https://cdn.staticfile.net/pjax/0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/blog/404')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="https://cdn.staticfile.net/hexo-theme-butterfly/4.13.0/js/search/local-search.min.js"></script></div></div><script src="/blog/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"tagMode":false,"debug":false,"model":{"jsonPath":"/blog/live2dw/assets/shizuku.model.json"},"display":{"position":"left","width":150,"height":300,"hOffset":20,"vOffset":-20},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/"});</script></body></html>
