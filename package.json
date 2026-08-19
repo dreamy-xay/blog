@@ -8,9 +8,12 @@
     "clean": "hexo clean",
     "deploy": "npm run clean && hexo deploy",
     "deploy:github": "npm run clean && hexo deploy",
-    "deploy:netlify": ".\\deploy_netlify",
+    "deploy:netlify": "run-script-os",
     "deploy:all": "npm run deploy:github && npm run deploy:netlify",
-    "server": "hexo server"
+    "server": "hexo server",
+    "deploy:netlify:win32": ".\\deploy_netlify",
+    "deploy:netlify:linux": "sh deploy_netlify.sh",
+    "deploy:netlify:darwin": "sh deploy_netlify.sh"
   },
   "hexo": {
     "version": "7.3.0"
@@ -40,6 +43,15 @@
     "live2d-widget-model-wanko": "^1.0.5"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "run-script-os": "^1.1.6"
+  },
+  "allowScripts": {
+    "core-js@2.6.12": true,
+    "hexo-util@2.7.0": true,
+    "hexo-util@0.1.7": true,
+    "hexo-util@3.3.0": true,
+    "hexo-helper-live2d@3.1.1": true,
+    "live2d-widget@3.1.4": true
   }
 }
