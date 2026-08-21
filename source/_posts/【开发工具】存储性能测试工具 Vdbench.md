@@ -15,12 +15,12 @@ highlight_shrink: false
 aside: true
 noticeOutdate: false
 abbrlink: eec576bf
-keywords: ''
-description: ''
-top_img: ''
-cover: ''
+keywords: ""
+description: ""
+top_img: ""
+cover: ""
 date: 2026-08-18 12:15:22
-updated: 2026-08-19 09:14:18
+updated: 2026-08-21 08:59:58
 ---
 
 **Vdbench** 是一款开源的 I/O 工作负载生成器，主要用于测量存储性能并验证数据完整性。它支持对**裸盘（块设备）** 和**文件系统**进行基准测试。
@@ -73,7 +73,7 @@ Vdbench 通过一个**文本配置文件（参数文件）** 来定义测试的�
   - `elapsed`: 测试运行持续时间，单位秒，默认 30
   - `warmup`: 预热时间，单位秒，此期间数据不计入最终结果
   - `interval`: 报告输出的时间间隔，单位秒
-#### 2 文件系统测试参数详解
+### 2 文件系统测试参数详解
 
 参数定义顺序为：`HD` → `FSD` → `FWD` → `RD`。
 
