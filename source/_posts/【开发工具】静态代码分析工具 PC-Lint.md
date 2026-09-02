@@ -282,7 +282,7 @@ lint -elib(534) myfile.c   # 抑制头文件中所有告警 534
 
 ## 参考内容
 
-<strong style="color: red">[1]</strong> [PCLint静态分析工具使用详解](https://openvela.csdn.net/69c3bb8754b52172bc643688.html)
-<strong style="color: red">[2]</strong> [linux pc lint是什么？linux pc lint工具怎么用](https://idctop.com/article/479540.html)
-<strong style="color: red">[3]</strong> [PCLint静态代码分析工具详解：安装配置、命令行使用与常见告警处理](https://wenku.csdn.net/doc/7g9yhn4c2e)
-<strong style="color: red">[4]</strong> [PC-Lint/PCLint 使用手册](https://www.gimpel.com)
+<strong style="color: #db8ef7;">[1]</strong> [PCLint静态分析工具使用详解](https://openvela.csdn.net/69c3bb8754b52172bc643688.html)
+<strong style="color: #db8ef7;">[2]</strong> [linux pc lint是什么？linux pc lint工具怎么用](https://idctop.com/article/479540.html)
+<strong style="color: #db8ef7;">[3]</strong> [PCLint静态代码分析工具详解：安装配置、命令行使用与常见告警处理](https://wenku.csdn.net/doc/7g9yhn4c2e)
+<strong style="color: #db8ef7;">[4]</strong> [PC-Lint/PCLint 使用手册](https://www.gimpel.com)
