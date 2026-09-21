@@ -32,7 +32,7 @@ cover:
 NAS（Network Attached Storage，网络附加存储）是一种将分布、独立的数据整合为大型、集中化管理的数据中心，以便于对不同主机和应用服务器进行访问的技术。按字面理解，NAS就是连接在网络上、具备数据存储功能的装置，因此也被称为“网络存储器”。
 
 <div align="center">
-    <img src="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2026-07/NAS_1783567860789.gif" width="700px" />
+    <img src="https://cdn.jsdmirror.com/gh/dreamy-xay/figurebed@main/2026-07/NAS_1783567860789.gif" width="700px" />
     <strong style="color: #1fb9fb; margin: -20px 0px 20px 0px; display: block;">网络附加存储示例图</strong>
 </div>
 

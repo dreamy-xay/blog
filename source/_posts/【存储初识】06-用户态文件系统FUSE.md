@@ -29,14 +29,14 @@ cover:
 **文件系统**作为操作系统中的核心底层组件，负责频繁操作存储设备，因此最初的设计完全**在内核空间中进行**。内核是拥有超级权限的代码，负责管理计算机的核心资源（如 CPU、内存、硬盘、网络等）。当内核代码运行时，程序进入内核态，可以完全访问和操作这些底层设备。而与**内核空间**形成对应的是**用户空间**（User space），这部分代码就是平时常见的各种应用程序，在**用户空间**里程序的**权限受到严格限制**，不能直接访问底层的重要资源。
 
 <div align="center">
-    <img src="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2026-07/内核空间与用户空间_1783567886395.png" width="450px" />
+    <img src="https://cdn.jsdmirror.com/gh/dreamy-xay/figurebed@main/2026-07/内核空间与用户空间_1783567886395.png" width="450px" />
     <strong style="color: #1fb9fb; margin: -20px 0px 20px 0px; display: block;">内核空间与用户空间示意图</strong>
 </div>
 
 如果应用程序需要使用文件系统，必须通过操作系统设计好的接口来进行访问，比如 **OPEN、READ、WRITE 等系统调用**。系统调用的作用是搭建起用户空间和内核空间的桥梁。当应用程序调用系统调用时，它就会进入一段内核空间代码，等执行完毕后，再把结果返回给用户空间。
 
 <div align="center">
-    <img src="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2026-07/系统调用架构图_1783567891894.png" width="450px" />
+    <img src="https://cdn.jsdmirror.com/gh/dreamy-xay/figurebed@main/2026-07/系统调用架构图_1783567891894.png" width="450px" />
     <strong style="color: #1fb9fb; margin: -20px 0px 20px 0px; display: block;">系统调用架构图</strong>
 </div>
 
@@ -54,7 +54,7 @@ Linux 内核支持数十种不同的文件系统，VFS 的可扩展性为后续 
 单台计算机已难以满足不断增长的计算与存储需求，多机协同成为必然。在此背景下，**网络文件系统**（NFS）应运而生——它通过客户端-服务器模型，将远程服务器上的文件系统目录挂载到本地节点，使应用程序能够像访问本地存储一样，透明、无缝地访问远程数据，实现了跨网络的文件共享与统一访问。
 
 <div align="center">
-    <img src="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2026-07/NFS架构图_1783567865628.png" width="600px" />
+    <img src="https://cdn.jsdmirror.com/gh/dreamy-xay/figurebed@main/2026-07/NFS架构图_1783567865628.png" width="600px" />
     <strong style="color: #1fb9fb; margin: -20px 0px 20px 0px; display: block;">NFS架构图</strong>
 </div>
 
@@ -65,7 +65,7 @@ Linux 内核支持数十种不同的文件系统，VFS 的可扩展性为后续 
 FUSE（Filesystem in Userspace）是一个允许用户在用户态创建自定义文件系统的接口，诞生于 2001 年。FUSE 的出现大大降低了文件系统开发的门槛，使得开发者能够在不修改内核代码的情况下实现创新的文件系统功能。
 
 <div align="center">
-    <img src="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2026-07/FUSE操作示意图_1783567843304.png" width="500px" />
+    <img src="https://cdn.jsdmirror.com/gh/dreamy-xay/figurebed@main/2026-07/FUSE操作示意图_1783567843304.png" width="500px" />
     <strong style="color: #1fb9fb; margin: -20px 0px 20px 0px; display: block;">FUSE操作示意图</strong>
 </div>
 
@@ -87,7 +87,7 @@ FUSE 的核心是一个内核模块和一个用户空间库，两者通过 /dev/
 - **返回阶段**：回调函数执行完毕后，将结果（数据或错误码）通过 libfuse 写回 /dev/fuse 设备。fuse 内核模块读取该结果，将其还原为内核所需的格式，返回给 VFS，最终由 VFS 将结果返回给发起调用的应用程序。
 
 <div align="center">
-    <img src="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2026-07/FUSE工作流程图_1783567852257.gif" width="600px" />
+    <img src="https://cdn.jsdmirror.com/gh/dreamy-xay/figurebed@main/2026-07/FUSE工作流程图_1783567852257.gif" width="600px" />
     <strong style="color: #1fb9fb; margin: -20px 0px 20px 0px; display: block;">FUSE工作流程图</strong>
 </div>
 

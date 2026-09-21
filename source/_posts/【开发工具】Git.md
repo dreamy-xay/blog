@@ -28,7 +28,7 @@ updated: 2026-07-27 16:01:02
  Git 的工作流程可以想象成 **写作业并交给老师** 的过程。下图展示了这一流程：
 
 <div align="center">
-    <img src="https://cdn.jsdmirror.cn/gh/dreamy-xay/figurebed@main/2026-07/git-workflow_1785136799311.svg" width="100%" />
+    <img src="https://cdn.jsdmirror.com/gh/dreamy-xay/figurebed@main/2026-07/git-workflow_1785136799311.svg" width="100%" />
     <strong style="color: #1fb9fb; margin: -20px 0px 20px 0px; display: block;">Git 工作流程图</strong>
 </div>
 
