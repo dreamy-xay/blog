@@ -1,0 +1,67 @@
+#page-header #site-title,
+#page-header #subtitle {
+  color: rgba(255, 255, 255, 0.5);
+  text-shadow: 0 0 10px rgb(255, 255, 255);
+}
+
+#aside-content .card-announcement .item-headline i {
+  color: #ec4c8c;
+}
+
+/* flex 单行滚动容器 */
+.playerlist-cards-container {
+  width: 100%;
+  display: flex;
+  flex-wrap: nowrap;            
+  gap: -16px;
+  overflow-x: auto;
+}
+
+.playerlist-cards-container > div {
+  width: 311px !important;
+  flex: 0 0 auto;
+}
+
+.playerlist-cards-container > div a {
+  margin-top: 0px !important;
+  margin-bottom: 0 !important;
+}
+
+/* 豆瓣插件激活选项背景色 */
+.idouban-tab-active {
+  background: #ec4c8c !important;
+}
+
+/* twikoo 按钮颜色设置 */
+.twikoo .el-input__inner:focus,
+.twikoo .el-textarea__inner:focus  {
+  border-color: #ec4c8c !important;
+}
+
+.twikoo .el-button--primary {
+  background-color: #ec4c8c !important;
+  border-color: #ec4c8c !important;
+}
+
+.twikoo .el-button--primary.is-disabled, 
+.twikoo .el-button--primary.is-disabled:active, 
+.twikoo .el-button--primary.is-disabled:focus, 
+.twikoo .el-button--primary.is-disabled:hover {
+  color: rgba(255, 255, 255, 0.63) !important;
+  background-color: rgba(236, 76, 140, 0.50) !important;
+  border-color: transparent !important;
+}
+
+.twikoo .el-button:not(.el-button--primary):not(.el-button--text):active, .twikoo .el-button:not(.el-button--primary):not(.el-button--text):focus, .twikoo .el-button:not(.el-button--primary):not(.el-button--text):hover {
+  color: #ec4c8c !important;
+  background-color: rgba(236, 76, 140, 0.063) !important;
+  border-color: rgba(236, 76, 140, 0.50) !important;
+}
+
+.twikoo .el-loading-spinner .path {
+  stroke: #ec4c8c !important;
+}
+
+.tk-icon {
+  color: #ec4c8c !important;
+}
