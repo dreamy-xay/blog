@@ -65,8 +65,9 @@ name="Alice"
 age=25
 ```
 
-> [!ATTENTION] 注意
-> 等号两边不能有空格，这是 Shell 变量赋值的一条硬性规则。
+{% note warning modern %}
+等号两边不能有空格，这是 Shell 变量赋值的一条硬性规则。
+{% endnote %}
 
 ### 2 变量引用
 
@@ -160,11 +161,12 @@ str="Hello, World"
 
 echo ${str:0:5}     # 输出 "Hello"（从索引 0 开始取 5 个字符）
 echo ${str:7}       # 输出 "World"（从索引 7 开始到末尾）
-echo ${str: -5}     # 输出 "World"（从末尾倒数 5 个字符）
+echo ${str: -5}     # 输出 "World"（从末尾倒数 5 个字符）【其他写法：`${str:0-5}` 和 `${str:(-5)}`】
 ```
 
-> [!ATTENTION] 注意
-> 表达式 `${str: -5}` 中 `-5` 之前必须有空格，否则会被解析成默认值语法（`:-`），或者使用 `${str:0-5}` 和 `${str:(-5)}` 两种写法。
+{% note warning modern %}
+表达式 `${str: -5}` 中 `-5` 之前必须有空格，否则会被解析成默认值语法（`:-`）。
+{% endnote %}
 
 ### 3 字符串替换
 
@@ -495,8 +497,12 @@ echo ${arr[@]}       # one two three
 echo ${arr[*]}
 ```
 
-> [!NOTE] `[@]` 和 `[*]` 的区别
-> `"${arr[@]}"`：每个元素单独一个词，展开成：`"one" "two" "three"`；`"${arr[*]}"`：所有元素合成一个词，展开成：`"one two three"`。
+{% note primary no-icon flat %}
+<strong style="color: #6F42C1;">💡 `[@]` 和 `[*]` 的区别</strong>
+<span style="display: inline-block; padding-left: 3em;"><span style="display: inline-block; text-indent: -2em; transform: scale(0.4); opacity: 0.5;">●</span><strong>`"${arr[@]}"`：</strong>每个元素单独一个词，展开成：`"one" "two" "three"`</span>
+<span style="display: inline-block; padding-left: 3em;"><span style="display: inline-block; text-indent: -2em; transform: scale(0.4); opacity: 0.5;">●</span><strong>`"${arr[*]}"`：</strong>所有元素合成一个词，展开成：`"one two three"`</span>
+{% endnote %}
+
 
 **获取数组长度**：
 
